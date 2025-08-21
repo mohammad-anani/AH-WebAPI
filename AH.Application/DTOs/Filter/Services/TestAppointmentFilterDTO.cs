@@ -6,8 +6,15 @@ using System.Threading.Tasks;
 
 namespace AH.Application.DTOs.Filter
 {
-    public class TestAppointmentFilterDTO
+    public class TestAppointmentFilterDTO:ServiceFilter,IFilterable
     {
-        // Empty filter DTO class
+
+        public int? TestOrderID { get; set; }
+
+        public int? TestTypeID { get; set; }
+        public string? Sort { get; set; }
+        public bool? Order { get; set; }
+        public int? Page { get; set; }
+
     }
 }

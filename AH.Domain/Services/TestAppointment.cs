@@ -8,7 +8,7 @@ namespace AH.Domain.Entities
 {
     public class TestAppointment
     {
-        public int? ID { get; set; } 
+        public int ID { get; set; } 
 
         public TestOrder TestOrder { get; set; }
 
@@ -18,7 +18,7 @@ namespace AH.Domain.Entities
 
         public TestAppointment()
         {
-            ID = null;
+            ID = -1;
             TestOrder = new TestOrder();
             TestType = new TestType();
             Service = new Service();
@@ -34,7 +34,7 @@ namespace AH.Domain.Entities
 
         public TestAppointment(TestOrder testOrder, TestType testType, Service service)
         {
-            ID = null;
+            ID = -1;
             TestOrder = testOrder;
             TestType = testType;
             Service = service;

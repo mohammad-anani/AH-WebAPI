@@ -9,7 +9,7 @@ namespace AH.Domain.Entities
 {
     public class Department
     {
-        public int? ID { get; set; }
+        public int ID { get; set; }
         public string Name { get; set; }
         public string Phone { get; set; }
         public AdminAudit CreatedByAdmin { get; set; }
@@ -17,10 +17,10 @@ namespace AH.Domain.Entities
 
         public Department()
         {
-            ID = null;
+            ID = -1;
             Name = "";
             Phone = "";
-            CreatedByAdmin = null; // Fix: Don't create new AdminAudit to avoid circular dependency
+            CreatedByAdmin = new AdminAudit(); // Fix: Don't create new AdminAudit to avoid circular dependency
             CreatedAt = DateTime.MinValue;
         }
 
@@ -35,7 +35,7 @@ namespace AH.Domain.Entities
 
         public Department(string name, string phone, AdminAudit createdByAdmin)
         {
-            ID = null;
+            ID = -1;
             Name = name;
             Phone = phone;
             CreatedByAdmin = createdByAdmin;

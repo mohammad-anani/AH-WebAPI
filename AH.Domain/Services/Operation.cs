@@ -8,7 +8,7 @@ namespace AH.Domain.Entities
 {
     public class Operation
     {
-        public int? ID { get; set; }
+        public int ID { get; set; }
         public int Name { get; set; }
         public Department Department { get; set; }   
         public string Description { get; set; } 
@@ -16,7 +16,7 @@ namespace AH.Domain.Entities
 
         public Operation()
         {
-            ID = null;
+            ID = -1;
             Name = -1;
             Department = new Department();
             Description = "";
@@ -34,7 +34,7 @@ namespace AH.Domain.Entities
 
         public Operation(int name, Department department, string description, Service service)
         {
-            ID = null;
+            ID = -1;
             Name = name;
             Department = department;
             Description = description;

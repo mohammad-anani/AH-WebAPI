@@ -8,7 +8,7 @@ namespace AH.Domain.Entities.Audit
 {
     public class EmployeeAudit
     {
-        public int? ID { get; set; }
+        public int ID { get; set; }
 
         public Person Person { get; set; }
 
@@ -31,7 +31,7 @@ namespace AH.Domain.Entities.Audit
 
         public EmployeeAudit()
         {
-            ID = null;
+            ID = -1;
             Person = new Person();
             Department = new Department(); // Fix: Don't create new Department to avoid circular dependency
             Salary = -1;
@@ -59,7 +59,7 @@ namespace AH.Domain.Entities.Audit
 
         public EmployeeAudit(Person person, Department department, int salary, DateTime hireDate, DateTime? leaveDate, int workingDays, DateTime shiftStart, DateTime shiftEnd)
         {
-            ID = null;
+            ID = -1;
             Person = person;
             Department = department;
             Salary = salary;

@@ -10,4 +10,8 @@
     <ProjectReference Include="..\AH.Domain\AH.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOs\Filter\Finance\" />
+  </ItemGroup>
+
 </Project>

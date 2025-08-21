@@ -8,16 +8,16 @@ namespace AH.Domain.Entities
 {
     public class Patient
     {
-        public int? ID { get; set; }
+        public int ID { get; set; }
         public Person Person { get; set; }
         public Receptionist CreatedByReceptionist { get; set; }
         public DateTime CreatedAt { get; set; }
 
         public Patient()
         {
-            ID = null;
+            ID = -1;
             Person = new Person();
-            CreatedByReceptionist = null; // Fix: Don't create new Receptionist to avoid circular dependency
+            CreatedByReceptionist = new Receptionist(); // Fix: Don't create new Receptionist to avoid circular dependency
             CreatedAt = DateTime.MinValue;
         }
 
@@ -31,7 +31,7 @@ namespace AH.Domain.Entities
 
         public Patient(Person person, Receptionist createdByReceptionist)
         {
-            ID = null;
+            ID = -1;
             Person = person;
             CreatedByReceptionist = createdByReceptionist;
             CreatedAt = DateTime.MinValue;

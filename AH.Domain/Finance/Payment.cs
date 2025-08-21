@@ -8,7 +8,7 @@ namespace AH.Domain.Entities
 {
     public class Payment
     {
-        public int? ID { get; set; }
+        public int ID { get; set; }
         public Bill Bill { get; set; }
         public int Amount { get; set; }
         public string Method { get; set; }
@@ -17,12 +17,12 @@ namespace AH.Domain.Entities
 
         public Payment()
         {
-            ID = null;
+            ID = -1;
             Bill = new Bill();
             Amount = -1;
             Method = "";
             CreatedAt = DateTime.MinValue;
-            CreatedByReceptionist = null; // Fix: Don't create new Receptionist to avoid circular dependency
+            CreatedByReceptionist = new Receptionist(); // Fix: Don't create new Receptionist to avoid circular dependency
         }
 
         public Payment(int id, Bill bill, int amount, string method, DateTime createdAt, Receptionist createdByReceptionist)
@@ -37,7 +37,7 @@ namespace AH.Domain.Entities
 
         public Payment(Bill bill, int amount, string method, Receptionist createdByReceptionist)
         {
-            ID = null;
+            ID = -1;
             Bill = bill;
             Amount = amount;
             Method = method;

@@ -9,7 +9,7 @@ namespace AH.Domain.Entities
 {
     public class Employee
     {
-        public int? ID { get; set; }
+        public int ID { get; set; }
 
         public Person Person { get; set; }
 
@@ -34,16 +34,16 @@ namespace AH.Domain.Entities
 
         public Employee()
         {
-            ID = null;
+            ID = -1;
             Person = new Person();
-            Department = null; // Fix: Don't create new Department to avoid circular dependency
+            Department = new Department(); // Fix: Don't create new Department to avoid circular dependency
             Salary = -1;
             HireDate = DateTime.MinValue;
             LeaveDate = null;
             WorkingDays = -1;
             ShiftStart = DateTime.MinValue;
             ShiftEnd = DateTime.MinValue;
-            CreatedByAdmin = null; // Fix: Don't create new AdminAudit to avoid circular dependency
+            CreatedByAdmin = new AdminAudit(); // Fix: Don't create new AdminAudit to avoid circular dependency
             CreatedAt = DateTime.MinValue;
         }
 
@@ -64,7 +64,7 @@ namespace AH.Domain.Entities
 
         public Employee(Person person, Department department, int salary, DateTime hireDate, DateTime? leaveDate, int workingDays, DateTime shiftStart, DateTime shiftEnd, AdminAudit createdByAdmin)
         {
-            ID = null;
+            ID = -1;
             Person = person;
             Department = department;
             Salary = salary;

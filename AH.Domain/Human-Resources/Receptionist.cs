@@ -8,13 +8,13 @@ namespace AH.Domain.Entities
 {
     public class Receptionist
     {
-        public int? ID { get; set; }
+        public int ID { get; set; }
         public Employee Employee { get; set; }
 
         public Receptionist()
         {
-            ID = null;
-            Employee = null; // Fix: Don't create new Employee to avoid circular dependency
+            ID = -1;
+            Employee = new Employee(); // Fix: Don't create new Employee to avoid circular dependency
         }
 
         public Receptionist(int id, Employee employee)
@@ -25,7 +25,7 @@ namespace AH.Domain.Entities
 
         public Receptionist(Employee employee)
         {
-            ID = null;
+            ID = -1;
             Employee = employee;
         }
     }

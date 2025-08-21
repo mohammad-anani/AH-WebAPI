@@ -8,7 +8,7 @@ namespace AH.Domain.Entities
 {
     public class Person
     {
-        public int? ID { get; set; }
+        public int ID { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }
@@ -20,7 +20,7 @@ namespace AH.Domain.Entities
 
         public Person()
         {
-            ID = null;
+            ID = -1;
             FirstName = "";
             MiddleName = "";
             LastName = "";
@@ -46,7 +46,7 @@ namespace AH.Domain.Entities
 
         public Person(string firstName, string middleName, string lastName, char gender, DateTime birthDate, Country country, string phone, User user)
         {
-            ID = null;
+            ID = -1;
             FirstName = firstName;
             MiddleName = middleName;
             LastName = lastName;

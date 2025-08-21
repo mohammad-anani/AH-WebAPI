@@ -8,7 +8,7 @@ namespace AH.Domain.Entities
 {
     public class Service
     {
-        public int? ID { get; set; }
+        public int ID { get; set; }
         public Patient Patient { get; set; }
 
         public DateTime ScheduledDate { get; set; }
@@ -33,7 +33,7 @@ namespace AH.Domain.Entities
         // Empty constructor
         public Service()
         {
-            ID = null;
+            ID = -1;
             Patient = new Patient();
             ScheduledDate = DateTime.MinValue;
             ActualStartingDate = null;
@@ -67,7 +67,7 @@ namespace AH.Domain.Entities
         // Constructor without ID parameter
         public Service(Patient patient, DateTime scheduledDate, DateTime? actualStartingDate, string reason, string? result, DateTime? resultDate, string status, string? notes, Bill bill, Receptionist createdByReceptionist)
         {
-            ID = null;
+            ID = -1;
             Patient = patient;
             ScheduledDate = scheduledDate;
             ActualStartingDate = actualStartingDate;

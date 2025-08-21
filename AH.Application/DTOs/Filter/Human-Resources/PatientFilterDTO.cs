@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 
 namespace AH.Application.DTOs.Filter
 {
-    public class PatientFilterDTO
+    public class PatientFilterDTO:PersonFilter,IFilterable
     {
-        // Empty filter DTO class
+        public string? Sort { get; set; }
+        public bool? Order { get; set; }
+        public int? Page { get; set; }
+
+        public int? CreatedByReceptionistID { get; set; }
+
+        public DateTime? CreatedAtFrom { get; set; }
+
+        public DateTime? CreatedAtTo { get; set; }
     }
 }

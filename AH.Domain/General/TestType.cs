@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AH.Domain.Entities.Audit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,24 +9,24 @@ namespace AH.Domain.Entities
 {
     public class TestType
     {
-        public int? ID { get; set; }
+        public int ID { get; set; }
         public string Name { get; set; }
         public Department Department { get; set; }
         public int Cost { get; set; }
-        public Admin CreatedByAdmin { get; set; }
+        public AdminAudit CreatedByAdmin { get; set; }
         public DateTime CreatedAt { get; set; }
         
         public TestType()
         {
-            ID = null;
+            ID = -1;
             Name = "";
-            Department = null; // Fix: Don't create new Department to avoid circular dependency
+            Department = new Department(); // Fix: Don't create new Department to avoid circular dependency
             Cost = -1;
-            CreatedByAdmin = null; // Fix: Don't create new Admin to avoid circular dependency
+            CreatedByAdmin = new AdminAudit(); // Fix: Don't create new Admin to avoid circular dependency
             CreatedAt = DateTime.MinValue;
         }
 
-        public TestType(int id, string name, Department department, int cost, Admin createdByAdmin, DateTime createdAt)
+        public TestType(int id, string name, Department department, int cost, AdminAudit createdByAdmin, DateTime createdAt)
         {
             ID = id;
             Name = name;
@@ -35,9 +36,9 @@ namespace AH.Domain.Entities
             CreatedAt = createdAt;
         }
 
-        public TestType(string name, Department department, int cost, Admin createdByAdmin)
+        public TestType(string name, Department department, int cost, AdminAudit createdByAdmin)
         {
-            ID = null;
+            ID = -1;
             Name = name;
             Department = department;
             Cost = cost;

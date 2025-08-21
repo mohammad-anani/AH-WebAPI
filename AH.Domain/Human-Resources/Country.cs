@@ -8,12 +8,12 @@ namespace AH.Domain.Entities
 {
     public class Country
     {
-        public int? ID { get; set; }
+        public int ID { get; set; }
         public string Name { get; set; }
 
         public Country()
         {
-            ID = null;
+            ID = -1;
             Name = "";
         }
 
@@ -25,7 +25,7 @@ namespace AH.Domain.Entities
 
         public Country(string name)
         {
-            ID = null;
+            ID = -1;
             Name = name;
         }
     }

@@ -8,7 +8,7 @@ namespace AH.Domain.Entities
 {
     public class Prescription
     {
-        public int? ID { get; set; }
+        public int ID { get; set; }
         public Appointment Appointment { get; set; }
         public string Diagnosis { get; set; }
         public string Medication { get; set; }
@@ -20,7 +20,7 @@ namespace AH.Domain.Entities
 
         public Prescription()
         {
-            ID = null;
+            ID = -1;
             Appointment = new Appointment();
             Diagnosis = "";
             Medication = "";
@@ -46,7 +46,7 @@ namespace AH.Domain.Entities
 
         public Prescription(Appointment appointment, string diagnosis, string medication, string dosage, string frequency, DateTime medicationStart, DateTime medicationEnd, string notes)
         {
-            ID = null;
+            ID = -1;
             Appointment = appointment;
             Diagnosis = diagnosis;
             Medication = medication;

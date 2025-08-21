@@ -8,13 +8,13 @@ namespace AH.Domain.Entities
 {
     public class User
     {
-        public int? ID { get; set; }
+        public int ID { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
 
         public User()
         {
-            ID = null;
+            ID = -1;
             Email = "";
             Password = "";
         }
@@ -28,7 +28,7 @@ namespace AH.Domain.Entities
 
         public User(string email, string password)
         {
-            ID = null;
+            ID = -1;
             Email = email;
             Password = password;
         }

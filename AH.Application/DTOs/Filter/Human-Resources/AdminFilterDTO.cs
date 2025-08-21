@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace AH.Application.DTOs.Filter
 {
-    public class AdminFilterDTO
+    public class AdminFilterDTO : EmployeeFilter, IFilterable
     {
-        // Empty filter DTO class
+
+       public string? Sort {  get; set; }
+        public bool? Order { get; set; }
+        public int? Page {  get; set; }
     }
 }

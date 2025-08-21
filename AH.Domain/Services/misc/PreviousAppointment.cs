@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AH.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,33 +7,34 @@ using System.Threading.Tasks;
 
 namespace AH.Domain.Entities
 {
-    public class Appointment
+    public class PreviousAppointment
     {
+
         public int ID { get; set; }
-        public PreviousAppointment? PreviousAppointment { get; set; }
+        public int? PreviousAppointmentID { get; set; }
         public Doctor Doctor { get; set; }
         public Service Service { get; set; }
 
-        public Appointment()
+        public PreviousAppointment()
         {
             ID = -1;
-            PreviousAppointment = new PreviousAppointment();
+            PreviousAppointmentID = null;
             Doctor = new Doctor();
             Service = new Service();
         }
 
-        public Appointment(int id, PreviousAppointment? previousAppointment, Doctor doctor, Service service)
+        public PreviousAppointment(int id, int? previousAppointmentID, Doctor doctor, Service service)
         {
             ID = id;
-            PreviousAppointment = previousAppointment;
+            PreviousAppointmentID = previousAppointmentID;
             Doctor = doctor;
             Service = service;
         }
 
-        public Appointment(PreviousAppointment? previousAppointment, Doctor doctor, Service service)
+        public PreviousAppointment(int? previousAppointmentID, Doctor doctor, Service service)
         {
             ID = -1;
-            PreviousAppointment = previousAppointment;
+            PreviousAppointmentID = previousAppointmentID;
             Doctor = doctor;
             Service = service;
         }

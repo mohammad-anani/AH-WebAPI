@@ -8,14 +8,14 @@ namespace AH.Domain.Entities
 {
     public class OperationDoctor
     {
-        public int? ID { get; set; }
+        public int ID { get; set; }
         public Operation Operation { get; set; }
         public Doctor Doctor { get; set; }
         public string Role { get; set; }
 
         public OperationDoctor()
         {
-            ID = null;
+            ID = -1;
             Operation = new Operation();
             Doctor = new Doctor();
             Role = "";
@@ -31,7 +31,7 @@ namespace AH.Domain.Entities
 
         public OperationDoctor(Operation operation, Doctor doctor, string role)
         {
-            ID = null;
+            ID = -1;
             Operation = operation;
             Doctor = doctor;
             Role = role;

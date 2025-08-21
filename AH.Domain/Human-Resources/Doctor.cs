@@ -8,7 +8,7 @@ namespace AH.Domain.Entities
 {
     public class Doctor
     {
-        public int? ID { get; set; }
+        public int ID { get; set; }
 
         public Employee Employee { get; set; }
 
@@ -18,8 +18,8 @@ namespace AH.Domain.Entities
 
         public Doctor()
         {
-            ID = null;
-            Employee = null; // Fix: Don't create new Employee to avoid circular dependency
+            ID = -1;
+            Employee = new Employee(); // Fix: Don't create new Employee to avoid circular dependency
             CostPerAppointment = -1;
             Specialization = "";
         }
@@ -34,7 +34,7 @@ namespace AH.Domain.Entities
 
         public Doctor(Employee employee, int costPerAppointment, string specialization)
         {
-            ID = null;
+            ID = -1;
             Employee = employee;
             CostPerAppointment = costPerAppointment;
             Specialization = specialization;

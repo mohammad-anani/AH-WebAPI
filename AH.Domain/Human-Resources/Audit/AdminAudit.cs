@@ -9,12 +9,12 @@ namespace AH.Domain.Entities.Audit
     public class AdminAudit
     {
 
-        public int? ID { get; set; }
+        public int ID { get; set; }
         public EmployeeAudit Employee { get; set; }
 
         public AdminAudit()
         {
-            ID = null;
+            ID = -1;
             Employee = new EmployeeAudit();
         }
 
@@ -26,7 +26,7 @@ namespace AH.Domain.Entities.Audit
 
         public AdminAudit(EmployeeAudit employee)
         {
-            ID = null;
+            ID = -1;
             Employee = employee;
         }
     }

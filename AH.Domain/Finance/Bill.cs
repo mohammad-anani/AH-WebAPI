@@ -8,12 +8,12 @@ namespace AH.Domain.Entities
 {
     public class Bill
     {
-        public int? ID { get; set; }
+        public int ID { get; set; }
         public int Amount { get; set; }
 
         public Bill()
         {
-            ID = null;
+            ID = -1;
             Amount = -1;
         }
 
@@ -25,7 +25,7 @@ namespace AH.Domain.Entities
 
         public Bill(int amount)
         {
-            ID = null;
+            ID = -1;
             Amount = amount;
         }
     }

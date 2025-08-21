@@ -8,7 +8,7 @@ namespace AH.Domain.Entities
 {
     public class Insurance
     {
-        public int? ID { get; set; }
+        public int ID { get; set; }
 
         public Patient Patient { get; set; }
 
@@ -26,14 +26,14 @@ namespace AH.Domain.Entities
 
         public Insurance()
         {
-            ID = null;
-            Patient = null; // Fix: Don't create new Patient to avoid circular dependency
+            ID = -1;
+            Patient = new Patient(); // Fix: Don't create new Patient to avoid circular dependency
             ProviderName = "";
             Coverage = -1;
             ExpirationDate = DateTime.MinValue;
             IsActive = false;
             CreatedAt = DateTime.MinValue;
-            CreatedByReceptionist = null; // Fix: Don't create new Receptionist to avoid circular dependency
+            CreatedByReceptionist = new Receptionist(); // Fix: Don't create new Receptionist to avoid circular dependency
         }
 
         public Insurance(int id, Patient patient, string providerName, decimal coverage, DateTime expirationDate, bool isActive, DateTime createdAt, Receptionist createdByReceptionist)
@@ -50,7 +50,7 @@ namespace AH.Domain.Entities
 
         public Insurance(Patient patient, string providerName, decimal coverage, DateTime expirationDate, bool isActive, Receptionist createdByReceptionist)
         {
-            ID = null;
+            ID = -1;
             Patient = patient;
             ProviderName = providerName;
             Coverage = coverage;

@@ -21,6 +21,11 @@ namespace AH.Application.DTOs.Filter
         public TimeSpan? ShiftEndFrom { get; set; }
         public TimeSpan? ShiftEndTo { get; set; }
         public int? WorkingDays { get; set; }
+        public DateTime? CreatedAtFrom { get; set; }
+        public DateTime? CreatedAtTo { get; set; }
+        public int? CreatedByAdminID { get; set; }
+
+
 
         // Full constructor
         public EmployeeFilter(
@@ -35,7 +40,10 @@ namespace AH.Application.DTOs.Filter
             TimeSpan? shiftStartTo,
             TimeSpan? shiftEndFrom,
             TimeSpan? shiftEndTo,
-            int? workingDays)
+            int? workingDays,
+            DateTime? createdAtFrom,
+            DateTime? createdAtTo,
+            int? createdByAdminID)
         {
             DepartmentId = departmentId;
             SalaryFrom = salaryFrom;
@@ -49,6 +57,9 @@ namespace AH.Application.DTOs.Filter
             ShiftEndFrom = shiftEndFrom;
             ShiftEndTo = shiftEndTo;
             WorkingDays = workingDays;
+            CreatedAtFrom = createdAtFrom;
+            CreatedAtTo = createdAtTo;
+            CreatedByAdminID = createdByAdminID;
         }
 
         // Parameterless constructor
