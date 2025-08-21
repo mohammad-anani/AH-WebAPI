@@ -23,5 +23,60 @@ namespace AH.Application.DTOs.Filter
         public int? CreatedByReceptionistId { get; set; }
         public DateTime? CreatedAtFrom { get; set; }
         public DateTime? CreatedAtTo { get; set; }
+
+        // Full constructor
+        public ServiceFilter(
+            int? patientId,
+            DateTime? scheduledDateFrom,
+            DateTime? scheduledDateTo,
+            DateTime? actualStartingDateFrom,
+            DateTime? actualStartingDateTo,
+            string? reason,
+            string? result,
+            DateTime? resultDateFrom,
+            DateTime? resultDateTo,
+            byte? status,
+            string? notes,
+            int? billId,
+            int? createdByReceptionistId,
+            DateTime? createdAtFrom,
+            DateTime? createdAtTo)
+        {
+            PatientId = patientId;
+            ScheduledDateFrom = scheduledDateFrom;
+            ScheduledDateTo = scheduledDateTo;
+            ActualStartingDateFrom = actualStartingDateFrom;
+            ActualStartingDateTo = actualStartingDateTo;
+            Reason = reason;
+            Result = result;
+            ResultDateFrom = resultDateFrom;
+            ResultDateTo = resultDateTo;
+            Status = status;
+            Notes = notes;
+            BillId = billId;
+            CreatedByReceptionistId = createdByReceptionistId;
+            CreatedAtFrom = createdAtFrom;
+            CreatedAtTo = createdAtTo;
+        }
+
+        // Parameterless constructor
+        public ServiceFilter()
+        {
+            PatientId = null;
+            ScheduledDateFrom = null;
+            ScheduledDateTo = null;
+            ActualStartingDateFrom = null;
+            ActualStartingDateTo = null;
+            Reason = null;
+            Result = null;
+            ResultDateFrom = null;
+            ResultDateTo = null;
+            Status = null;
+            Notes = null;
+            BillId = null;
+            CreatedByReceptionistId = null;
+            CreatedAtFrom = null;
+            CreatedAtTo = null;
+        }
     }
 }
