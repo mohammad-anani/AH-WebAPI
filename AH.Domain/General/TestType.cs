@@ -1,0 +1,48 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AH.Domain.Entities
+{
+    public class TestType
+    {
+        public int? ID { get; set; }
+        public string Name { get; set; }
+        public Department Department { get; set; }
+        public int Cost { get; set; }
+        public Admin CreatedByAdmin { get; set; }
+        public DateTime CreatedAt { get; set; }
+        
+        public TestType()
+        {
+            ID = null;
+            Name = "";
+            Department = null; // Fix: Don't create new Department to avoid circular dependency
+            Cost = -1;
+            CreatedByAdmin = null; // Fix: Don't create new Admin to avoid circular dependency
+            CreatedAt = DateTime.MinValue;
+        }
+
+        public TestType(int id, string name, Department department, int cost, Admin createdByAdmin, DateTime createdAt)
+        {
+            ID = id;
+            Name = name;
+            Department = department;
+            Cost = cost;
+            CreatedByAdmin = createdByAdmin;
+            CreatedAt = createdAt;
+        }
+
+        public TestType(string name, Department department, int cost, Admin createdByAdmin)
+        {
+            ID = null;
+            Name = name;
+            Department = department;
+            Cost = cost;
+            CreatedByAdmin = createdByAdmin;
+            CreatedAt = DateTime.MinValue;
+        }
+    }
+}
