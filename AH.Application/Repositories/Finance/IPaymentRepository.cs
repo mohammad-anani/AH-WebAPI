@@ -1,4 +1,5 @@
 using AH.Domain.Entities;
+using AH.Application.DTOs.Row;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace AH.Application.Repositories
 {
     public interface IPaymentRepository
     {
-        Task<IEnumerable<Payment>> GetAllByBillIDAsync(int billID);
+        Task<Tuple<IEnumerable<PaymentRowDTO>, int>> GetAllByBillIDAsync(int billID);
         Task<Payment> GetByIdAsync(int id);
         Task<int> AddAsync(Payment payment);
        

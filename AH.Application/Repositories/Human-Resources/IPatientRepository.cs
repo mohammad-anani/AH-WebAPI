@@ -1,5 +1,6 @@
 ﻿using AH.Domain.Entities;
 using AH.Application.DTOs.Filter;
+using AH.Application.DTOs.Row;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +11,9 @@ namespace AH.Application.Repositories
 {
     public interface IPatientRepository
     {
-        Task<Tuple<IEnumerable<Patient>, int>> GetAllAsync(PatientFilterDTO filterDTO);
+        Task<Tuple<IEnumerable<PatientRowDTO>, int>> GetAllAsync(PatientFilterDTO filterDTO);
 
-        Task<IEnumerable<Patient>> GetForDoctorAsync(int doctorID);
+        Task<Tuple<IEnumerable<PatientRowDTO>, int>> GetForDoctorAsync(int doctorID);
 
         Task<Patient> GetByIdAsync(int id);
         Task<int> AddAsync(Patient patient);

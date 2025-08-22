@@ -9,32 +9,27 @@ namespace AH.Application.DTOs.Row
     public class PrescriptionRowDTO
     {
         public int ID { get; set; }
-        public int AppointmentID { get; set; }
-        public string Medication { get; set; }
-        public string Dosage { get; set; }
-        public string Frequency { get; set; }
-        public bool IsOnMedication { get; set; }
+        public string PatientFullName { get; set; }
+        public string DoctorFullName { get; set; }
+        public string MedicationName { get; set; }
+        public DateTime PrescribedDate { get; set; }
 
-        // Empty constructor with defaults
-        public PrescriptionRowDTO()
-        {
-            ID = 0;
-            AppointmentID = 0;
-            Medication = string.Empty;
-            Dosage = string.Empty;
-            Frequency = string.Empty;
-            IsOnMedication = false;
-        }
-
-        // Full constructor
-        public PrescriptionRowDTO(int id, int appointmentID, string medication, string dosage, string frequency, bool isOnMedication)
+        public PrescriptionRowDTO(int id, string patientFullName, string doctorFullName, string medicationName, DateTime prescribedDate)
         {
             ID = id;
-            AppointmentID = appointmentID;
-            Medication = medication;
-            Dosage = dosage;
-            Frequency = frequency;
-            IsOnMedication = isOnMedication;
+            PatientFullName = patientFullName;
+            DoctorFullName = doctorFullName;
+            MedicationName = medicationName;
+            PrescribedDate = prescribedDate;
+        }
+
+        public PrescriptionRowDTO()
+        {
+            ID = -1;
+            PatientFullName = string.Empty;
+            DoctorFullName = string.Empty;
+            MedicationName = string.Empty;
+            PrescribedDate = DateTime.MinValue;
         }
     }
 

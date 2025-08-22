@@ -8,7 +8,7 @@ namespace AH.Application.DTOs.Row
 {
     public class PatientRowDTO
     {
-     public int ID { get; set; }
+        public int ID { get; set; }
         public string FullName { get; set; }
 
         public PatientRowDTO(int id, string fullName)
@@ -22,6 +22,5 @@ namespace AH.Application.DTOs.Row
             ID = -1;
             FullName = string.Empty;
         }
-
     }
 }

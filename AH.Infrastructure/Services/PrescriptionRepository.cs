@@ -3,6 +3,7 @@ using AH.Application.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AH.Application.DTOs.Row;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,7 +21,7 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Prescription>> GetAllByAppointmentIDAsync(int appointmentID)
+        public async Task<Tuple<IEnumerable<PrescriptionRowDTO>, int>> GetAllByAppointmentIDAsync(int appointmentID)
         {
             throw new NotImplementedException();
         }

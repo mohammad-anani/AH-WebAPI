@@ -10,7 +10,7 @@ namespace AH.Infrastructure.Repositories
 {
     public class OperationDoctorRepository : IOperationDoctorRepository
     {
-        public async Task<IEnumerable<OperationDoctor>> GetAllByOperationIDAsync(int operationID)
+        public async Task<Tuple<IEnumerable<OperationDoctor>, int>> GetAllByOperationIDAsync(int operationID)
         {
             // Implementation placeholder
             throw new NotImplementedException();

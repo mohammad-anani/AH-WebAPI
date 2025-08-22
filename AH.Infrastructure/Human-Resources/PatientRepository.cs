@@ -6,18 +6,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AH.Application.DTOs.Row;
 
 namespace AH.Infrastructure.Repositories
 {
     public class PatientRepository : IPatientRepository
     {
-        public async Task<Tuple<IEnumerable<Patient>, int>> GetAllAsync(PatientFilterDTO filterDTO)
+        public async Task<Tuple<IEnumerable<PatientRowDTO>, int>> GetAllAsync(PatientFilterDTO filterDTO)
         {
             // Implementation placeholder
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Patient>> GetForDoctorAsync(int doctorID)
+        public async Task<Tuple<IEnumerable<PatientRowDTO>, int>> GetForDoctorAsync(int doctorID)
         {
             // Implementation placeholder
             throw new NotImplementedException();

@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AH.Application.DTOs.Row;
 
 namespace AH.Infrastructure.Repositories
 {
     public class InsuranceRepository : IInsuranceRepository
     {
-        public async Task<IEnumerable<Insurance>> GetAllByPatientIDAsync(int patiendID)
+        public async Task<Tuple<IEnumerable<InsuranceRowDTO>, int>> GetAllByPatientIDAsync(int patiendID)
         {
             // Implementation placeholder
             throw new NotImplementedException();

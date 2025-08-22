@@ -5,16 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AH.Application.DTOs.Row;
 
 namespace AH.Application.Repositories
 {
     public interface IAppointmentRepository:IService
     {
-        Task<Tuple<IEnumerable<Appointment>, int>> GetAllAsync(AppointmentFilterDTO filterDTO);
+        Task<Tuple<IEnumerable<AppointmentRowDTO>, int>> GetAllAsync(AppointmentFilterDTO filterDTO);
 
-        Task<IEnumerable<Appointment>> GetAllByDoctorIDAsync(int doctorID);
+        Task<Tuple<IEnumerable<AppointmentRowDTO>, int>> GetAllByDoctorIDAsync(int doctorID);
 
-        Task<IEnumerable<Appointment>> GetAllByPatientIDAsync(int patientID);
+        Task<Tuple<IEnumerable<AppointmentRowDTO>, int>> GetAllByPatientIDAsync(int patientID);
 
         Task<Appointment> GetByIdAsync(int id);
         Task<int> AddAsync(Appointment appointment);

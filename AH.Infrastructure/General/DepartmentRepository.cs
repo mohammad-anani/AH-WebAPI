@@ -5,13 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AH.Application.DTOs.Row;
 using System.Threading.Tasks;
 
 namespace AH.Infrastructure.Repositories
 {
     public class DepartmentRepository : IDepartmentRepository
     {
-        public async Task<Tuple<IEnumerable<Department>, int>> GetAllAsync(DepartmentFilterDTO filterDTO)
+        public async Task<Tuple<IEnumerable<DepartmentRowDTO>, int>> GetAllAsync(DepartmentFilterDTO filterDTO)
         {
             // Implementation placeholder
             throw new NotImplementedException();

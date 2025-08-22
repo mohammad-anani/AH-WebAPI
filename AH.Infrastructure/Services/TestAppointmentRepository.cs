@@ -6,18 +6,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AH.Application.DTOs.Row;
 
 namespace AH.Infrastructure.Repositories
 {
     public class TestAppointmentRepository : ITestAppointmentRepository
     {
-        public async Task<Tuple<IEnumerable<TestAppointment>, int>> GetAllAsync(TestAppointmentFilterDTO filterDTO)
+        public async Task<Tuple<IEnumerable<TestAppointmentRowDTO>, int>> GetAllAsync(TestAppointmentFilterDTO filterDTO)
         {
             // Implementation placeholder
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Appointment>> GetAllByPatientIDAsync(int patientID)
+        public async Task<Tuple<IEnumerable<AppointmentRowDTO>, int>> GetAllByPatientIDAsync(int patientID)
         {
             // Implementation placeholder
             throw new NotImplementedException();

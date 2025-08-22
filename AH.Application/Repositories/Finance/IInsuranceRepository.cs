@@ -3,13 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AH.Application.DTOs.Row;
 using System.Threading.Tasks;
 
 namespace AH.Application.Repositories
 {
     public interface IInsuranceRepository
     {
-        Task<IEnumerable<Insurance>> GetAllByPatientIDAsync(int patiendID);
+        Task<Tuple<IEnumerable<InsuranceRowDTO>, int>> GetAllByPatientIDAsync(int patiendID);
         Task<Insurance> GetByIdAsync(int id);
 
         Task<bool> Renew(int id);

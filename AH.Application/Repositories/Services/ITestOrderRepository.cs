@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace AH.Application.Repositories
 {
     public interface ITestOrderRepository
     {
-        Task<IEnumerable<TestOrder>> GetAllAsync();
+        Task<Tuple<IEnumerable<TestOrderRowDTO>, int>> GetAllAsync();
         Task<TestOrder> GetByIdAsync(int id);
         Task<int> AddAsync(TestOrder testOrder);
         Task<bool> UpdateAsync(TestOrder testOrder);

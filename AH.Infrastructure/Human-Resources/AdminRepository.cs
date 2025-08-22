@@ -4,6 +4,7 @@ using AH.Application.DTOs.Filter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AH.Application.DTOs.Row;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace AH.Infrastructure.Repositories
 {
     public class AdminRepository : IAdminRepository
     {
-        public async Task<Tuple<IEnumerable<Admin>, int>> GetAllAsync(AdminFilterDTO filterDTO)
+        public async Task<Tuple<IEnumerable<AdminRowDTO>, int>> GetAllAsync(AdminFilterDTO filterDTO)
         {
             // Implementation placeholder
             throw new NotImplementedException();

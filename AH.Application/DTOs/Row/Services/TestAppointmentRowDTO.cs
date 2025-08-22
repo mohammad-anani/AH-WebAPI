@@ -11,33 +11,25 @@ namespace AH.Application.DTOs.Row
         public int ID { get; set; }
         public string PatientFullName { get; set; }
         public string TestName { get; set; }
-        public bool IsOrdered { get; set; }
-        public DateTime ScheduledDate { get; set; }
+        public DateTime AppointmentDateTime { get; set; }
         public string Status { get; set; }
-        public bool IsPaid { get; set; }
 
-        // Empty constructor with defaults
-        public TestAppointmentRowDTO()
-        {
-            ID = 0;
-            PatientFullName = string.Empty;
-            TestName = string.Empty;
-            IsOrdered = false;
-            ScheduledDate = DateTime.MinValue;
-            Status = string.Empty;
-            IsPaid = false;
-        }
-
-        // Full constructor
-        public TestAppointmentRowDTO(int id, string patientFullName, string testName, bool isOrdered, DateTime scheduledDate, string status, bool isPaid)
+        public TestAppointmentRowDTO(int id, string patientFullName, string testName, DateTime appointmentDateTime, string status)
         {
             ID = id;
             PatientFullName = patientFullName;
             TestName = testName;
-            IsOrdered = isOrdered;
-            ScheduledDate = scheduledDate;
+            AppointmentDateTime = appointmentDateTime;
             Status = status;
-            IsPaid = isPaid;
+        }
+
+        public TestAppointmentRowDTO()
+        {
+            ID = -1;
+            PatientFullName = string.Empty;
+            TestName = string.Empty;
+            AppointmentDateTime = DateTime.MinValue;
+            Status = string.Empty;
         }
     }
 }

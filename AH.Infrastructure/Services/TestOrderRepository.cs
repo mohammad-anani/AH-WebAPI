@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AH.Application.DTOs.Row;
 
 namespace AH.Infrastructure.Repositories
 {
@@ -20,7 +21,7 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        Task<IEnumerable<TestOrder>> ITestOrderRepository.GetAllAsync()
+        Task<Tuple<IEnumerable<TestOrderRowDTO>, int>> ITestOrderRepository.GetAllAsync()
         {
             throw new NotImplementedException();
         }

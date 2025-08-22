@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AH.Application.DTOs.Row;
 
 namespace AH.Application.Repositories
 {
     public interface IAdminRepository:IEmployee
     {
-        Task<Tuple<IEnumerable<Admin>, int>> GetAllAsync(AdminFilterDTO filterDTO);
+        Task<Tuple<IEnumerable<AdminRowDTO>, int>> GetAllAsync(AdminFilterDTO filterDTO);
         Task<Admin> GetByIdAsync(int id);
         Task<int> AddAsync(Admin admin);
         Task<bool> UpdateAsync(Admin admin);

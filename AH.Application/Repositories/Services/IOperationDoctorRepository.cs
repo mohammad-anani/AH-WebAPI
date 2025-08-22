@@ -9,7 +9,7 @@ namespace AH.Application.Repositories
 {
     public interface IOperationDoctorRepository
     {
-        Task<IEnumerable<OperationDoctor>> GetAllByOperationIDAsync(int operationID);
+        Task<Tuple<IEnumerable<OperationDoctor>, int>> GetAllByOperationIDAsync(int operationID);
         Task<int> AddUpdateAsync(OperationDoctor operationDoctor);
        
     }
