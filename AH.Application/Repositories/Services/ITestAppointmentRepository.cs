@@ -1,4 +1,5 @@
 using AH.Domain.Entities;
+using AH.Application.DTOs.Filter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace AH.Application.Repositories
 {
     public interface ITestAppointmentRepository:IService
     {
-        Task<IEnumerable<TestAppointment>> GetAllAsync();
+        Task<Tuple<IEnumerable<TestAppointment>, int>> GetAllAsync(TestAppointmentFilterDTO filterDTO);
 
         Task<IEnumerable<Appointment>> GetAllByPatientIDAsync(int patientID);
         Task<TestAppointment> GetByIdAsync(int id);

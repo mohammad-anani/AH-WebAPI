@@ -1,4 +1,5 @@
 using AH.Domain.Entities;
+using AH.Application.DTOs.Filter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace AH.Application.Repositories
 {
     public interface IReceptionistRepository:IEmployee
     {
-        Task<IEnumerable<Receptionist>> GetAllAsync();
+        Task<Tuple<IEnumerable<Receptionist>, int>> GetAllAsync(ReceptionistFilterDTO filterDTO);
         Task<Receptionist> GetByIdAsync(int id);
         Task<int> AddAsync(Receptionist receptionist);
         Task<bool> UpdateAsync(Receptionist receptionist);

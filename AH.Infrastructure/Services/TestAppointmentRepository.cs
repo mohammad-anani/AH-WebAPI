@@ -1,5 +1,6 @@
 using AH.Domain.Entities;
 using AH.Application.Repositories;
+using AH.Application.DTOs.Filter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,58 +11,69 @@ namespace AH.Infrastructure.Repositories
 {
     public class TestAppointmentRepository : ITestAppointmentRepository
     {
-        public async Task<IEnumerable<TestAppointment>> GetAllAsync()
+        public async Task<Tuple<IEnumerable<TestAppointment>, int>> GetAllAsync(TestAppointmentFilterDTO filterDTO)
         {
+            // Implementation placeholder
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Appointment>> GetAllByPatientIDAsync(int patientID)
+        {
+            // Implementation placeholder
             throw new NotImplementedException();
         }
 
         public async Task<TestAppointment> GetByIdAsync(int id)
         {
+            // Implementation placeholder
             throw new NotImplementedException();
         }
 
         public async Task<int> AddAsync(TestAppointment testAppointment)
         {
+            // Implementation placeholder
+            throw new NotImplementedException();
+        }
+
+        public async Task<int> AddFromTestOrderAsync(TestAppointment testAppointment)
+        {
+            // Implementation placeholder
             throw new NotImplementedException();
         }
 
         public async Task<bool> UpdateAsync(TestAppointment testAppointment)
         {
+            // Implementation placeholder
             throw new NotImplementedException();
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
+            // Implementation placeholder
             throw new NotImplementedException();
         }
 
-        Task<IEnumerable<Appointment>> ITestAppointmentRepository.GetAllByPatientIDAsync(int patientID)
+        public async Task<bool> StartAsync(int id, string? notes)
         {
+            // Implementation placeholder
             throw new NotImplementedException();
         }
 
-        Task<int> ITestAppointmentRepository.AddFromTestOrderAsync(TestAppointment testAppointment)
+        public async Task<bool> CancelAsync(int id, string? notes)
         {
+            // Implementation placeholder
             throw new NotImplementedException();
         }
 
-        Task<bool> IService.StartAsync(int id, string? notes)
+        public async Task<bool> CompleteAsync(int id, string? notes, string result)
         {
+            // Implementation placeholder
             throw new NotImplementedException();
         }
 
-        Task<bool> IService.CancelAsync(int id, string? notes)
+        public async Task<bool> RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
         {
-            throw new NotImplementedException();
-        }
-
-        Task<bool> IService.CompleteAsync(int id, string? notes, string result)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<bool> IService.RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
-        {
+            // Implementation placeholder
             throw new NotImplementedException();
         }
     }

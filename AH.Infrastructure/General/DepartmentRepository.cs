@@ -1,5 +1,6 @@
 using AH.Domain.Entities;
 using AH.Application.Repositories;
+using AH.Application.DTOs.Filter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace AH.Infrastructure.Repositories
 {
     public class DepartmentRepository : IDepartmentRepository
     {
-        public async Task<IEnumerable<Department>> GetAllAsync()
+        public async Task<Tuple<IEnumerable<Department>, int>> GetAllAsync(DepartmentFilterDTO filterDTO)
         {
             // Implementation placeholder
             throw new NotImplementedException();

@@ -1,4 +1,5 @@
 using AH.Domain.Entities;
+using AH.Application.DTOs.Filter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace AH.Application.Repositories
 {
     public interface IAdminRepository:IEmployee
     {
-        Task<IEnumerable<Admin>> GetAllAsync();
+        Task<Tuple<IEnumerable<Admin>, int>> GetAllAsync(AdminFilterDTO filterDTO);
         Task<Admin> GetByIdAsync(int id);
         Task<int> AddAsync(Admin admin);
         Task<bool> UpdateAsync(Admin admin);

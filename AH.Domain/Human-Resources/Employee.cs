@@ -9,7 +9,7 @@ namespace AH.Domain.Entities
 {
     public class Employee
     {
-        public int ID { get; set; }
+     
 
         public Person Person { get; set; }
 
@@ -23,9 +23,9 @@ namespace AH.Domain.Entities
 
         public int WorkingDays { get; set; }
 
-        public DateTime ShiftStart { get; set; }
+        public TimeOnly ShiftStart { get; set; }
 
-        public DateTime ShiftEnd { get; set; }
+        public TimeOnly ShiftEnd { get; set; }
 
         public AdminAudit CreatedByAdmin { get; set; }   
 
@@ -34,22 +34,20 @@ namespace AH.Domain.Entities
 
         public Employee()
         {
-            ID = -1;
             Person = new Person();
             Department = new Department(); // Fix: Don't create new Department to avoid circular dependency
             Salary = -1;
             HireDate = DateTime.MinValue;
             LeaveDate = null;
             WorkingDays = -1;
-            ShiftStart = DateTime.MinValue;
-            ShiftEnd = DateTime.MinValue;
+            ShiftStart = TimeOnly.MinValue;
+            ShiftEnd = TimeOnly.MinValue;
             CreatedByAdmin = new AdminAudit(); // Fix: Don't create new AdminAudit to avoid circular dependency
             CreatedAt = DateTime.MinValue;
         }
 
-        public Employee(int id, Person person, Department department, int salary, DateTime hireDate, DateTime? leaveDate, int workingDays, DateTime shiftStart, DateTime shiftEnd, AdminAudit createdByAdmin, DateTime createdAt)
+        public Employee( Person person, Department department, int salary, DateTime hireDate, DateTime? leaveDate, int workingDays, TimeOnly shiftStart, TimeOnly shiftEnd, AdminAudit createdByAdmin, DateTime createdAt)
         {
-            ID = id;
             Person = person;
             Department = department;
             Salary = salary;
@@ -62,9 +60,8 @@ namespace AH.Domain.Entities
             CreatedAt = createdAt;
         }
 
-        public Employee(Person person, Department department, int salary, DateTime hireDate, DateTime? leaveDate, int workingDays, DateTime shiftStart, DateTime shiftEnd, AdminAudit createdByAdmin)
+        public Employee(Person person, Department department, int salary, DateTime hireDate, DateTime? leaveDate, int workingDays, TimeOnly shiftStart, TimeOnly shiftEnd, AdminAudit createdByAdmin)
         {
-            ID = -1;
             Person = person;
             Department = department;
             Salary = salary;

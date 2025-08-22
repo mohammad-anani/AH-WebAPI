@@ -23,10 +23,11 @@ namespace AH.Domain.Entities
             Name = name;
         }
 
-        public Country(string name)
+    
+        public Country(int id)
         {
-            ID = -1;
-            Name = name;
+            ID = id;
+            Name = "";
         }
     }
 }

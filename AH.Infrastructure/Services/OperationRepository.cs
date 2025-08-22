@@ -1,5 +1,6 @@
 using AH.Domain.Entities;
 using AH.Application.Repositories;
+using AH.Application.DTOs.Filter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,19 @@ namespace AH.Infrastructure.Repositories
 {
     public class OperationRepository : IOperationRepository
     {
-        public async Task<IEnumerable<Operation>> GetAllAsync()
+        public async Task<Tuple<IEnumerable<Operation>, int>> GetAllAsync(OperationFilterDTO filterDTO)
+        {
+            // Implementation placeholder
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Appointment>> GetAllByDoctorIDAsync(int doctorID)
+        {
+            // Implementation placeholder
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Appointment>> GetAllByPatientIDAsync(int patientID)
         {
             // Implementation placeholder
             throw new NotImplementedException();
@@ -40,58 +53,27 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        Task<IEnumerable<Operation>> IOperationRepository.GetAllAsync()
+        public async Task<bool> StartAsync(int id, string? notes)
         {
+            // Implementation placeholder
             throw new NotImplementedException();
         }
 
-        Task<IEnumerable<Appointment>> IOperationRepository.GetAllByDoctorIDAsync(int doctorID)
+        public async Task<bool> CancelAsync(int id, string? notes)
         {
+            // Implementation placeholder
             throw new NotImplementedException();
         }
 
-        Task<IEnumerable<Appointment>> IOperationRepository.GetAllByPatientIDAsync(int patientID)
+        public async Task<bool> CompleteAsync(int id, string? notes, string result)
         {
+            // Implementation placeholder
             throw new NotImplementedException();
         }
 
-        Task<Operation> IOperationRepository.GetByIdAsync(int id)
+        public async Task<bool> RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
         {
-            throw new NotImplementedException();
-        }
-
-        Task<int> IOperationRepository.AddAsync(Operation operation)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<bool> IOperationRepository.UpdateAsync(Operation operation)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<bool> IOperationRepository.DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<bool> IService.StartAsync(int id, string? notes)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<bool> IService.CancelAsync(int id, string? notes)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<bool> IService.CompleteAsync(int id, string? notes, string result)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<bool> IService.RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
-        {
+            // Implementation placeholder
             throw new NotImplementedException();
         }
     }

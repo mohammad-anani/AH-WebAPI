@@ -1,4 +1,5 @@
 using AH.Domain.Entities;
+using AH.Application.DTOs.Filter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace AH.Application.Repositories
 {
     public interface IDoctorRepository:IEmployee
     {
-        Task<IEnumerable<Doctor>> GetAllAsync();
+        Task<Tuple<IEnumerable<Doctor>, int>> GetAllAsync(DoctorFilterDTO filterDTO);
         Task<Doctor> GetByIdAsync(int id);
         Task<int> AddAsync(Doctor doctor);
         Task<bool> UpdateAsync(Doctor doctor);
