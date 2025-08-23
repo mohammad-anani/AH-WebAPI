@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AH.Domain.Entities
+﻿namespace AH.Domain.Entities
 {
     public class Person
     {
@@ -29,7 +23,7 @@ namespace AH.Domain.Entities
             User = new User();
         }
 
-        public Person( string firstName, string middleName, string lastName, char gender, DateTime birthDate, Country country, string phone, User user)
+        public Person(string firstName, string middleName, string lastName, char gender, DateTime birthDate, Country country, string phone, User user)
         {
             FirstName = firstName;
             MiddleName = middleName;
@@ -40,7 +34,5 @@ namespace AH.Domain.Entities
             Phone = phone;
             User = user;
         }
-
-   
     }
 }

@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace AH.Application.DTOs.Row
 {
     public class PaymentRowDTO
     {
         public int ID { get; set; }
-      
+
         public int Amount { get; set; }
         public string Method { get; set; }
 
@@ -26,6 +20,5 @@ namespace AH.Application.DTOs.Row
             Amount = 0;
             Method = string.Empty;
         }
-
     }
 }

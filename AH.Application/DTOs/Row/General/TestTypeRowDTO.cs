@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace AH.Application.DTOs.Row
 {
     public class TestTypeRowDTO
@@ -28,6 +22,5 @@ namespace AH.Application.DTOs.Row
             DepartmentName = string.Empty;
             Cost = 0;
         }
-
     }
 }

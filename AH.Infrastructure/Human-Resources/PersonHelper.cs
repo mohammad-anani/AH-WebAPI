@@ -1,9 +1,7 @@
 ﻿using AH.Application.DTOs.Filter;
 using AH.Domain.Entities;
 using Microsoft.Data.SqlClient;
-using System;
 using System.Data;
-using System.Threading.Tasks;
 
 namespace AH.Infrastructure.Helpers
 {

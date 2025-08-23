@@ -1,18 +1,13 @@
-using AH.Domain.Entities;
-using AH.Application.Repositories;
 using AH.Application.DTOs.Filter;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AH.Application.DTOs.Row;
+using AH.Application.IRepositories;
+using AH.Domain.Entities;
 
 namespace AH.Infrastructure.Repositories
 {
     public class ReceptionistRepository : IReceptionistRepository
     {
-        public async Task<Tuple<IEnumerable<ReceptionistRowDTO>, int>> GetAllAsync(ReceptionistFilterDTO filterDTO)
+        public async Task<(IEnumerable<ReceptionistRowDTO> Items, int Count)> GetAllAsync(ReceptionistFilterDTO filterDTO)
         {
             // Implementation placeholder
             throw new NotImplementedException();

@@ -1,21 +1,22 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
+﻿using AH.Infrastructure.Repositories;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Logging;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AH.Infrastructure.Helpers
 {
     public static class ADOHelper
     {
-        static string _connectionString=ConfigHelper.GetConnectionString();
+        private static readonly string _connectionString = ConfigHelper.GetConnectionString();
 
+        /// <summary>
+        /// Execute a stored procedure that returns rows (via SqlDataReader).
+        /// </summary>
         public static async Task<Exception?> ExecuteReaderAsync(
-       string spName,
-       Action<SqlCommand> addParameters,
-       Func<SqlDataReader, Task> readRowAsync)
+            string spName,
+            Action<SqlCommand>? addParameters,
+            Action<SqlDataReader, SqlCommand> readRow,
+            Action<SqlCommand>? postAction = null) // <-- added
         {
             await using var conn = new SqlConnection(_connectionString);
             await using var cmd = new SqlCommand(spName, conn)
@@ -23,18 +24,23 @@ namespace AH.Infrastructure.Helpers
                 CommandType = CommandType.StoredProcedure
             };
 
-            // Add parameters via delegate
             addParameters?.Invoke(cmd);
 
             try
             {
                 await conn.OpenAsync();
 
-                await using var reader = await cmd.ExecuteReaderAsync();
+                await using (var reader = await cmd.ExecuteReaderAsync())
+                {
+
                 while (await reader.ReadAsync())
                 {
-                    await readRowAsync(reader);
+                    readRow(reader, cmd);
                 }
+                }
+
+                // Run optional post action (e.g., check output params)
+                postAction?.Invoke(cmd);
             }
             catch (Exception ex)
             {
@@ -44,35 +50,55 @@ namespace AH.Infrastructure.Helpers
             return null;
         }
 
-
-        // Reusable method for SP that returns affected rows
-        public static int ExecuteNonQuery(string spName, Action<SqlCommand> addParameters)
+        /// <summary>
+        /// Execute a stored procedure that modifies data (INSERT/UPDATE/DELETE).
+        /// Returns number of affected rows.
+        /// </summary>
+        public static async Task<int> ExecuteNonQueryAsync(
+            string spName,
+            Action<SqlCommand>? addParameters,
+            Action<SqlCommand>? postAction = null) // <-- added
         {
-            using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(spName, conn)
+            await using var conn = new SqlConnection(_connectionString);
+            await using var cmd = new SqlCommand(spName, conn)
             {
                 CommandType = CommandType.StoredProcedure
             };
 
             addParameters?.Invoke(cmd);
 
-            conn.Open();
-            return cmd.ExecuteNonQuery();
+            await conn.OpenAsync();
+            int affected = await cmd.ExecuteNonQueryAsync();
+
+            // Run optional post action (e.g., read OUTPUT params)
+            postAction?.Invoke(cmd);
+
+            return affected;
         }
 
-        // Reusable method for SP with output parameter
-        public static T ExecuteScalar<T>(string spName, Action<SqlCommand> addParameters)
+        /// <summary>
+        /// Execute a stored procedure and return a single scalar value.
+        /// </summary>
+        public static async Task<object?> ExecuteScalarAsync(
+            string spName,
+            Action<SqlCommand>? addParameters,
+            Action<SqlCommand>? postAction = null) // <-- added
         {
-            using var conn = new SqlConnection(_connectionString);
-            using var cmd = new SqlCommand(spName, conn)
+            await using var conn = new SqlConnection(_connectionString);
+            await using var cmd = new SqlCommand(spName, conn)
             {
                 CommandType = CommandType.StoredProcedure
             };
 
             addParameters?.Invoke(cmd);
 
-            conn.Open();
-            return (T)cmd.ExecuteScalar();
+            await conn.OpenAsync();
+            object? result = await cmd.ExecuteScalarAsync();
+
+            // Run optional post action (e.g., check output params)
+            postAction?.Invoke(cmd);
+
+            return result;
         }
     }
 }

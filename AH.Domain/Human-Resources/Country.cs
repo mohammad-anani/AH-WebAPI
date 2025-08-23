@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AH.Domain.Entities
+﻿namespace AH.Domain.Entities
 {
     public class Country
     {
@@ -23,7 +17,6 @@ namespace AH.Domain.Entities
             Name = name;
         }
 
-    
         public Country(int id)
         {
             ID = id;

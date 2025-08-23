@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AH.Domain.Entities.Audit;
+﻿using AH.Domain.Entities.Audit;
 
 namespace AH.Domain.Entities
 {
     public class Employee
     {
-     
-
         public Person Person { get; set; }
 
         public Department Department { get; set; }
@@ -27,8 +20,7 @@ namespace AH.Domain.Entities
 
         public TimeOnly ShiftEnd { get; set; }
 
-        public AdminAudit CreatedByAdmin { get; set; }   
-
+        public AdminAudit CreatedByAdmin { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
@@ -46,7 +38,7 @@ namespace AH.Domain.Entities
             CreatedAt = DateTime.MinValue;
         }
 
-        public Employee( Person person, Department department, int salary, DateTime hireDate, DateTime? leaveDate, int workingDays, TimeOnly shiftStart, TimeOnly shiftEnd, AdminAudit createdByAdmin, DateTime createdAt)
+        public Employee(Person person, Department department, int salary, DateTime hireDate, DateTime? leaveDate, int workingDays, TimeOnly shiftStart, TimeOnly shiftEnd, AdminAudit createdByAdmin, DateTime createdAt)
         {
             Person = person;
             Department = department;

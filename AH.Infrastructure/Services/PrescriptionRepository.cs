@@ -1,11 +1,6 @@
-using AH.Domain.Entities;
-using AH.Application.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using AH.Application.DTOs.Row;
-using System.Text;
-using System.Threading.Tasks;
+using AH.Application.IRepositories;
+using AH.Domain.Entities;
 
 namespace AH.Infrastructure.Repositories
 {
@@ -21,7 +16,7 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<Tuple<IEnumerable<PrescriptionRowDTO>, int>> GetAllByAppointmentIDAsync(int appointmentID)
+        public async Task<(IEnumerable<PrescriptionRowDTO> Items, int Count)> GetAllByAppointmentIDAsync(int appointmentID)
         {
             throw new NotImplementedException();
         }

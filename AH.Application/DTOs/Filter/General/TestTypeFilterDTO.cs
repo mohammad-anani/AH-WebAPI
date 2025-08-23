@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace AH.Application.DTOs.Filter
 {
-    public class TestTypeFilterDTO:IFilterable
+    public class TestTypeFilterDTO : IFilterable
     {
         public string? Name { get; set; }
         public int? DepartmentId { get; set; }

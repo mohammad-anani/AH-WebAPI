@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AH.Domain.Entities.Audit
+﻿namespace AH.Domain.Entities.Audit
 {
     public class AdminAudit
     {
-
         public int ID { get; set; }
         public EmployeeAudit Employee { get; set; }
 

@@ -1,15 +1,7 @@
-﻿using AH.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AH.Domain.Entities
+﻿namespace AH.Domain.Entities
 {
     public class PreviousAppointment
     {
-
         public int ID { get; set; }
         public int? PreviousAppointmentID { get; set; }
         public Doctor Doctor { get; set; }

@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AH.Domain.Entities
+﻿namespace AH.Domain.Entities
 {
     public class Service
     {
-   
         public Patient Patient { get; set; }
 
         public DateTime ScheduledDate { get; set; }
@@ -47,7 +40,7 @@ namespace AH.Domain.Entities
         }
 
         // All-fields constructor
-        public Service( Patient patient, DateTime scheduledDate, DateTime? actualStartingDate, string reason, string? result, DateTime? resultDate, string status, string? notes, Bill bill, Receptionist createdByReceptionist, DateTime createdAt)
+        public Service(Patient patient, DateTime scheduledDate, DateTime? actualStartingDate, string reason, string? result, DateTime? resultDate, string status, string? notes, Bill bill, Receptionist createdByReceptionist, DateTime createdAt)
         {
             Patient = patient;
             ScheduledDate = scheduledDate;
@@ -78,4 +71,4 @@ namespace AH.Domain.Entities
             CreatedAt = DateTime.MinValue;
         }
     }
-    }
+}

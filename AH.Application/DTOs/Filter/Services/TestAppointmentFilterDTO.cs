@@ -1,14 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace AH.Application.DTOs.Filter
 {
-    public class TestAppointmentFilterDTO:ServiceFilter,IFilterable
+    public class TestAppointmentFilterDTO : ServiceFilter, IFilterable
     {
-
         public int? TestOrderID { get; set; }
 
         public int? TestTypeID { get; set; }

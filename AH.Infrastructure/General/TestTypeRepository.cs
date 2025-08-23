@@ -1,18 +1,13 @@
-using AH.Domain.Entities;
-using AH.Application.Repositories;
 using AH.Application.DTOs.Filter;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AH.Application.DTOs.Row;
+using AH.Application.IRepositories;
+using AH.Domain.Entities;
 
 namespace AH.Infrastructure.Repositories
 {
     public class TestTypeRepository : ITestTypeRepository
     {
-        public async Task<Tuple<IEnumerable<TestTypeRowDTO>, int>> GetAllAsync(TestTypeFilterDTO filterDTO)
+        public async Task<(IEnumerable<TestTypeRowDTO> Items, int Count)> GetAllAsync(TestTypeFilterDTO filterDTO)
         {
             // Implementation placeholder
             throw new NotImplementedException();

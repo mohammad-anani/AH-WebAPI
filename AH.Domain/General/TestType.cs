@@ -1,9 +1,4 @@
 ﻿using AH.Domain.Entities.Audit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AH.Domain.Entities
 {
@@ -15,7 +10,7 @@ namespace AH.Domain.Entities
         public int Cost { get; set; }
         public AdminAudit CreatedByAdmin { get; set; }
         public DateTime CreatedAt { get; set; }
-        
+
         public TestType()
         {
             ID = -1;

@@ -1,19 +1,18 @@
-using AH.Domain.Entities;
 using AH.Application.DTOs.Row;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AH.Domain.Entities;
 
-namespace AH.Application.Repositories
+namespace AH.Application.IRepositories
 {
     public interface IPrescriptionRepository
     {
-        Task<Tuple<IEnumerable<PrescriptionRowDTO>, int>> GetAllByAppointmentIDAsync(int appointmentID);
+        Task<(IEnumerable<PrescriptionRowDTO> Items, int Count)> GetAllByAppointmentIDAsync(int appointmentID);
+
         Task<Prescription> GetByIdAsync(int id);
+
         Task<int> AddAsync(Prescription prescription);
+
         Task<bool> UpdateAsync(Prescription prescription);
+
         Task<bool> DeleteAsync(int id);
     }
 }

@@ -1,17 +1,12 @@
-using AH.Domain.Entities;
-using AH.Application.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AH.Application.DTOs.Row;
+using AH.Application.IRepositories;
+using AH.Domain.Entities;
 
 namespace AH.Infrastructure.Repositories
 {
     public class InsuranceRepository : IInsuranceRepository
     {
-        public async Task<Tuple<IEnumerable<InsuranceRowDTO>, int>> GetAllByPatientIDAsync(int patiendID)
+        public async Task<(IEnumerable<InsuranceRowDTO> Items, int Count)> GetAllByPatientIDAsync(int patiendID)
         {
             // Implementation placeholder
             throw new NotImplementedException();

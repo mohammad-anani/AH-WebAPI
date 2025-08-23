@@ -14,6 +14,6 @@ public static class ConfigHelper
         if (_config is null)
             throw new InvalidOperationException("ConfigHelper not initialized");
 
-        return _config.GetConnectionString("DefaultConnection")??"";
+        return _config.GetConnectionString("DefaultConnection") ?? "";
     }
 }

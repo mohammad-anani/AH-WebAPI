@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AH.Domain.Entities
+﻿namespace AH.Domain.Entities
 {
     public class User
     {
@@ -12,12 +6,12 @@ namespace AH.Domain.Entities
         public string Password { get; set; }
 
         public User()
-        { 
+        {
             Email = "";
             Password = "";
         }
 
-        public User( string email, string password)
+        public User(string email, string password)
         {
             Email = email;
             Password = password;
@@ -25,7 +19,6 @@ namespace AH.Domain.Entities
 
         public User(string email)
         {
-
             Email = email;
             Password = "";
         }

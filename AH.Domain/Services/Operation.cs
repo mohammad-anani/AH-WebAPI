@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AH.Domain.Entities
+﻿namespace AH.Domain.Entities
 {
     public class Operation
     {
         public int ID { get; set; }
         public int Name { get; set; }
-        public Department Department { get; set; }   
-        public string Description { get; set; } 
+        public Department Department { get; set; }
+        public string Description { get; set; }
         public Service Service { get; set; }
 
         public Operation()

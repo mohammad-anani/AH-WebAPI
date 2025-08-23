@@ -1,17 +1,12 @@
-using AH.Domain.Entities;
-using AH.Application.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AH.Application.DTOs.Row;
+using AH.Application.IRepositories;
+using AH.Domain.Entities;
 
 namespace AH.Infrastructure.Repositories
 {
     public class TestOrderRepository : ITestOrderRepository
     {
-       public async Task<int> AddAsync(TestOrder testOrder)
+        public async Task<int> AddAsync(TestOrder testOrder)
         {
             throw new NotImplementedException();
         }
@@ -21,7 +16,7 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        Task<Tuple<IEnumerable<TestOrderRowDTO>, int>> ITestOrderRepository.GetAllAsync()
+        Task<(IEnumerable<TestOrderRowDTO> Items, int Count)> ITestOrderRepository.GetAllAsync()
         {
             throw new NotImplementedException();
         }

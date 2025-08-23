@@ -1,24 +1,19 @@
-using AH.Domain.Entities;
-using AH.Application.Repositories;
 using AH.Application.DTOs.Filter;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AH.Application.DTOs.Row;
+using AH.Application.IRepositories;
+using AH.Domain.Entities;
 
 namespace AH.Infrastructure.Repositories
 {
     public class TestAppointmentRepository : ITestAppointmentRepository
     {
-        public async Task<Tuple<IEnumerable<TestAppointmentRowDTO>, int>> GetAllAsync(TestAppointmentFilterDTO filterDTO)
+        public async Task<(IEnumerable<TestAppointmentRowDTO> Items, int Count)> GetAllAsync(TestAppointmentFilterDTO filterDTO)
         {
             // Implementation placeholder
             throw new NotImplementedException();
         }
 
-        public async Task<Tuple<IEnumerable<AppointmentRowDTO>, int>> GetAllByPatientIDAsync(int patientID)
+        public async Task<(IEnumerable<AppointmentRowDTO> Items, int Count)> GetAllByPatientIDAsync(int patientID)
         {
             // Implementation placeholder
             throw new NotImplementedException();

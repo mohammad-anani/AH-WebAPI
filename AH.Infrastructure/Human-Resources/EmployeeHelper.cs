@@ -1,7 +1,6 @@
 ﻿using AH.Application.DTOs.Filter;
 using AH.Domain.Entities;
 using Microsoft.Data.SqlClient;
-using System;
 using System.Data;
 
 namespace AH.Infrastructure.Helpers
@@ -41,7 +40,6 @@ namespace AH.Infrastructure.Helpers
 
         public static Func<SqlDataReader, Task<Employee>> ReadEmployeeAsync = async reader =>
         {
-
             var converter = new ConvertingHelper(reader);
 
             var employee = new Employee
@@ -66,9 +64,7 @@ namespace AH.Infrastructure.Helpers
                 Employee = {
                         Person =
                         {
-
                         FirstName= converter.ConvertValue<string>("CreatedByAdminFullName"),
-
                         }
                     }
                 },

@@ -1,20 +1,19 @@
-using AH.Domain.Entities;
 using AH.Application.DTOs.Filter;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AH.Application.DTOs.Row;
+using AH.Domain.Entities;
 
-namespace AH.Application.Repositories
+namespace AH.Application.IRepositories
 {
     public interface IDepartmentRepository
     {
-        Task<Tuple<IEnumerable<DepartmentRowDTO>, int>> GetAllAsync(DepartmentFilterDTO filterDTO);
+        Task<(IEnumerable<DepartmentRowDTO> Items, int Count)> GetAllAsync(DepartmentFilterDTO filterDTO);
+
         Task<Department> GetByIdAsync(int id);
+
         Task<int> AddAsync(Department department);
+
         Task<bool> UpdateAsync(Department department);
+
         Task<bool> DeleteAsync(int id);
     }
 }

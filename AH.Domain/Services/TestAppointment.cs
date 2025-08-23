@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AH.Domain.Entities
+﻿namespace AH.Domain.Entities
 {
     public class TestAppointment
     {
-        public int ID { get; set; } 
+        public int ID { get; set; }
 
         public TestOrder TestOrder { get; set; }
 

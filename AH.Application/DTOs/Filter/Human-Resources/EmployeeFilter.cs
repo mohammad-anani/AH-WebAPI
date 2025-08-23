@@ -1,13 +1,6 @@
-using AH.Application.DTOs.Filter;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace AH.Application.DTOs.Filter
 {
-    public class EmployeeFilter:PersonFilter
+    public class EmployeeFilter : PersonFilter
     {
         public int? DepartmentId { get; set; }
         public decimal? SalaryFrom { get; set; }
@@ -24,8 +17,6 @@ namespace AH.Application.DTOs.Filter
         public DateTime? CreatedAtFrom { get; set; }
         public DateTime? CreatedAtTo { get; set; }
         public int? CreatedByAdminID { get; set; }
-
-
 
         // Full constructor
         public EmployeeFilter(
@@ -63,6 +54,7 @@ namespace AH.Application.DTOs.Filter
         }
 
         // Parameterless constructor
-        public EmployeeFilter() { }
+        public EmployeeFilter()
+        { }
     }
 }
