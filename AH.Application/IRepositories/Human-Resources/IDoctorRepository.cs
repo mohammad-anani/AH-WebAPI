@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Extra;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
@@ -6,7 +7,7 @@ namespace AH.Application.IRepositories
 {
     public interface IDoctorRepository : IEmployee
     {
-        Task<(IEnumerable<DoctorRowDTO> Items, int Count)> GetAllAsync(DoctorFilterDTO filterDTO);
+        Task<ListResponseDTO<DoctorRowDTO>> GetAllAsync(DoctorFilterDTO filterDTO);
 
         Task<Doctor> GetByIdAsync(int id);
 

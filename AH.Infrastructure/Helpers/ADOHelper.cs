@@ -1,5 +1,4 @@
-﻿using AH.Infrastructure.Repositories;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using System.Data;
 
@@ -14,9 +13,10 @@ namespace AH.Infrastructure.Helpers
         /// </summary>
         public static async Task<Exception?> ExecuteReaderAsync(
             string spName,
+            ILogger logger,
             Action<SqlCommand>? addParameters,
             Action<SqlDataReader, SqlCommand> readRow,
-            Action<SqlCommand>? postAction = null) // <-- added
+            Action<SqlCommand>? postAction = null)
         {
             await using var conn = new SqlConnection(_connectionString);
             await using var cmd = new SqlCommand(spName, conn)
@@ -24,40 +24,49 @@ namespace AH.Infrastructure.Helpers
                 CommandType = CommandType.StoredProcedure
             };
 
+            logger.LogDebug("Command parameter count before executing addParameters:{count}", cmd.Parameters.Count);
             addParameters?.Invoke(cmd);
+            logger.LogDebug("Command parameter count after executing addParameters:{count}", cmd.Parameters.Count);
 
             try
             {
+                logger.LogInformation("Opening Connection");
                 await conn.OpenAsync();
 
+                logger.LogInformation("Starting reader");
                 await using (var reader = await cmd.ExecuteReaderAsync())
                 {
+                    logger.LogDebug("Reader has rows after executing reader before iterating:{hasRows}", reader.HasRows);
+                    int rowcount = 0;
+                    while (await reader.ReadAsync())
+                    {
+                        readRow(reader, cmd);
+                        rowcount++;
+                    }
+                    logger.LogDebug("Reader row count after iterating:{count}", rowcount);
 
-                while (await reader.ReadAsync())
-                {
-                    readRow(reader, cmd);
-                }
+                    logger.LogInformation("Closing reader");
                 }
 
-                // Run optional post action (e.g., check output params)
+                logger.LogInformation("Post action executing");
                 postAction?.Invoke(cmd);
+                logger.LogInformation("Post action executed");
             }
             catch (Exception ex)
             {
+                logger.LogError(ex, "Error executing stored procedure {spName}", spName);
                 return ex;
             }
 
+            logger.LogInformation("Successfully executed stored procedure {spName}", spName);
             return null;
         }
 
-        /// <summary>
-        /// Execute a stored procedure that modifies data (INSERT/UPDATE/DELETE).
-        /// Returns number of affected rows.
-        /// </summary>
         public static async Task<int> ExecuteNonQueryAsync(
             string spName,
             Action<SqlCommand>? addParameters,
-            Action<SqlCommand>? postAction = null) // <-- added
+            ILogger logger,
+            Action<SqlCommand>? postAction = null)
         {
             await using var conn = new SqlConnection(_connectionString);
             await using var cmd = new SqlCommand(spName, conn)
@@ -70,19 +79,18 @@ namespace AH.Infrastructure.Helpers
             await conn.OpenAsync();
             int affected = await cmd.ExecuteNonQueryAsync();
 
-            // Run optional post action (e.g., read OUTPUT params)
+            logger.LogInformation("Post action executing");
             postAction?.Invoke(cmd);
+            logger.LogInformation("Post action executed");
 
             return affected;
         }
 
-        /// <summary>
-        /// Execute a stored procedure and return a single scalar value.
-        /// </summary>
         public static async Task<object?> ExecuteScalarAsync(
             string spName,
             Action<SqlCommand>? addParameters,
-            Action<SqlCommand>? postAction = null) // <-- added
+            ILogger logger,
+            Action<SqlCommand>? postAction = null)
         {
             await using var conn = new SqlConnection(_connectionString);
             await using var cmd = new SqlCommand(spName, conn)
@@ -95,8 +103,9 @@ namespace AH.Infrastructure.Helpers
             await conn.OpenAsync();
             object? result = await cmd.ExecuteScalarAsync();
 
-            // Run optional post action (e.g., check output params)
+            logger.LogInformation("Post action executing");
             postAction?.Invoke(cmd);
+            logger.LogInformation("Post action executed");
 
             return result;
         }

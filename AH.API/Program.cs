@@ -1,9 +1,6 @@
-using AH.Application.IRepositories;
-using AH.Application.IServices;
-using AH.Application.Services;
-using AH.Infrastructure.Repositories;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Serilog;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,8 +19,8 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     //Repositories Injection
     containerBuilder.RegisterAssemblyTypes(Assembly.Load("AH.Infrastructure"))
-        .Where(t => t.Namespace=="AH.Infrastructure.Repositories") 
-        .AsImplementedInterfaces()               
+        .Where(t => t.Namespace == "AH.Infrastructure.Repositories")
+        .AsImplementedInterfaces()
         .InstancePerLifetimeScope();
 
     //Services Injection
@@ -36,9 +33,9 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     containerBuilder.Register(ctx => builder.Configuration)
        .As<IConfiguration>()
        .SingleInstance();
-
-
 });
+
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 
@@ -51,6 +48,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHsts();
 app.UseHttpsRedirection();
+
+app.UseSerilogRequestLogging();
 
 app.UseAuthorization();
 

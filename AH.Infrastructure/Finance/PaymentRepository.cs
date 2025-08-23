@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Extra;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
@@ -6,7 +7,7 @@ namespace AH.Infrastructure.Repositories
 {
     public class PaymentRepository : IPaymentRepository
     {
-        public async Task<(IEnumerable<PaymentRowDTO> Items, int Count)> GetAllByBillIDAsync(int billID)
+        public async Task<ListResponseDTO<PaymentRowDTO>> GetAllByBillIDAsync(int billID)
         {
             // Implementation placeholder
             throw new NotImplementedException();

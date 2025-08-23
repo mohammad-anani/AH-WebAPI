@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Extra;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
@@ -7,7 +8,7 @@ namespace AH.Infrastructure.Repositories
 {
     public class ReceptionistRepository : IReceptionistRepository
     {
-        public async Task<(IEnumerable<ReceptionistRowDTO> Items, int Count)> GetAllAsync(ReceptionistFilterDTO filterDTO)
+        public async Task<ListResponseDTO<ReceptionistRowDTO>> GetAllAsync(ReceptionistFilterDTO filterDTO)
         {
             // Implementation placeholder
             throw new NotImplementedException();

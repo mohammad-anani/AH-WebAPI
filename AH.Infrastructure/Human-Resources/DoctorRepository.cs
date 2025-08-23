@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Extra;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
@@ -7,7 +8,7 @@ namespace AH.Infrastructure.Repositories
 {
     public class DoctorRepository : IDoctorRepository
     {
-        public async Task<(IEnumerable<DoctorRowDTO> Items, int Count)> GetAllAsync(DoctorFilterDTO filterDTO)
+        public async Task<ListResponseDTO<DoctorRowDTO>> GetAllAsync(DoctorFilterDTO filterDTO)
         {
             // Implementation placeholder
             throw new NotImplementedException();

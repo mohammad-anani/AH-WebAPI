@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Extra;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
@@ -16,7 +17,7 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        Task<(IEnumerable<TestOrderRowDTO> Items, int Count)> ITestOrderRepository.GetAllAsync()
+        Task<ListResponseDTO<TestOrderRowDTO>> ITestOrderRepository.GetAllAsync()
         {
             throw new NotImplementedException();
         }

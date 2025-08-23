@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Extra;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
@@ -6,7 +7,7 @@ namespace AH.Infrastructure.Repositories
 {
     public class InsuranceRepository : IInsuranceRepository
     {
-        public async Task<(IEnumerable<InsuranceRowDTO> Items, int Count)> GetAllByPatientIDAsync(int patiendID)
+        public async Task<ListResponseDTO<InsuranceRowDTO>> GetAllByPatientIDAsync(int patiendID)
         {
             // Implementation placeholder
             throw new NotImplementedException();

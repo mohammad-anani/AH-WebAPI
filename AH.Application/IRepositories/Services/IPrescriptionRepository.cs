@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Extra;
 using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
 
@@ -5,7 +6,7 @@ namespace AH.Application.IRepositories
 {
     public interface IPrescriptionRepository
     {
-        Task<(IEnumerable<PrescriptionRowDTO> Items, int Count)> GetAllByAppointmentIDAsync(int appointmentID);
+        Task<ListResponseDTO<PrescriptionRowDTO>> GetAllByAppointmentIDAsync(int appointmentID);
 
         Task<Prescription> GetByIdAsync(int id);
 

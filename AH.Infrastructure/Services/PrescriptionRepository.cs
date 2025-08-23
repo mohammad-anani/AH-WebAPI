@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Extra;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
@@ -16,7 +17,7 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<(IEnumerable<PrescriptionRowDTO> Items, int Count)> GetAllByAppointmentIDAsync(int appointmentID)
+        public async Task<ListResponseDTO<PrescriptionRowDTO>> GetAllByAppointmentIDAsync(int appointmentID)
         {
             throw new NotImplementedException();
         }

@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Extra;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
@@ -6,7 +7,7 @@ namespace AH.Application.IRepositories
 {
     public interface ITestTypeRepository
     {
-        Task<(IEnumerable<TestTypeRowDTO> Items, int Count)> GetAllAsync(TestTypeFilterDTO filterDTO);
+        Task<ListResponseDTO<TestTypeRowDTO>> GetAllAsync(TestTypeFilterDTO filterDTO);
 
         Task<TestType> GetByIdAsync(int id);
 

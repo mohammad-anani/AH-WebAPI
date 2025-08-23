@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Extra;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
 
@@ -5,7 +6,7 @@ namespace AH.Infrastructure.Repositories
 {
     public class OperationDoctorRepository : IOperationDoctorRepository
     {
-        public async Task<(IEnumerable<OperationDoctor> Items, int Count)> GetAllByOperationIDAsync(int operationID)
+        public async Task<ListResponseDTO<OperationDoctor>> GetAllByOperationIDAsync(int operationID)
         {
             // Implementation placeholder
             throw new NotImplementedException();

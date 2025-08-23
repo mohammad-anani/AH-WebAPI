@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Extra;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
@@ -7,19 +8,19 @@ namespace AH.Infrastructure.Repositories
 {
     public class OperationRepository : IOperationRepository
     {
-        public async Task<(IEnumerable<OperationRowDTO> Items, int Count)> GetAllAsync(OperationFilterDTO filterDTO)
+        public async Task<ListResponseDTO<OperationRowDTO>> GetAllAsync(OperationFilterDTO filterDTO)
         {
             // Implementation placeholder
             throw new NotImplementedException();
         }
 
-        public async Task<(IEnumerable<OperationRowDTO> Items, int Count)> GetAllByDoctorIDAsync(int doctorID)
+        public async Task<ListResponseDTO<OperationRowDTO>> GetAllByDoctorIDAsync(int doctorID)
         {
             // Implementation placeholder
             throw new NotImplementedException();
         }
 
-        public async Task<(IEnumerable<OperationRowDTO> Items, int Count)> GetAllByPatientIDAsync(int patientID)
+        public async Task<ListResponseDTO<OperationRowDTO>> GetAllByPatientIDAsync(int patientID)
         {
             // Implementation placeholder
             throw new NotImplementedException();

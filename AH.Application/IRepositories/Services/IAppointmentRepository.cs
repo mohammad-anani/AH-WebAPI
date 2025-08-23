@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Extra;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
@@ -8,11 +9,11 @@ namespace AH.Application
 {
     public interface IAppointmentRepository : IService
     {
-        Task<(IEnumerable<AppointmentRowDTO> Items, int Count)> GetAllAsync(AppointmentFilterDTO filterDTO);
+        Task<ListResponseDTO<AppointmentRowDTO>> GetAllAsync(AppointmentFilterDTO filterDTO);
 
-        Task<(IEnumerable<AppointmentRowDTO> Items, int Count)> GetAllByDoctorIDAsync(int doctorID);
+        Task<ListResponseDTO<AppointmentRowDTO>> GetAllByDoctorIDAsync(int doctorID);
 
-        Task<(IEnumerable<AppointmentRowDTO> Items, int Count)> GetAllByPatientIDAsync(int patientID);
+        Task<ListResponseDTO<AppointmentRowDTO>> GetAllByPatientIDAsync(int patientID);
 
         Task<Appointment> GetByIdAsync(int id);
 

@@ -1,52 +1,37 @@
+using AH.Application.DTOs.Extra;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
-using Microsoft.Data.SqlClient;
-
 using AH.Infrastructure.Helpers;
-using System.Data;
 using Microsoft.Extensions.Logging;
 
 namespace AH.Infrastructure.Repositories
 {
     public class AdminRepository : IAdminRepository
     {
-        private ILogger<AdminRepository> _Logger { get; set; }
+        private readonly ILogger<AdminRepository> _logger;
 
         public AdminRepository(ILogger<AdminRepository> logger)
         {
-            _Logger = logger;
+            _logger = logger;
         }
 
-        public async Task<(IEnumerable<AdminRowDTO> Items, int Count)> GetAllAsync(AdminFilterDTO filterDTO)
+        public async Task<ListResponseDTO<AdminRowDTO>> GetAllAsync(AdminFilterDTO filterDTO)
         {
             int totalCount = -1;
             List<AdminRowDTO> admins = new List<AdminRowDTO>();
-            SqlParameter output = new SqlParameter
-            {
-                ParameterName = "@TotalRowCount",
-                SqlDbType = SqlDbType.Int,
-                Direction = ParameterDirection.Output
-            };
+
+            RowCountOutputHelper rowCountOutputHelper = new RowCountOutputHelper();
 
             Exception? ex = await ADOHelper.ExecuteReaderAsync(
-                 "Fetch_Admins", cmd =>
+                 "Fetch_Admins", _logger, cmd =>
                  {
                      EmployeeHelper.AddEmployeeParameters(filterDTO)(cmd);
 
-                     var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
-                     {
-                         ["Page"] = (filterDTO.Page, SqlDbType.Int, null, null),
-                         ["Sort"] = (filterDTO.Sort, SqlDbType.NVarChar, 20, null),
-                         ["Order"] = (filterDTO.Sort, SqlDbType.Bit, null, null),
+                     FilterableHelper.AddFilterParameters(filterDTO.Sort, filterDTO.Order, filterDTO.Page, cmd);
 
-                     };
-
-                     SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
-
-                     cmd.Parameters.Add(output);
-
+                     rowCountOutputHelper.AddToCommand(cmd);
                  }, (reader, cmd) =>
                  {
                      var converter = new ConvertingHelper(reader);
@@ -54,13 +39,12 @@ namespace AH.Infrastructure.Repositories
                         converter.ConvertValue<string>("FullName")
 
                          ));
-
-                 }, (cmd) =>
-                 {
-                     totalCount = (int)output.Value;
                  });
 
-            return (admins, totalCount);
+            totalCount = rowCountOutputHelper.GetRowCount();
+
+           
+            return new ListResponseDTO<AdminRowDTO>(admins,totalCount,ex);
         }
 
         public async Task<Admin> GetByIdAsync(int id)
