@@ -13,7 +13,7 @@ namespace AH.Application.IRepositories
 
         Task<ListResponseDTO<OperationRowDTO>> GetAllByPatientIDAsync(int patientID);
 
-        Task<Operation> GetByIdAsync(int id);
+        Task<Operation> GetByIDAsync(int id);
 
         Task<int> AddAsync(Operation operation);
 

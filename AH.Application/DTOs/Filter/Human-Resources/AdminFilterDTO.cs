@@ -1,3 +1,5 @@
+using AH.Application.DTOs.Filter.Helpers;
+
 namespace AH.Application.DTOs.Filter
 {
     public class AdminFilterDTO : EmployeeFilter, IFilterable
@@ -11,7 +13,8 @@ namespace AH.Application.DTOs.Filter
             string? sort,
             bool? order,
             int? page,
-            int? departmentId = null,
+            int? departmentID
+            = null,
             decimal? salaryFrom = null,
             decimal? salaryTo = null,
             DateTime? hireDateFrom = null,
@@ -32,10 +35,10 @@ namespace AH.Application.DTOs.Filter
             char? gender = null,
             DateTime? birthDateFrom = null,
             DateTime? birthDateTo = null,
-            int? countryId = null,
+            int? countryID = null,
             string? phone = null,
             string? email = null)
-            : base(departmentId, salaryFrom, salaryTo, hireDateFrom, hireDateTo, leaveDateFrom, leaveDateTo,
+            : base(departmentID, salaryFrom, salaryTo, hireDateFrom, hireDateTo, leaveDateFrom, leaveDateTo,
                    shiftStartFrom, shiftStartTo, shiftEndFrom, shiftEndTo, workingDays, createdAtFrom, createdAtTo, createdByAdminID)
         {
             Sort = sort;
@@ -48,7 +51,7 @@ namespace AH.Application.DTOs.Filter
             Gender = gender;
             BirthDateFrom = birthDateFrom;
             BirthDateTo = birthDateTo;
-            CountryId = countryId;
+            CountryID = countryID;
             Phone = phone;
             Email = email;
         }

@@ -1,4 +1,5 @@
 using AH.Application.DTOs.Extra;
+using AH.Application.DTOs.Filter.Finance;
 using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
 
@@ -6,9 +7,9 @@ namespace AH.Application.IRepositories
 {
     public interface IPaymentRepository
     {
-        Task<ListResponseDTO<PaymentRowDTO>> GetAllByBillIDAsync(int billID);
+        Task<ListResponseDTO<PaymentRowDTO>> GetAllByBillIDAsync(PaymentFilterDTO filterDTO);
 
-        Task<Payment> GetByIdAsync(int id);
+        Task<Payment> GetByIDAsync(int id);
 
         Task<int> AddAsync(Payment payment);
 

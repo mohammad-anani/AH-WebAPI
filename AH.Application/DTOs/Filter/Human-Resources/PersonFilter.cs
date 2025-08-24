@@ -8,7 +8,7 @@
         public char? Gender { get; set; }
         public DateTime? BirthDateFrom { get; set; }
         public DateTime? BirthDateTo { get; set; }
-        public int? CountryId { get; set; }
+        public int? CountryID { get; set; }
         public string? Phone { get; set; }
         public string? Email { get; set; }
 
@@ -20,7 +20,7 @@
             char? gender,
             DateTime? birthDateFrom,
             DateTime? birthDateTo,
-            int? countryId,
+            int? countryID,
             string? phone,
             string? email)
         {
@@ -30,7 +30,7 @@
             Gender = gender;
             BirthDateFrom = birthDateFrom;
             BirthDateTo = birthDateTo;
-            CountryId = countryId;
+            CountryID = countryID;
             Phone = phone;
             Email = email;
         }

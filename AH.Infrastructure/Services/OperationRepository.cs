@@ -3,15 +3,40 @@ using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
+using AH.Infrastructure.Helpers;
+using Microsoft.Extensions.Logging;
+using System.Data;
 
 namespace AH.Infrastructure.Repositories
 {
     public class OperationRepository : IOperationRepository
     {
+        private readonly ILogger<OperationRepository> _logger;
+
+        public OperationRepository(ILogger<OperationRepository> logger)
+        {
+            _logger = logger;
+        }
+
         public async Task<ListResponseDTO<OperationRowDTO>> GetAllAsync(OperationFilterDTO filterDTO)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["DepartmentID"] = (filterDTO.DepartmentID, SqlDbType.Int, null, null),
+                ["Name"] = (filterDTO.Name, SqlDbType.NVarChar, 100, null),
+                ["Description"] = (filterDTO.Description, SqlDbType.NVarChar, -1, null),
+            };
+
+            return await ReusableCRUD.GetAllAsync<OperationRowDTO, OperationFilterDTO>("Fetch_Operations", _logger, filterDTO, cmd =>
+            {
+                ServiceHelper.AddServiceParameters(filterDTO, cmd);
+            }, (reader, converter) =>
+
+                new OperationRowDTO(converter.ConvertValue<int>("ID"),
+                                    converter.ConvertValue<string>("PatientFullName"),
+                                    converter.ConvertValue<DateTime>("ScheduledDate"),
+                                    converter.ConvertValue<string>("Status"))
+            , parameters);
         }
 
         public async Task<ListResponseDTO<OperationRowDTO>> GetAllByDoctorIDAsync(int doctorID)
@@ -26,7 +51,7 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<Operation> GetByIdAsync(int id)
+        public async Task<Operation> GetByIDAsync(int id)
         {
             // Implementation placeholder
             throw new NotImplementedException();

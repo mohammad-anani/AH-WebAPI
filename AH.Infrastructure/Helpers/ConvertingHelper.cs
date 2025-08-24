@@ -11,6 +11,11 @@ namespace AH.Infrastructure.Helpers
             _reader = reader ?? throw new ArgumentNullException(nameof(reader));
         }
 
+        public ConvertingHelper()
+        {
+            _reader = null!;
+        }
+
         /// <summary>
         /// Convert a column value from the associated SqlDataReader to the specified type T.
         /// Throws an exception if the conversion fails or value is DBNull for non-nullable types.

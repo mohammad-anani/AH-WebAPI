@@ -7,35 +7,32 @@ namespace AH.Infrastructure.Helpers
 {
     public static class EmployeeHelper
     {
-        public static Action<SqlCommand> AddEmployeeParameters(EmployeeFilter employeeFilter)
+        public static void AddEmployeeParameters(EmployeeFilter employeeFilter, SqlCommand cmd)
         {
-            return cmd =>
+            // Reuse Person parameters
+            PersonHelper.AddPersonParameters(employeeFilter, cmd);
+
+            // Employee-specific parameters as dictionary
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
-                // Reuse Person parameters
-                PersonHelper.AddPersonParameters(employeeFilter)(cmd);
-
-                // Employee-specific parameters as dictionary
-                var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
-                {
-                    ["DepartmentID"] = (employeeFilter.DepartmentId, SqlDbType.Int, null, null),
-                    ["SalaryFrom"] = (employeeFilter.SalaryFrom, SqlDbType.Money, null, null),
-                    ["SalaryTo"] = (employeeFilter.SalaryTo, SqlDbType.Money, null, null),
-                    ["HireDateFrom"] = (employeeFilter.HireDateFrom, SqlDbType.Date, null, null),
-                    ["HireDateTo"] = (employeeFilter.HireDateTo, SqlDbType.Date, null, null),
-                    ["LeaveDateFrom"] = (employeeFilter.LeaveDateFrom, SqlDbType.Date, null, null),
-                    ["LeaveDateTo"] = (employeeFilter.LeaveDateTo, SqlDbType.Date, null, null),
-                    ["ShiftStartFrom"] = (employeeFilter.ShiftStartFrom, SqlDbType.Time, null, null),
-                    ["ShiftStartTo"] = (employeeFilter.ShiftStartTo, SqlDbType.Time, null, null),
-                    ["ShiftEndFrom"] = (employeeFilter.ShiftEndFrom, SqlDbType.Time, null, null),
-                    ["ShiftEndTo"] = (employeeFilter.ShiftEndTo, SqlDbType.Time, null, null),
-                    ["WorkingDays"] = (employeeFilter.WorkingDays, SqlDbType.Int, null, null),
-                    ["CreatedAtFrom"] = (employeeFilter.CreatedAtFrom, SqlDbType.DateTime, null, null),
-                    ["CreatedAtTo"] = (employeeFilter.CreatedAtTo, SqlDbType.DateTime, null, null),
-                    ["CreatedByAdminID"] = (employeeFilter.CreatedByAdminID, SqlDbType.Int, null, null)
-                };
-
-                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+                ["DepartmentID"] = (employeeFilter.DepartmentID, SqlDbType.Int, null, null),
+                ["SalaryFrom"] = (employeeFilter.SalaryFrom, SqlDbType.Money, null, null),
+                ["SalaryTo"] = (employeeFilter.SalaryTo, SqlDbType.Money, null, null),
+                ["HireDateFrom"] = (employeeFilter.HireDateFrom, SqlDbType.Date, null, null),
+                ["HireDateTo"] = (employeeFilter.HireDateTo, SqlDbType.Date, null, null),
+                ["LeaveDateFrom"] = (employeeFilter.LeaveDateFrom, SqlDbType.Date, null, null),
+                ["LeaveDateTo"] = (employeeFilter.LeaveDateTo, SqlDbType.Date, null, null),
+                ["ShiftStartFrom"] = (employeeFilter.ShiftStartFrom, SqlDbType.Time, null, null),
+                ["ShiftStartTo"] = (employeeFilter.ShiftStartTo, SqlDbType.Time, null, null),
+                ["ShiftEndFrom"] = (employeeFilter.ShiftEndFrom, SqlDbType.Time, null, null),
+                ["ShiftEndTo"] = (employeeFilter.ShiftEndTo, SqlDbType.Time, null, null),
+                ["WorkingDays"] = (employeeFilter.WorkingDays, SqlDbType.Int, null, null),
             };
+
+            SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+
+            AdminAuditHelper.AddAdminAuditParameters
+                (employeeFilter.CreatedByAdminID, employeeFilter.CreatedAtFrom, employeeFilter.CreatedAtTo, cmd);
         }
 
         public static Func<SqlDataReader, Task<Employee>> ReadEmployeeAsync = async reader =>

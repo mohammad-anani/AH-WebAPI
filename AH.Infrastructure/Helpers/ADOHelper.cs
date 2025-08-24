@@ -12,11 +12,12 @@ namespace AH.Infrastructure.Helpers
         /// Execute a stored procedure that returns rows (via SqlDataReader).
         /// </summary>
         public static async Task<Exception?> ExecuteReaderAsync(
-            string spName,
-            ILogger logger,
-            Action<SqlCommand>? addParameters,
-            Action<SqlDataReader, SqlCommand> readRow,
-            Action<SqlCommand>? postAction = null)
+      string spName,
+      ILogger logger,
+      Action<SqlCommand>? addParameters,
+      Action<SqlDataReader, SqlCommand> readRow,
+      Action<SqlCommand>? postAction = null,
+      Action<SqlDataReader, SqlCommand>? beforeIteration = null) // NEW optional hook
         {
             await using var conn = new SqlConnection(_connectionString);
             await using var cmd = new SqlCommand(spName, conn)
@@ -37,6 +38,13 @@ namespace AH.Infrastructure.Helpers
                 await using (var reader = await cmd.ExecuteReaderAsync())
                 {
                     logger.LogDebug("Reader has rows after executing reader before iterating:{hasRows}", reader.HasRows);
+
+                    logger.LogInformation("Before Iteration Executing.");
+
+                    beforeIteration?.Invoke(reader, cmd);
+
+                    logger.LogInformation("Before Iteration Executed.");
+
                     int rowcount = 0;
                     while (await reader.ReadAsync())
                     {

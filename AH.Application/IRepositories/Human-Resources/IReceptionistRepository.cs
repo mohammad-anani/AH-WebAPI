@@ -9,7 +9,7 @@ namespace AH.Application.IRepositories
     {
         Task<ListResponseDTO<ReceptionistRowDTO>> GetAllAsync(ReceptionistFilterDTO filterDTO);
 
-        Task<Receptionist> GetByIdAsync(int id);
+        Task<Receptionist> GetByIDAsync(int id);
 
         Task<int> AddAsync(Receptionist receptionist);
 

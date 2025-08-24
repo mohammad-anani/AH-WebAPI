@@ -1,10 +1,12 @@
+using AH.Application.DTOs.Filter.Helpers;
+
 namespace AH.Application.DTOs.Filter
 {
-    public class DepartmentFilterDTO : IFilterable
+    public class DepartmentFilterDTO : IFilterable, IAdminAudit
     {
         public string? Name { get; set; }
         public string? Phone { get; set; }
-        public int? CreatedByAdminId { get; set; }
+        public int? CreatedByAdminID { get; set; }
         public DateTime? CreatedAtFrom { get; set; }
         public DateTime? CreatedAtTo { get; set; }
         public string? Sort { get; set; }
@@ -15,7 +17,7 @@ namespace AH.Application.DTOs.Filter
         public DepartmentFilterDTO(
             string? name,
             string? phone,
-            int? createdByAdminId,
+            int? createdByAdminID,
             DateTime? createdAtFrom,
             DateTime? createdAtTo,
             string? sort,
@@ -24,7 +26,7 @@ namespace AH.Application.DTOs.Filter
         {
             Name = name;
             Phone = phone;
-            CreatedByAdminId = createdByAdminId;
+            CreatedByAdminID = createdByAdminID;
             CreatedAtFrom = createdAtFrom;
             CreatedAtTo = createdAtTo;
             Sort = sort;
@@ -37,7 +39,7 @@ namespace AH.Application.DTOs.Filter
         {
             Name = null;
             Phone = null;
-            CreatedByAdminId = null;
+            CreatedByAdminID = null;
             CreatedAtFrom = null;
             CreatedAtTo = null;
             Sort = null;

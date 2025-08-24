@@ -1,6 +1,8 @@
+using AH.Application.DTOs.Filter.Helpers;
+
 namespace AH.Application.DTOs.Filter
 {
-    public class PatientFilterDTO : PersonFilter, IFilterable
+    public class PatientFilterDTO : PersonFilter, IFilterable, IReceptionistAudit
     {
         public string? Sort { get; set; }
         public bool? Order { get; set; }
@@ -26,10 +28,10 @@ namespace AH.Application.DTOs.Filter
             char? gender = null,
             DateTime? birthDateFrom = null,
             DateTime? birthDateTo = null,
-            int? countryId = null,
+            int? countryID = null,
             string? phone = null,
             string? email = null)
-            : base(firstName, middleName, lastName, gender, birthDateFrom, birthDateTo, countryId, phone, email)
+            : base(firstName, middleName, lastName, gender, birthDateFrom, birthDateTo, countryID, phone, email)
         {
             Sort = sort;
             Order = order;

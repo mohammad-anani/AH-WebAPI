@@ -1,8 +1,10 @@
+using AH.Application.DTOs.Filter.Helpers;
+
 namespace AH.Application.DTOs.Filter
 {
-    public class ServiceFilter
+    public class ServiceFilter : IReceptionistAudit
     {
-        public int? PatientId { get; set; }
+        public int? PatientID { get; set; }
         public DateTime? ScheduledDateFrom { get; set; }
         public DateTime? ScheduledDateTo { get; set; }
         public DateTime? ActualStartingDateFrom { get; set; }
@@ -13,14 +15,14 @@ namespace AH.Application.DTOs.Filter
         public DateTime? ResultDateTo { get; set; }
         public byte? Status { get; set; }
         public string? Notes { get; set; }
-        public int? BillId { get; set; }
-        public int? CreatedByReceptionistId { get; set; }
+        public int? BillID { get; set; }
+        public int? CreatedByReceptionistID { get; set; }
         public DateTime? CreatedAtFrom { get; set; }
         public DateTime? CreatedAtTo { get; set; }
 
         // Full constructor
         public ServiceFilter(
-            int? patientId,
+            int? patientID,
             DateTime? scheduledDateFrom,
             DateTime? scheduledDateTo,
             DateTime? actualStartingDateFrom,
@@ -31,12 +33,12 @@ namespace AH.Application.DTOs.Filter
             DateTime? resultDateTo,
             byte? status,
             string? notes,
-            int? billId,
-            int? createdByReceptionistId,
+            int? billID,
+            int? createdByReceptionistID,
             DateTime? createdAtFrom,
             DateTime? createdAtTo)
         {
-            PatientId = patientId;
+            PatientID = patientID;
             ScheduledDateFrom = scheduledDateFrom;
             ScheduledDateTo = scheduledDateTo;
             ActualStartingDateFrom = actualStartingDateFrom;
@@ -47,8 +49,8 @@ namespace AH.Application.DTOs.Filter
             ResultDateTo = resultDateTo;
             Status = status;
             Notes = notes;
-            BillId = billId;
-            CreatedByReceptionistId = createdByReceptionistId;
+            BillID = billID;
+            CreatedByReceptionistID = createdByReceptionistID;
             CreatedAtFrom = createdAtFrom;
             CreatedAtTo = createdAtTo;
         }
@@ -56,7 +58,7 @@ namespace AH.Application.DTOs.Filter
         // Parameterless constructor
         public ServiceFilter()
         {
-            PatientId = null;
+            PatientID = null;
             ScheduledDateFrom = null;
             ScheduledDateTo = null;
             ActualStartingDateFrom = null;
@@ -67,8 +69,8 @@ namespace AH.Application.DTOs.Filter
             ResultDateTo = null;
             Status = null;
             Notes = null;
-            BillId = null;
-            CreatedByReceptionistId = null;
+            BillID = null;
+            CreatedByReceptionistID = null;
             CreatedAtFrom = null;
             CreatedAtTo = null;
         }

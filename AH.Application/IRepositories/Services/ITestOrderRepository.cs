@@ -1,4 +1,5 @@
 using AH.Application.DTOs.Extra;
+using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
 
@@ -6,9 +7,9 @@ namespace AH.Application.IRepositories
 {
     public interface ITestOrderRepository
     {
-        Task<ListResponseDTO<TestOrderRowDTO>> GetAllAsync();
+        Task<ListResponseDTO<TestOrderRowDTO>> GetAllAsync(OperationDoctorFilterDTO filterDTO);
 
-        Task<TestOrder> GetByIdAsync(int id);
+        Task<TestOrder> GetByIDAsync(int id);
 
         Task<int> AddAsync(TestOrder testOrder);
 

@@ -1,12 +1,23 @@
 using AH.Application.DTOs.Extra;
+using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
+using AH.Infrastructure.Helpers;
+using Microsoft.Extensions.Logging;
+using System.Data;
 
 namespace AH.Infrastructure.Repositories
 {
     public class PrescriptionRepository : IPrescriptionRepository
     {
+        private readonly ILogger<PrescriptionRepository> _logger;
+
+        public PrescriptionRepository(ILogger<PrescriptionRepository> logger)
+        {
+            _logger = logger;
+        }
+
         public async Task<int> AddAsync(Prescription prescription)
         {
             throw new NotImplementedException();
@@ -17,12 +28,42 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<ListResponseDTO<PrescriptionRowDTO>> GetAllByAppointmentIDAsync(int appointmentID)
+        public async Task<ListResponseDTO<PrescriptionRowDTO>> GetAllByAppointmentIDAsync(PrescriptionFilterDTO filterDTO)
         {
-            throw new NotImplementedException();
+            var extraParameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["AppointmentID"] = (filterDTO.AppointmentID, SqlDbType.Int, null, null),
+                ["Page"] = (filterDTO.Page, SqlDbType.Int, null, null),
+            };
+
+            int totalCount = -1;
+            List<PrescriptionRowDTO> items = new List<PrescriptionRowDTO>();
+            ConvertingHelper converter = new ConvertingHelper();
+            RowCountOutputHelper rowCountOutputHelper = new RowCountOutputHelper();
+
+            Exception? ex = await ADOHelper.ExecuteReaderAsync(
+                 "Fetch_Prescriptions", _logger, cmd =>
+                 {
+                     SqlParameterHelper.AddParametersFromDictionary(cmd, extraParameters);
+
+                     rowCountOutputHelper.AddToCommand(cmd);
+                 }, (reader, cmd) =>
+                 {
+                     items.Add(new PrescriptionRowDTO(
+                         converter.ConvertValue<int>("ID"),
+                         converter.ConvertValue<int>("AppointmentID"),
+                         converter.ConvertValue<string>("Medication"),
+                         converter.ConvertValue<string>("Dosage"),
+                         converter.ConvertValue<string>("Frequency"),
+                         converter.ConvertValue<bool>("IsOnMedication")));
+                 }, null, (reader, cmd) => { converter = new ConvertingHelper(reader); });
+
+            totalCount = rowCountOutputHelper.GetRowCount();
+
+            return new ListResponseDTO<PrescriptionRowDTO>(items, totalCount, ex);
         }
 
-        public async Task<Prescription> GetByIdAsync(int id)
+        public async Task<Prescription> GetByIDAsync(int id)
         {
             throw new NotImplementedException();
         }

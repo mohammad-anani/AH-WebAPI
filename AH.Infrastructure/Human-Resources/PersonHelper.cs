@@ -7,27 +7,21 @@ namespace AH.Infrastructure.Helpers
 {
     public static class PersonHelper
     {
-        public static Action<SqlCommand> AddPersonParameters(PersonFilter personFilter)
+        public static void AddPersonParameters(PersonFilter personFilter, SqlCommand cmd)
         {
-            return cmd =>
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
-                // Build dictionary of parameters
-                var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
-                {
-                    ["FirstName"] = (personFilter.FirstName, SqlDbType.NVarChar, 20, null),
-                    ["MiddleName"] = (personFilter.MiddleName, SqlDbType.NVarChar, 20, null),
-                    ["LastName"] = (personFilter.LastName, SqlDbType.NVarChar, 20, null),
-                    ["Gender"] = (personFilter.Gender, SqlDbType.Char, 1, null),
-                    ["BirthDateFrom"] = (personFilter.BirthDateFrom, SqlDbType.Date, null, null),
-                    ["BirthDateTo"] = (personFilter.BirthDateTo, SqlDbType.Date, null, null),
-                    ["CountryID"] = (personFilter.CountryId, SqlDbType.Int, null, null),
-                    ["Phone"] = (personFilter.Phone, SqlDbType.NVarChar, 8, null),
-                    ["Email"] = (personFilter.Email, SqlDbType.NVarChar, 40, null)
-                };
-
-                // Use the reusable helper to add them
-                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+                ["FirstName"] = (personFilter.FirstName, SqlDbType.NVarChar, 20, null),
+                ["MiddleName"] = (personFilter.MiddleName, SqlDbType.NVarChar, 20, null),
+                ["LastName"] = (personFilter.LastName, SqlDbType.NVarChar, 20, null),
+                ["Gender"] = (personFilter.Gender, SqlDbType.Char, 1, null),
+                ["BirthDateFrom"] = (personFilter.BirthDateFrom, SqlDbType.Date, null, null),
+                ["BirthDateTo"] = (personFilter.BirthDateTo, SqlDbType.Date, null, null),
+                ["CountryID"] = (personFilter.CountryID, SqlDbType.Int, null, null),
+                ["Phone"] = (personFilter.Phone, SqlDbType.NVarChar, 8, null),
+                ["Email"] = (personFilter.Email, SqlDbType.NVarChar, 40, null)
             };
+            SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
         }
 
         public static Func<SqlDataReader, Task<Person>> ReadPersonAsync = async reader =>

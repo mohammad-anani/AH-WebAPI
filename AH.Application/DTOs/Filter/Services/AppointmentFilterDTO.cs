@@ -1,3 +1,5 @@
+using AH.Application.DTOs.Filter.Helpers;
+
 namespace AH.Application.DTOs.Filter
 {
     public class AppointmentFilterDTO : ServiceFilter, IFilterable
@@ -15,7 +17,7 @@ namespace AH.Application.DTOs.Filter
             string? sort,
             bool? order,
             int? page,
-            int? patientId = null,
+            int? patientID = null,
             DateTime? scheduledDateFrom = null,
             DateTime? scheduledDateTo = null,
             DateTime? actualStartingDateFrom = null,
@@ -26,12 +28,12 @@ namespace AH.Application.DTOs.Filter
             DateTime? resultDateTo = null,
             byte? status = null,
             string? notes = null,
-            int? billId = null,
-            int? createdByReceptionistId = null,
+            int? billID = null,
+            int? createdByReceptionistID = null,
             DateTime? createdAtFrom = null,
             DateTime? createdAtTo = null)
-            : base(patientId, scheduledDateFrom, scheduledDateTo, actualStartingDateFrom, actualStartingDateTo,
-                   reason, result, resultDateFrom, resultDateTo, status, notes, billId, createdByReceptionistId, createdAtFrom, createdAtTo)
+            : base(patientID, scheduledDateFrom, scheduledDateTo, actualStartingDateFrom, actualStartingDateTo,
+                   reason, result, resultDateFrom, resultDateTo, status, notes, billID, createdByReceptionistID, createdAtFrom, createdAtTo)
         {
             PreviousAppointmentID = previousAppointmentID;
             DoctorID = doctorID;

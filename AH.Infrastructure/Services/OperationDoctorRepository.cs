@@ -1,15 +1,55 @@
 using AH.Application.DTOs.Extra;
+using AH.Application.DTOs.Filter;
+using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
+using AH.Infrastructure.Helpers;
+using Microsoft.Extensions.Logging;
+using System.Data;
 
 namespace AH.Infrastructure.Repositories
 {
     public class OperationDoctorRepository : IOperationDoctorRepository
     {
-        public async Task<ListResponseDTO<OperationDoctor>> GetAllByOperationIDAsync(int operationID)
+        private readonly ILogger<OperationDoctorRepository> _logger;
+
+        public OperationDoctorRepository(ILogger<OperationDoctorRepository> logger)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            _logger = logger;
+        }
+
+        public async Task<ListResponseDTO<OperationDoctorRowDTO>> GetAllByOperationIDAsync(OperationDoctorFilterDTO filterDTO)
+        {
+            var extraParameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["OperationID"] = (filterDTO.OperationID, SqlDbType.Int, null, null),
+                ["Page"] = (filterDTO.Page, SqlDbType.Int, null, null),
+            };
+
+            int totalCount = -1;
+            List<OperationDoctorRowDTO> items = new List<OperationDoctorRowDTO>();
+            ConvertingHelper converter = new ConvertingHelper();
+            RowCountOutputHelper rowCountOutputHelper = new RowCountOutputHelper();
+
+            Exception? ex = await ADOHelper.ExecuteReaderAsync(
+                 "Fetch_OperationDoctors", _logger, cmd =>
+                 {
+                     SqlParameterHelper.AddParametersFromDictionary(cmd, extraParameters);
+
+                     rowCountOutputHelper.AddToCommand(cmd);
+                 }, (reader, cmd) =>
+                 {
+                     items.Add(new OperationDoctorRowDTO(
+                         converter.ConvertValue<int>("ID"),
+                         converter.ConvertValue<int>("DoctorID"),
+                         converter.ConvertValue<string>("DoctorFullName"),
+                         converter.ConvertValue<string>("Role")
+                         ));
+                 }, null, (reader, cmd) => { converter = new ConvertingHelper(reader); });
+
+            totalCount = rowCountOutputHelper.GetRowCount();
+
+            return new ListResponseDTO<OperationDoctorRowDTO>(items, totalCount, ex);
         }
 
         public async Task<int> AddUpdateAsync(OperationDoctor operationDoctor)

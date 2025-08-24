@@ -1,4 +1,4 @@
-﻿namespace AH.Application.DTOs.Filter
+﻿namespace AH.Application.DTOs.Filter.Helpers
 {
     public interface IFilterable
     {

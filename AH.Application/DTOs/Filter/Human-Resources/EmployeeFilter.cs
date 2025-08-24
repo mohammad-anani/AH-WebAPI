@@ -1,8 +1,10 @@
+using AH.Application.DTOs.Filter.Helpers;
+
 namespace AH.Application.DTOs.Filter
 {
-    public class EmployeeFilter : PersonFilter
+    public class EmployeeFilter : PersonFilter, IAdminAudit
     {
-        public int? DepartmentId { get; set; }
+        public int? DepartmentID { get; set; }
         public decimal? SalaryFrom { get; set; }
         public decimal? SalaryTo { get; set; }
         public DateTime? HireDateFrom { get; set; }
@@ -20,7 +22,7 @@ namespace AH.Application.DTOs.Filter
 
         // Full constructor
         public EmployeeFilter(
-            int? departmentId,
+            int? departmentID,
             decimal? salaryFrom,
             decimal? salaryTo,
             DateTime? hireDateFrom,
@@ -36,7 +38,7 @@ namespace AH.Application.DTOs.Filter
             DateTime? createdAtTo,
             int? createdByAdminID)
         {
-            DepartmentId = departmentId;
+            DepartmentID = departmentID;
             SalaryFrom = salaryFrom;
             SalaryTo = salaryTo;
             HireDateFrom = hireDateFrom;

@@ -1,12 +1,14 @@
+using AH.Application.DTOs.Filter.Helpers;
+
 namespace AH.Application.DTOs.Filter
 {
-    public class TestTypeFilterDTO : IFilterable
+    public class TestTypeFilterDTO : IFilterable, IAdminAudit
     {
         public string? Name { get; set; }
-        public int? DepartmentId { get; set; }
+        public int? DepartmentID { get; set; }
         public int? CostFrom { get; set; }
         public int? CostTo { get; set; }
-        public int? CreatedByAdminId { get; set; }
+        public int? CreatedByAdminID { get; set; }
         public DateTime? CreatedAtFrom { get; set; }
         public DateTime? CreatedAtTo { get; set; }
         public string? Sort { get; set; }
@@ -16,10 +18,10 @@ namespace AH.Application.DTOs.Filter
         // Full constructor
         public TestTypeFilterDTO(
             string? name,
-            int? departmentId,
+            int? departmentID,
             int? costFrom,
             int? costTo,
-            int? createdByAdminId,
+            int? createdByAdminID,
             DateTime? createdAtFrom,
             DateTime? createdAtTo,
             string? sort,
@@ -27,10 +29,10 @@ namespace AH.Application.DTOs.Filter
             int? page)
         {
             Name = name;
-            DepartmentId = departmentId;
+            DepartmentID = departmentID;
             CostFrom = costFrom;
             CostTo = costTo;
-            CreatedByAdminId = createdByAdminId;
+            CreatedByAdminID = createdByAdminID;
             CreatedAtFrom = createdAtFrom;
             CreatedAtTo = createdAtTo;
             Sort = sort;
@@ -42,10 +44,10 @@ namespace AH.Application.DTOs.Filter
         public TestTypeFilterDTO()
         {
             Name = null;
-            DepartmentId = null;
+            DepartmentID = null;
             CostFrom = null;
             CostTo = null;
-            CreatedByAdminId = null;
+            CreatedByAdminID = null;
             CreatedAtFrom = null;
             CreatedAtTo = null;
             Sort = null;

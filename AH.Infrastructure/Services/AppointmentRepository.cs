@@ -4,15 +4,40 @@ using AH.Application.DTOs.Extra;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
+using AH.Infrastructure.Helpers;
+using Microsoft.Extensions.Logging;
+using System.Data;
 
 namespace AH.Infrastructure.Repositories
 {
     public class AppointmentRepository : IAppointmentRepository
     {
+        private readonly ILogger<AppointmentRepository> _logger;
+
+        public AppointmentRepository(ILogger<AppointmentRepository> logger)
+        {
+            _logger = logger;
+        }
+
         public async Task<ListResponseDTO<AppointmentRowDTO>> GetAllAsync(AppointmentFilterDTO filterDTO)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["PreviousAppointmentID"] = (null, SqlDbType.Int, null, null),
+                ["DoctorID"] = (filterDTO.DoctorID, SqlDbType.Int, null, null),
+            };
+
+            return await ReusableCRUD.GetAllAsync<AppointmentRowDTO, AppointmentFilterDTO>("Fetch_Appointments", _logger, filterDTO, cmd =>
+            {
+                ServiceHelper.AddServiceParameters(filterDTO, cmd);
+            }, (reader, converter) =>
+
+                new AppointmentRowDTO(converter.ConvertValue<int>("ID"),
+                                    converter.ConvertValue<string>("PatientFullName"),
+                                    converter.ConvertValue<string>("DoctorFullName"),
+                                    converter.ConvertValue<DateTime>("ScheduledDate"),
+                                    converter.ConvertValue<string>("Status"))
+            , parameters);
         }
 
         public async Task<ListResponseDTO<AppointmentRowDTO>> GetAllByDoctorIDAsync(int doctorID)
@@ -27,7 +52,7 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<Appointment> GetByIdAsync(int id)
+        public async Task<Appointment> GetByIDAsync(int id)
         {
             // Implementation placeholder
             throw new NotImplementedException();

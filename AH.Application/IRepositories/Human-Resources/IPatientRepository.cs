@@ -11,7 +11,7 @@ namespace AH.Application.IRepositories
 
         Task<ListResponseDTO<PatientRowDTO>> GetForDoctorAsync(int doctorID);
 
-        Task<Patient> GetByIdAsync(int id);
+        Task<Patient> GetByIDAsync(int id);
 
         Task<int> AddAsync(Patient patient);
 

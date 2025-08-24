@@ -2,14 +2,14 @@ namespace AH.Application.DTOs.Row
 {
     public class TestTypeRowDTO
     {
-        public int Id { get; set; }
+        public int ID { get; set; }
         public string Name { get; set; }
         public string DepartmentName { get; set; }
         public int Cost { get; set; }
 
         public TestTypeRowDTO(int id, string name, string departmentName, int cost)
         {
-            Id = id;
+            ID = id;
             Name = name;
             DepartmentName = departmentName;
             Cost = cost;
@@ -17,7 +17,7 @@ namespace AH.Application.DTOs.Row
 
         public TestTypeRowDTO()
         {
-            Id = -1;
+            ID = -1;
             Name = string.Empty;
             DepartmentName = string.Empty;
             Cost = 0;

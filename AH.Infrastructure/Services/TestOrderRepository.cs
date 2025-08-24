@@ -1,12 +1,23 @@
 using AH.Application.DTOs.Extra;
+using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
+using AH.Infrastructure.Helpers;
+using Microsoft.Extensions.Logging;
+using System.Data;
 
 namespace AH.Infrastructure.Repositories
 {
     public class TestOrderRepository : ITestOrderRepository
     {
+        private readonly ILogger<TestOrderRepository> logger;
+
+        public TestOrderRepository(ILogger<TestOrderRepository> logger)
+        {
+            this.logger = logger;
+        }
+
         public async Task<int> AddAsync(TestOrder testOrder)
         {
             throw new NotImplementedException();
@@ -17,12 +28,38 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        Task<ListResponseDTO<TestOrderRowDTO>> ITestOrderRepository.GetAllAsync()
+        async Task<ListResponseDTO<TestOrderRowDTO>> ITestOrderRepository.GetAllAsync(OperationDoctorFilterDTO filterDTO)
         {
-            throw new NotImplementedException();
+            var extraParameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["OperationID"] = (filterDTO.OperationID, SqlDbType.Int, null, null),
+                ["Page"] = (filterDTO.Page, SqlDbType.Int, null, null),
+            };
+
+            int totalCount = -1;
+            List<TestOrderRowDTO> items = new List<TestOrderRowDTO>();
+            ConvertingHelper converter = new ConvertingHelper();
+            RowCountOutputHelper rowCountOutputHelper = new RowCountOutputHelper();
+
+            Exception? ex = await ADOHelper.ExecuteReaderAsync(
+                 "Fetch_TestOrders", logger, cmd =>
+                 {
+                     SqlParameterHelper.AddParametersFromDictionary(cmd, extraParameters);
+
+                     rowCountOutputHelper.AddToCommand(cmd);
+                 }, (reader, cmd) =>
+                 {
+                     items.Add(new TestOrderRowDTO(converter.ConvertValue<int>("ID"),
+                         converter.ConvertValue<string>("PatientFullName"),
+                         converter.ConvertValue<string>("TestTypeName")));
+                 }, null, (reader, cmd) => { converter = new ConvertingHelper(reader); });
+
+            totalCount = rowCountOutputHelper.GetRowCount();
+
+            return new ListResponseDTO<TestOrderRowDTO>(items, totalCount, ex);
         }
 
-        Task<TestOrder> ITestOrderRepository.GetByIdAsync(int id)
+        Task<TestOrder> ITestOrderRepository.GetByIDAsync(int id)
         {
             throw new NotImplementedException();
         }

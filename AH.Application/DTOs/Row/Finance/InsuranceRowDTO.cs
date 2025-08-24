@@ -3,24 +3,25 @@ namespace AH.Application.DTOs.Row
     public class InsuranceRowDTO
     {
         public int ID { get; set; }
-        public string CompanyName { get; set; }
-        public string PolicyNumber { get; set; }
-        public string CoverageType { get; set; }
+        public string ProviderName { get; set; }
+        public decimal Coverage { get; set; }
 
-        public InsuranceRowDTO(int id, string companyName, string policyNumber, string coverageType)
+        public bool IsActive { get; set; }
+
+        public InsuranceRowDTO(int iD, string providerName, decimal coverage, bool isActive)
         {
-            ID = id;
-            CompanyName = companyName;
-            PolicyNumber = policyNumber;
-            CoverageType = coverageType;
+            ID = iD;
+            ProviderName = providerName;
+            Coverage = coverage;
+            IsActive = isActive;
         }
 
         public InsuranceRowDTO()
         {
             ID = -1;
-            CompanyName = string.Empty;
-            PolicyNumber = string.Empty;
-            CoverageType = string.Empty;
+            ProviderName = String.Empty;
+            Coverage = 0;
+            IsActive = false;
         }
     }
 }

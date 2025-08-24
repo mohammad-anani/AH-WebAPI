@@ -9,7 +9,7 @@ namespace AH.Application.IRepositories
     {
         Task<ListResponseDTO<TestTypeRowDTO>> GetAllAsync(TestTypeFilterDTO filterDTO);
 
-        Task<TestType> GetByIdAsync(int id);
+        Task<TestType> GetByIDAsync(int id);
 
         Task<int> AddAsync(TestType testType);
 

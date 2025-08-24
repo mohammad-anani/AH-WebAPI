@@ -4,17 +4,13 @@ namespace AH.Application.DTOs.Row
     {
         public int ID { get; set; }
         public string PatientFullName { get; set; }
-        public string DoctorFullName { get; set; }
-        public string OperationType { get; set; }
         public DateTime OperationDateTime { get; set; }
         public string Status { get; set; }
 
-        public OperationRowDTO(int id, string patientFullName, string doctorFullName, string operationType, DateTime operationDateTime, string status)
+        public OperationRowDTO(int id, string patientFullName, DateTime operationDateTime, string status)
         {
             ID = id;
             PatientFullName = patientFullName;
-            DoctorFullName = doctorFullName;
-            OperationType = operationType;
             OperationDateTime = operationDateTime;
             Status = status;
         }
@@ -23,8 +19,6 @@ namespace AH.Application.DTOs.Row
         {
             ID = -1;
             PatientFullName = string.Empty;
-            DoctorFullName = string.Empty;
-            OperationType = string.Empty;
             OperationDateTime = DateTime.MinValue;
             Status = string.Empty;
         }

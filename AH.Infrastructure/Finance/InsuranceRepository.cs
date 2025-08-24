@@ -1,19 +1,57 @@
 using AH.Application.DTOs.Extra;
+using AH.Application.DTOs.Filter.Finance;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
+using AH.Infrastructure.Helpers;
+using Microsoft.Extensions.Logging;
+using System.Data;
 
 namespace AH.Infrastructure.Repositories
 {
     public class InsuranceRepository : IInsuranceRepository
     {
-        public async Task<ListResponseDTO<InsuranceRowDTO>> GetAllByPatientIDAsync(int patiendID)
+        private readonly ILogger<InsuranceRepository> _logger;
+
+        public InsuranceRepository(ILogger<InsuranceRepository> logger)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            _logger = logger;
         }
 
-        public async Task<Insurance> GetByIdAsync(int id)
+        public async Task<ListResponseDTO<InsuranceRowDTO>> GetAllByPatientIDAsync(InsuranceFilterDTO filterDTO)
+        {
+            var extraParameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["PatientID"] = (filterDTO.PatientID, SqlDbType.Int, null, null),
+                ["Page"] = (filterDTO.Page, SqlDbType.Int, null, null),
+            };
+
+            int totalCount = -1;
+            List<InsuranceRowDTO> items = new List<InsuranceRowDTO>();
+            ConvertingHelper converter = new ConvertingHelper();
+            RowCountOutputHelper rowCountOutputHelper = new RowCountOutputHelper();
+
+            Exception? ex = await ADOHelper.ExecuteReaderAsync(
+                 "Fetch_Insurances", _logger, cmd =>
+                 {
+                     SqlParameterHelper.AddParametersFromDictionary(cmd, extraParameters);
+
+                     rowCountOutputHelper.AddToCommand(cmd);
+                 }, (reader, cmd) =>
+                 {
+                     items.Add(new InsuranceRowDTO(
+                         converter.ConvertValue<int>("ID"),
+                         converter.ConvertValue<string>("ProviderName"),
+                         converter.ConvertValue<decimal>("Coverage"),
+                         converter.ConvertValue<bool>("IsActive")));
+                 }, null, (reader, cmd) => { converter = new ConvertingHelper(reader); });
+
+            totalCount = rowCountOutputHelper.GetRowCount();
+
+            return new ListResponseDTO<InsuranceRowDTO>(items, totalCount, ex);
+        }
+
+        public async Task<Insurance> GetByIDAsync(int id)
         {
             // Implementation placeholder
             throw new NotImplementedException();

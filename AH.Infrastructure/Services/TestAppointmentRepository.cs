@@ -3,15 +3,40 @@ using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
+using AH.Infrastructure.Helpers;
+using Microsoft.Extensions.Logging;
+using System.Data;
 
 namespace AH.Infrastructure.Repositories
 {
     public class TestAppointmentRepository : ITestAppointmentRepository
     {
+        private readonly ILogger<AppointmentRepository> _logger;
+
+        public TestAppointmentRepository(ILogger<AppointmentRepository> logger)
+        {
+            _logger = logger;
+        }
+
         public async Task<ListResponseDTO<TestAppointmentRowDTO>> GetAllAsync(TestAppointmentFilterDTO filterDTO)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["TestOrderID"] = (filterDTO.TestOrderID, SqlDbType.Int, null, null),
+                ["TestTypeID"] = (filterDTO.TestTypeID, SqlDbType.Int, null, null),
+            };
+
+            return await ReusableCRUD.GetAllAsync<TestAppointmentRowDTO, TestAppointmentFilterDTO>("Fetch_TestAppointments", _logger, filterDTO, cmd =>
+            {
+                ServiceHelper.AddServiceParameters(filterDTO, cmd);
+            }, (reader, converter) =>
+
+                new TestAppointmentRowDTO(converter.ConvertValue<int>("ID"),
+                                    converter.ConvertValue<string>("PatientFullName"),
+                                    converter.ConvertValue<string>("TestFullName"),
+                                    converter.ConvertValue<DateTime>("ScheduledDate"),
+                                    converter.ConvertValue<string>("Status"))
+            , parameters);
         }
 
         public async Task<ListResponseDTO<AppointmentRowDTO>> GetAllByPatientIDAsync(int patientID)
@@ -20,7 +45,7 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<TestAppointment> GetByIdAsync(int id)
+        public async Task<TestAppointment> GetByIDAsync(int id)
         {
             // Implementation placeholder
             throw new NotImplementedException();

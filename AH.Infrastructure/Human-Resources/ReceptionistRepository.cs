@@ -3,18 +3,33 @@ using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
+using AH.Infrastructure.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace AH.Infrastructure.Repositories
 {
     public class ReceptionistRepository : IReceptionistRepository
     {
-        public async Task<ListResponseDTO<ReceptionistRowDTO>> GetAllAsync(ReceptionistFilterDTO filterDTO)
+        private readonly ILogger<ReceptionistRepository> _logger;
+
+        public ReceptionistRepository(ILogger<ReceptionistRepository> logger)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            _logger = logger;
         }
 
-        public async Task<Receptionist> GetByIdAsync(int id)
+        public async Task<ListResponseDTO<ReceptionistRowDTO>> GetAllAsync(ReceptionistFilterDTO filterDTO)
+        {
+            return await ReusableCRUD.GetAllAsync<ReceptionistRowDTO, ReceptionistFilterDTO>("Fetch_Receptionists", _logger, filterDTO, cmd =>
+            {
+                EmployeeHelper.AddEmployeeParameters(filterDTO, cmd);
+            }, (reader, converter) =>
+
+                new ReceptionistRowDTO(converter.ConvertValue<int>("ID"),
+                                    converter.ConvertValue<string>("FullName"))
+          , null);
+        }
+
+        public async Task<Receptionist> GetByIDAsync(int id)
         {
             // Implementation placeholder
             throw new NotImplementedException();
