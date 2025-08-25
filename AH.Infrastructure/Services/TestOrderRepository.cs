@@ -1,4 +1,4 @@
-using AH.Application.DTOs.Extra;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
@@ -18,21 +18,11 @@ namespace AH.Infrastructure.Repositories
             this.logger = logger;
         }
 
-        public async Task<int> AddAsync(TestOrder testOrder)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<bool> ITestOrderRepository.DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        async Task<ListResponseDTO<TestOrderRowDTO>> ITestOrderRepository.GetAllAsync(OperationDoctorFilterDTO filterDTO)
+        public async Task<GetAllResponseDTO<TestOrderRowDTO>> GetAllAsync(TestOrderFilterDTO filterDTO)
         {
             var extraParameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
-                ["OperationID"] = (filterDTO.OperationID, SqlDbType.Int, null, null),
+                ["AppointmentID"] = (filterDTO.AppointmentID, SqlDbType.Int, null, null),
                 ["Page"] = (filterDTO.Page, SqlDbType.Int, null, null),
             };
 
@@ -56,15 +46,25 @@ namespace AH.Infrastructure.Repositories
 
             totalCount = rowCountOutputHelper.GetRowCount();
 
-            return new ListResponseDTO<TestOrderRowDTO>(items, totalCount, ex);
+            return new GetAllResponseDTO<TestOrderRowDTO>(items, totalCount, ex);
         }
 
-        Task<TestOrder> ITestOrderRepository.GetByIDAsync(int id)
+        public async Task<int> AddAsync(TestOrder testOrder)
         {
             throw new NotImplementedException();
         }
 
-        Task<bool> ITestOrderRepository.UpdateAsync(TestOrder testOrder)
+        public async Task<bool> DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<GetByIDResponseDTO<TestOrder>> GetByIDAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> UpdateAsync(TestOrder testOrder)
         {
             throw new NotImplementedException();
         }

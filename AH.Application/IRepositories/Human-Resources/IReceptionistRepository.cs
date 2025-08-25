@@ -1,4 +1,4 @@
-using AH.Application.DTOs.Extra;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
@@ -7,9 +7,9 @@ namespace AH.Application.IRepositories
 {
     public interface IReceptionistRepository : IEmployee
     {
-        Task<ListResponseDTO<ReceptionistRowDTO>> GetAllAsync(ReceptionistFilterDTO filterDTO);
+        Task<GetAllResponseDTO<ReceptionistRowDTO>> GetAllAsync(ReceptionistFilterDTO filterDTO);
 
-        Task<Receptionist> GetByIDAsync(int id);
+        Task<GetByIDResponseDTO<Receptionist>> GetByIDAsync(int id);
 
         Task<int> AddAsync(Receptionist receptionist);
 

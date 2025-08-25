@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using AH.Domain.Entities;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,6 +20,24 @@ namespace AH.Infrastructure.Helpers
                 ["CreatedAtTo"] = (createdAtTo, SqlDbType.DateTime, null, null),
             };
             SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+        }
+
+        public static Receptionist ReadReceptionist(SqlDataReader reader)
+        {
+            var converter = new ConvertingHelper(reader);
+            Receptionist CreatedByReceptionist = new Receptionist()
+            {
+                ID = converter.ConvertValue<int>("CreatedByReceptionistID"),
+                Employee = {
+                    Person =
+                        {
+                        FirstName = converter.ConvertValue<string>("CreatedByReceptionistFirstName"),
+                        MiddleName = converter.ConvertValue<string>("CreatedByReceptionistMiddleName"),
+                        LastName = converter.ConvertValue<string>("CreatedByReceptionistLastName"),
+                        }
+                }
+            };
+            return CreatedByReceptionist;
         }
     }
 }

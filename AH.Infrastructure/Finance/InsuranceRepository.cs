@@ -1,4 +1,4 @@
-using AH.Application.DTOs.Extra;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Filter.Finance;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
@@ -18,7 +18,7 @@ namespace AH.Infrastructure.Repositories
             _logger = logger;
         }
 
-        public async Task<ListResponseDTO<InsuranceRowDTO>> GetAllByPatientIDAsync(InsuranceFilterDTO filterDTO)
+        public async Task<GetAllResponseDTO<InsuranceRowDTO>> GetAllByPatientIDAsync(InsuranceFilterDTO filterDTO)
         {
             var extraParameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
@@ -48,13 +48,39 @@ namespace AH.Infrastructure.Repositories
 
             totalCount = rowCountOutputHelper.GetRowCount();
 
-            return new ListResponseDTO<InsuranceRowDTO>(items, totalCount, ex);
+            return new GetAllResponseDTO<InsuranceRowDTO>(items, totalCount, ex);
         }
 
-        public async Task<Insurance> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<Insurance>> GetByIDAsync(int id)
         {
-            // Implementation placeholder
             throw new NotImplementedException();
+            //Insurance insurance = new Insurance();
+
+            //Exception? ex = await ReusableCRUD.GetByID<Admin>("Fetch_InsuranceByID", _logger, id, null, (reader, converter) =>
+            //{
+            //    insurance  new Insurance(converter.ConvertValue<int>("ID"), new Patient()
+            //    {
+            //        ID = converter.ConvertValue<int>("PatientID"),
+            //        Person = new Person
+            //        {
+            //            FirstName = converter.ConvertValue<string>("PatientFirstName"),
+            //            MiddleName = converter.ConvertValue<string>("PatientMiddleName"),
+            //            LastName = converter.ConvertValue<string>("PatientLastName"),
+            //        }
+            //    },
+            //        converter.ConvertValue<string>("ProviderName"),
+            //        converter.ConvertValue<decimal>("Coverage", new Department
+            //        {
+            //            ID = converter.ConvertValue<int>("DepartmentID"),
+            //            Name = converter.ConvertValue<string>("DepartmentName")
+            //        },
+            //        converter.ConvertValue<int>("Cost"),
+            //        AdminAuditHelper.ReadAdmin(reader),
+            //        converter.ConvertValue<DateTime>("CreatedAt"));
+            //}
+            //);
+
+            //return new GetByIDResponseDTO<Insurance>(insurance, ex);
         }
 
         public async Task<bool> Renew(int id)

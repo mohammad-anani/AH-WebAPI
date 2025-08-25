@@ -24,7 +24,7 @@ namespace AH.Infrastructure.Helpers
             SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
         }
 
-        public static Func<SqlDataReader, Task<Person>> ReadPersonAsync = async reader =>
+        public static Func<SqlDataReader, Person> ReadPerson = reader =>
         {
             var converter = new ConvertingHelper(reader);
 
@@ -47,7 +47,7 @@ namespace AH.Infrastructure.Helpers
                 }
             };
 
-            return await Task.FromResult(person);
+            return person;
         };
     }
 }

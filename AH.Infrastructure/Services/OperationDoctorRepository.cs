@@ -1,4 +1,4 @@
-using AH.Application.DTOs.Extra;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
@@ -18,7 +18,7 @@ namespace AH.Infrastructure.Repositories
             _logger = logger;
         }
 
-        public async Task<ListResponseDTO<OperationDoctorRowDTO>> GetAllByOperationIDAsync(OperationDoctorFilterDTO filterDTO)
+        public async Task<GetAllResponseDTO<OperationDoctorRowDTO>> GetAllByOperationIDAsync(OperationDoctorFilterDTO filterDTO)
         {
             var extraParameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
@@ -49,7 +49,7 @@ namespace AH.Infrastructure.Repositories
 
             totalCount = rowCountOutputHelper.GetRowCount();
 
-            return new ListResponseDTO<OperationDoctorRowDTO>(items, totalCount, ex);
+            return new GetAllResponseDTO<OperationDoctorRowDTO>(items, totalCount, ex);
         }
 
         public async Task<int> AddUpdateAsync(OperationDoctor operationDoctor)

@@ -3,23 +3,31 @@ namespace AH.Application.DTOs.Row
     public class OperationRowDTO
     {
         public int ID { get; set; }
+
+        public string Name { get; set; }
         public string PatientFullName { get; set; }
-        public DateTime OperationDateTime { get; set; }
+        public DateTime ScheduledDate { get; set; }
         public string Status { get; set; }
 
-        public OperationRowDTO(int id, string patientFullName, DateTime operationDateTime, string status)
+        public bool IsPaid { get; set; }
+
+        public OperationRowDTO(int iD, string name, string patientFullName, DateTime scheduledDate, string status, bool isPaid)
         {
-            ID = id;
+            ID = iD;
+            Name = name;
             PatientFullName = patientFullName;
-            OperationDateTime = operationDateTime;
+            ScheduledDate = scheduledDate;
             Status = status;
+            IsPaid = isPaid;
         }
 
         public OperationRowDTO()
         {
             ID = -1;
+            Name = string.Empty;
             PatientFullName = string.Empty;
-            OperationDateTime = DateTime.MinValue;
+            ScheduledDate = DateTime.MinValue;
+            IsPaid = false;
             Status = string.Empty;
         }
     }

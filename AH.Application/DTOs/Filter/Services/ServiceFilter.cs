@@ -15,7 +15,10 @@ namespace AH.Application.DTOs.Filter
         public DateTime? ResultDateTo { get; set; }
         public byte? Status { get; set; }
         public string? Notes { get; set; }
-        public int? BillID { get; set; }
+        public int? AmountFrom { get; set; }
+        public int? AmountTo { get; set; }
+        public int? AmountPaidFrom { get; set; }
+        public int? AmountPaidTo { get; set; }
         public int? CreatedByReceptionistID { get; set; }
         public DateTime? CreatedAtFrom { get; set; }
         public DateTime? CreatedAtTo { get; set; }
@@ -33,7 +36,10 @@ namespace AH.Application.DTOs.Filter
             DateTime? resultDateTo,
             byte? status,
             string? notes,
-            int? billID,
+            int? amountFrom,
+            int? amountTo,
+            int? amountPaidFrom,
+            int? amountPaidTo,
             int? createdByReceptionistID,
             DateTime? createdAtFrom,
             DateTime? createdAtTo)
@@ -49,7 +55,10 @@ namespace AH.Application.DTOs.Filter
             ResultDateTo = resultDateTo;
             Status = status;
             Notes = notes;
-            BillID = billID;
+            AmountFrom = amountFrom;
+            AmountTo = amountTo;
+            AmountPaidFrom = amountPaidFrom;
+            AmountPaidTo = amountPaidTo;
             CreatedByReceptionistID = createdByReceptionistID;
             CreatedAtFrom = createdAtFrom;
             CreatedAtTo = createdAtTo;
@@ -69,7 +78,10 @@ namespace AH.Application.DTOs.Filter
             ResultDateTo = null;
             Status = null;
             Notes = null;
-            BillID = null;
+            AmountFrom = null;
+            AmountTo = null;
+            AmountPaidFrom = null;
+            AmountPaidTo = null;
             CreatedByReceptionistID = null;
             CreatedAtFrom = null;
             CreatedAtTo = null;

@@ -1,21 +1,20 @@
-using AH.Application.DTOs.Extra;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
 
-namespace AH.Application
-
+namespace AH.Application.IRepositories
 {
     public interface IAppointmentRepository : IService
     {
-        Task<ListResponseDTO<AppointmentRowDTO>> GetAllAsync(AppointmentFilterDTO filterDTO);
+        Task<GetAllResponseDTO<AppointmentRowDTO>> GetAllAsync(AppointmentFilterDTO filterDTO);
 
-        Task<ListResponseDTO<AppointmentRowDTO>> GetAllByDoctorIDAsync(int doctorID);
+        Task<GetAllResponseDTO<AppointmentRowDTO>> GetAllByDoctorIDAsync(int doctorID);
 
-        Task<ListResponseDTO<AppointmentRowDTO>> GetAllByPatientIDAsync(int patientID);
+        Task<GetAllResponseDTO<AppointmentRowDTO>> GetAllByPatientIDAsync(int patientID);
 
-        Task<Appointment> GetByIDAsync(int id);
+        Task<GetByIDResponseDTO<Appointment>> GetByIDAsync(int id);
 
         Task<int> AddAsync(Appointment appointment);
 

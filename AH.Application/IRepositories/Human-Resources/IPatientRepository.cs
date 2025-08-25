@@ -1,4 +1,4 @@
-﻿using AH.Application.DTOs.Extra;
+﻿using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
@@ -7,11 +7,11 @@ namespace AH.Application.IRepositories
 {
     public interface IPatientRepository
     {
-        Task<ListResponseDTO<PatientRowDTO>> GetAllAsync(PatientFilterDTO filterDTO);
+        Task<GetAllResponseDTO<PatientRowDTO>> GetAllAsync(PatientFilterDTO filterDTO);
 
-        Task<ListResponseDTO<PatientRowDTO>> GetForDoctorAsync(int doctorID);
+        Task<GetAllResponseDTO<PatientRowDTO>> GetAllForDoctorAsync(int doctorID, PatientFilterDTO filterDTO);
 
-        Task<Patient> GetByIDAsync(int id);
+        Task<GetByIDResponseDTO<Patient>> GetByIDAsync(int id);
 
         Task<int> AddAsync(Patient patient);
 

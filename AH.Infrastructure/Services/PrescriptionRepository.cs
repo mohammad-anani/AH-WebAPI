@@ -1,4 +1,4 @@
-using AH.Application.DTOs.Extra;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
@@ -18,17 +18,7 @@ namespace AH.Infrastructure.Repositories
             _logger = logger;
         }
 
-        public async Task<int> AddAsync(Prescription prescription)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<ListResponseDTO<PrescriptionRowDTO>> GetAllByAppointmentIDAsync(PrescriptionFilterDTO filterDTO)
+        public async Task<GetAllResponseDTO<PrescriptionRowDTO>> GetAllByAppointmentIDAsync(PrescriptionFilterDTO filterDTO)
         {
             var extraParameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
@@ -60,10 +50,20 @@ namespace AH.Infrastructure.Repositories
 
             totalCount = rowCountOutputHelper.GetRowCount();
 
-            return new ListResponseDTO<PrescriptionRowDTO>(items, totalCount, ex);
+            return new GetAllResponseDTO<PrescriptionRowDTO>(items, totalCount, ex);
         }
 
-        public async Task<Prescription> GetByIDAsync(int id)
+        public async Task<int> AddAsync(Prescription prescription)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<GetByIDResponseDTO<Prescription>> GetByIDAsync(int id)
         {
             throw new NotImplementedException();
         }

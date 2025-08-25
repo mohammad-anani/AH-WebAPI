@@ -20,7 +20,7 @@ namespace AH.Application.DTOs.Row
         {
             ID = -1;
             ProviderName = String.Empty;
-            Coverage = 0;
+            Coverage = -1;
             IsActive = false;
         }
     }

@@ -1,4 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using AH.Domain.Entities;
+using AH.Domain.Entities.Audit;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,6 +21,27 @@ namespace AH.Infrastructure.Helpers
                 ["CreatedAtTo"] = (createdAtTo, SqlDbType.DateTime, null, null),
             };
             SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+        }
+
+        public static AdminAudit ReadAdmin(SqlDataReader reader)
+        {
+            var converter = new ConvertingHelper(reader);
+
+            AdminAudit CreatedByAdmin = new AdminAudit()
+            {
+                ID = converter.ConvertValue<int>("CreatedByAdminID"),
+
+                Employee = {
+                    Person =
+                        {
+                        FirstName = converter.ConvertValue<string>("CreatedByAdminFirstName"),
+                        MiddleName = converter.ConvertValue<string>("CreatedByAdminMiddleName"),
+                        LastName = converter.ConvertValue<string>("CreatedByAdminLastName"),
+                        }
+                }
+            };
+
+            return CreatedByAdmin;
         }
     }
 }

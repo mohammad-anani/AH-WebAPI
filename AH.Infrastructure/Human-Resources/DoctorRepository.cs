@@ -1,9 +1,10 @@
-using AH.Application.DTOs.Extra;
 using AH.Application.DTOs.Filter;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using System.Data;
 
@@ -18,7 +19,7 @@ namespace AH.Infrastructure.Repositories
             _logger = logger;
         }
 
-        public async Task<ListResponseDTO<DoctorRowDTO>> GetAllAsync(DoctorFilterDTO filterDTO)
+        public async Task<GetAllResponseDTO<DoctorRowDTO>> GetAllAsync(DoctorFilterDTO filterDTO)
         {
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
@@ -37,10 +38,14 @@ namespace AH.Infrastructure.Repositories
             , parameters);
         }
 
-        public async Task<Doctor> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<Doctor>> GetByIDAsync(int id)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            return await ReusableCRUD.GetByID<Doctor>("Fetch_DoctorByID", _logger, id, null, (reader, converter) =>
+            {
+                Employee employee = EmployeeHelper.ReadEmployee(reader);
+                return new Doctor(converter.ConvertValue<int>("ID"), employee, converter.ConvertValue<int>("CostPerAppointment"),
+                    converter.ConvertValue<string>("Specialization"));
+            });
         }
 
         public async Task<int> AddAsync(Doctor doctor)
@@ -65,6 +70,26 @@ namespace AH.Infrastructure.Repositories
         {
             // Implementation placeholder
             throw new NotImplementedException();
+        }
+
+        public static Doctor ReadDoctor(SqlDataReader reader)
+        {
+            ConvertingHelper converter = new ConvertingHelper(reader);
+
+            return new Doctor()
+            {
+                ID = converter.ConvertValue<int>("DoctorID"),
+                Employee =
+                {
+                    Person=
+                new Person
+                {
+                    FirstName = converter.ConvertValue<string>("DoctorFirstName"),
+                    MiddleName = converter.ConvertValue<string>("DoctorMiddleName"),
+                    LastName = converter.ConvertValue<string>("DoctorLastName"),
+                }
+                }
+            };
         }
     }
 }

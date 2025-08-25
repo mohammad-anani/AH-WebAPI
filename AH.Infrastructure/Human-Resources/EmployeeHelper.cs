@@ -16,8 +16,8 @@ namespace AH.Infrastructure.Helpers
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
                 ["DepartmentID"] = (employeeFilter.DepartmentID, SqlDbType.Int, null, null),
-                ["SalaryFrom"] = (employeeFilter.SalaryFrom, SqlDbType.Money, null, null),
-                ["SalaryTo"] = (employeeFilter.SalaryTo, SqlDbType.Money, null, null),
+                ["SalaryFrom"] = (employeeFilter.SalaryFrom, SqlDbType.Int, null, null),
+                ["SalaryTo"] = (employeeFilter.SalaryTo, SqlDbType.Int, null, null),
                 ["HireDateFrom"] = (employeeFilter.HireDateFrom, SqlDbType.Date, null, null),
                 ["HireDateTo"] = (employeeFilter.HireDateTo, SqlDbType.Date, null, null),
                 ["LeaveDateFrom"] = (employeeFilter.LeaveDateFrom, SqlDbType.Date, null, null),
@@ -35,13 +35,13 @@ namespace AH.Infrastructure.Helpers
                 (employeeFilter.CreatedByAdminID, employeeFilter.CreatedAtFrom, employeeFilter.CreatedAtTo, cmd);
         }
 
-        public static Func<SqlDataReader, Task<Employee>> ReadEmployeeAsync = async reader =>
+        public static Func<SqlDataReader, Employee> ReadEmployee = reader =>
         {
             var converter = new ConvertingHelper(reader);
 
             var employee = new Employee
             {
-                Person = await PersonHelper.ReadPersonAsync(reader),
+                Person = PersonHelper.ReadPerson(reader),
 
                 Department = new Department
                 {
@@ -54,21 +54,11 @@ namespace AH.Infrastructure.Helpers
                 WorkingDays = converter.ConvertValue<int>("WorkingDays"),
                 ShiftStart = converter.ConvertValue<TimeOnly>("ShiftStart"),
                 ShiftEnd = converter.ConvertValue<TimeOnly>("ShiftEnd"),
-                CreatedByAdmin =
-                {
-                ID = converter.ConvertValue<int>("CreatedByAdminID"),
-
-                Employee = {
-                        Person =
-                        {
-                        FirstName= converter.ConvertValue<string>("CreatedByAdminFullName"),
-                        }
-                    }
-                },
+                CreatedByAdmin = AdminAuditHelper.ReadAdmin(reader),
                 CreatedAt = converter.ConvertValue<DateTime>("CreatedAt")
             };
 
-            return await Task.FromResult(employee);
+            return employee;
         };
     }
 }

@@ -1,4 +1,4 @@
-using AH.Application.DTOs.Extra;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
@@ -18,7 +18,7 @@ namespace AH.Infrastructure.Repositories
             _logger = logger;
         }
 
-        public async Task<ListResponseDTO<OperationRowDTO>> GetAllAsync(OperationFilterDTO filterDTO)
+        public async Task<GetAllResponseDTO<OperationRowDTO>> GetAllAsync(OperationFilterDTO filterDTO)
         {
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
@@ -33,25 +33,41 @@ namespace AH.Infrastructure.Repositories
             }, (reader, converter) =>
 
                 new OperationRowDTO(converter.ConvertValue<int>("ID"),
+                converter.ConvertValue<string>("Name"),
                                     converter.ConvertValue<string>("PatientFullName"),
                                     converter.ConvertValue<DateTime>("ScheduledDate"),
-                                    converter.ConvertValue<string>("Status"))
+                                    converter.ConvertValue<string>("Status"), converter.ConvertValue<bool>("IsPaid"))
             , parameters);
         }
 
-        public async Task<ListResponseDTO<OperationRowDTO>> GetAllByDoctorIDAsync(int doctorID)
+        public async Task<GetAllResponseDTO<OperationRowDTO>> GetAllByDoctorIDAsync(int doctorID)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var filterDTO = new OperationFilterDTO { /* set any default values if needed */ };
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["DoctorID"] = (doctorID, SqlDbType.Int, null, null),
+            };
+
+            return await ReusableCRUD.GetAllAsync<OperationRowDTO, OperationFilterDTO>("Fetch_OperationsForDoctor", _logger, filterDTO, cmd =>
+            {
+                ServiceHelper.AddServiceParameters(filterDTO, cmd);
+            }, (reader, converter) =>
+
+                new OperationRowDTO(converter.ConvertValue<int>("ID"),
+                converter.ConvertValue<string>("Name"),
+                                    converter.ConvertValue<string>("PatientFullName"),
+                                    converter.ConvertValue<DateTime>("ScheduledDate"),
+                                    converter.ConvertValue<string>("Status"), converter.ConvertValue<bool>("IsPaid"))
+            , parameters);
         }
 
-        public async Task<ListResponseDTO<OperationRowDTO>> GetAllByPatientIDAsync(int patientID)
+        public async Task<GetAllResponseDTO<OperationRowDTO>> GetAllByPatientIDAsync(int patientID)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var filterDTO = new OperationFilterDTO { PatientID = patientID };
+            return await this.GetAllAsync(filterDTO);
         }
 
-        public async Task<Operation> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<Operation>> GetByIDAsync(int id)
         {
             // Implementation placeholder
             throw new NotImplementedException();

@@ -1,4 +1,4 @@
-using AH.Application.DTOs.Extra;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
@@ -17,7 +17,7 @@ namespace AH.Infrastructure.Repositories
             _logger = logger;
         }
 
-        public async Task<ListResponseDTO<ReceptionistRowDTO>> GetAllAsync(ReceptionistFilterDTO filterDTO)
+        public async Task<GetAllResponseDTO<ReceptionistRowDTO>> GetAllAsync(ReceptionistFilterDTO filterDTO)
         {
             return await ReusableCRUD.GetAllAsync<ReceptionistRowDTO, ReceptionistFilterDTO>("Fetch_Receptionists", _logger, filterDTO, cmd =>
             {
@@ -29,10 +29,18 @@ namespace AH.Infrastructure.Repositories
           , null);
         }
 
-        public async Task<Receptionist> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<Receptionist>> GetByIDAsync(int id)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            Receptionist receptionist = new Receptionist();
+
+            Exception? ex = await ReusableCRUD.GetByID<Admin>("Fetch_ReceptionistByID", _logger, id, null, (reader, converter) =>
+            {
+                Employee employee = EmployeeHelper.ReadEmployee(reader);
+                receptionist = new Receptionist(converter.ConvertValue<int>("ID"), employee);
+            }
+            );
+
+            return new GetByIDResponseDTO<Receptionist>(receptionist, ex);
         }
 
         public async Task<int> AddAsync(Receptionist receptionist)

@@ -1,9 +1,10 @@
-using AH.Application.DTOs.Extra;
 using AH.Application.DTOs.Filter;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using System.Data;
 
@@ -11,21 +12,21 @@ namespace AH.Infrastructure.Repositories
 {
     public class TestTypeRepository : ITestTypeRepository
     {
-        private readonly ILogger<DepartmentRepository> _logger;
+        private readonly ILogger<TestTypeRepository> _logger;
 
-        public TestTypeRepository(ILogger<DepartmentRepository> logger)
+        public TestTypeRepository(ILogger<TestTypeRepository> logger)
         {
             _logger = logger;
         }
 
-        public async Task<ListResponseDTO<TestTypeRowDTO>> GetAllAsync(TestTypeFilterDTO filterDTO)
+        public async Task<GetAllResponseDTO<TestTypeRowDTO>> GetAllAsync(TestTypeFilterDTO filterDTO)
         {
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
-                ["Name"] = (filterDTO.Name, SqlDbType.NVarChar, 100, null)
-            ,
-                ["CostFrom"] = (filterDTO.CostFrom, SqlDbType.NVarChar, 100, null),
-                ["CostTo"] = (filterDTO.CostTo, SqlDbType.NVarChar, 100, null)
+                ["Name"] = (filterDTO.Name, SqlDbType.NVarChar, 100, null),
+                ["DepartmentID"] = (filterDTO.DepartmentID, SqlDbType.Int, null, null),
+                ["CostFrom"] = (filterDTO.CostFrom, SqlDbType.Int, null, null),
+                ["CostTo"] = (filterDTO.CostTo, SqlDbType.Int, null, null)
             };
 
             return await ReusableCRUD.GetAllAsync<TestTypeRowDTO, TestTypeFilterDTO>("Fetch_TestTypes", _logger, filterDTO, cmd =>
@@ -39,10 +40,19 @@ namespace AH.Infrastructure.Repositories
      , null);
         }
 
-        public async Task<TestType> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<TestType>> GetByIDAsync(int id)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            return await ReusableCRUD.GetByID<TestType>("Fetch_TestTypeByID", _logger, id, null, (reader, converter) =>
+            {
+                return new TestType(converter.ConvertValue<int>("ID"), converter.ConvertValue<string>("Name"), new Department
+                {
+                    ID = converter.ConvertValue<int>("DepartmentID"),
+                    Name = converter.ConvertValue<string>("DepartmentName")
+                },
+                    converter.ConvertValue<int>("Cost"),
+                    AdminAuditHelper.ReadAdmin(reader),
+                    converter.ConvertValue<DateTime>("CreatedAt"));
+            });
         }
 
         public async Task<int> AddAsync(TestType testType)
@@ -61,6 +71,21 @@ namespace AH.Infrastructure.Repositories
         {
             // Implementation placeholder
             throw new NotImplementedException();
+        }
+
+        public static TestType ReadTestType(SqlDataReader reader)
+        {
+            ConvertingHelper converter = new ConvertingHelper(reader);
+
+            return new TestType()
+            {
+                ID = converter.ConvertValue<int>("TestTypeID"),
+                Name = converter.ConvertValue<string>("TestTypeName"),
+                Department = new Department
+                {
+                    Name = converter.ConvertValue<string>("TestTypeDepartmentName")
+                },
+            };
         }
     }
 }

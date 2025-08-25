@@ -1,4 +1,4 @@
-using AH.Application.DTOs.Extra;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
@@ -11,14 +11,14 @@ namespace AH.Infrastructure.Repositories
 {
     public class TestAppointmentRepository : ITestAppointmentRepository
     {
-        private readonly ILogger<AppointmentRepository> _logger;
+        private readonly ILogger<TestAppointmentRepository> _logger;
 
-        public TestAppointmentRepository(ILogger<AppointmentRepository> logger)
+        public TestAppointmentRepository(ILogger<TestAppointmentRepository> logger)
         {
             _logger = logger;
         }
 
-        public async Task<ListResponseDTO<TestAppointmentRowDTO>> GetAllAsync(TestAppointmentFilterDTO filterDTO)
+        public async Task<GetAllResponseDTO<TestAppointmentRowDTO>> GetAllAsync(TestAppointmentFilterDTO filterDTO)
         {
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
@@ -33,19 +33,22 @@ namespace AH.Infrastructure.Repositories
 
                 new TestAppointmentRowDTO(converter.ConvertValue<int>("ID"),
                                     converter.ConvertValue<string>("PatientFullName"),
-                                    converter.ConvertValue<string>("TestFullName"),
+                                    converter.ConvertValue<string>("TestName"),
+                                    converter.ConvertValue<bool>("IsOrdered"),
                                     converter.ConvertValue<DateTime>("ScheduledDate"),
-                                    converter.ConvertValue<string>("Status"))
+                                    converter.ConvertValue<string>("Status"),
+                                    converter.ConvertValue<bool>("IsPaid")
+                                    )
             , parameters);
         }
 
-        public async Task<ListResponseDTO<AppointmentRowDTO>> GetAllByPatientIDAsync(int patientID)
+        public async Task<GetAllResponseDTO<AppointmentRowDTO>> GetAllByPatientIDAsync(int patientID)
         {
-            // Implementation placeholder
+            // Implementation placeholder - should return appointments for specific patient
             throw new NotImplementedException();
         }
 
-        public async Task<TestAppointment> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<TestAppointment>> GetByIDAsync(int id)
         {
             // Implementation placeholder
             throw new NotImplementedException();

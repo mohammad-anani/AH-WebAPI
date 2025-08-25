@@ -1,4 +1,4 @@
-﻿using AH.Application.DTOs.Extra;
+﻿using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
@@ -15,7 +15,7 @@ namespace AH.Application.Services
             _adminRepository = adminRepository;
         }
 
-        public async Task<ListResponseDTO<AdminRowDTO>> GetAllAsync(AdminFilterDTO filterDTO)
+        public async Task<GetAllResponseDTO<AdminRowDTO>> GetAllAsync(AdminFilterDTO filterDTO)
         {
             return await _adminRepository.GetAllAsync(filterDTO);
         }

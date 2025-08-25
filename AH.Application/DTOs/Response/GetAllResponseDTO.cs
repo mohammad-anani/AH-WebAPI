@@ -1,13 +1,13 @@
-﻿namespace AH.Application.DTOs.Extra
+﻿namespace AH.Application.DTOs.Response
 {
-    public class ListResponseDTO<T>
+    public class GetAllResponseDTO<T>
     {
         public IEnumerable<T> Items { get; set; }
         public int Count { get; set; }
 
         public Exception? Exception { get; set; }
 
-        public ListResponseDTO(IEnumerable<T> items, int count, Exception? exception)
+        public GetAllResponseDTO(IEnumerable<T> items, int count, Exception? exception)
         {
             Items = items;
             Count = count;

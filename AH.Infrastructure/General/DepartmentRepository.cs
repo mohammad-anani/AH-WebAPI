@@ -1,9 +1,10 @@
-using AH.Application.DTOs.Extra;
 using AH.Application.DTOs.Filter;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using System.Data;
 
@@ -18,13 +19,13 @@ namespace AH.Infrastructure.Repositories
             _logger = logger;
         }
 
-        public async Task<ListResponseDTO<DepartmentRowDTO>> GetAllAsync(DepartmentFilterDTO filterDTO)
+        public async Task<GetAllResponseDTO<DepartmentRowDTO>> GetAllAsync(DepartmentFilterDTO filterDTO)
         {
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
-                ["Name"] = (filterDTO.Name, SqlDbType.NVarChar, 100, null)
+                ["Name"] = (filterDTO.Name, SqlDbType.NVarChar, 20, null)
                 ,
-                ["Phone"] = (filterDTO.Phone, SqlDbType.NVarChar, 100, null)
+                ["Phone"] = (filterDTO.Phone, SqlDbType.NVarChar, 8, null)
             };
 
             return await ReusableCRUD.GetAllAsync<DepartmentRowDTO, DepartmentFilterDTO>("Fetch_Departments", _logger, filterDTO, cmd =>
@@ -38,10 +39,15 @@ namespace AH.Infrastructure.Repositories
      , null);
         }
 
-        public async Task<Department> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<Department>> GetByIDAsync(int id)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            return await ReusableCRUD.GetByID<Department>("Fetch_DepartmentByID", _logger, id, null, (reader, converter) =>
+            new Department(converter.ConvertValue<int>("ID"), converter.ConvertValue<string>("Name"),
+                    converter.ConvertValue<string>("Phone"),
+                    AdminAuditHelper.ReadAdmin(reader),
+                    converter.ConvertValue<DateTime>("CreatedAt"))
+
+            );
         }
 
         public async Task<int> AddAsync(Department department)
@@ -60,6 +66,19 @@ namespace AH.Infrastructure.Repositories
         {
             // Implementation placeholder
             throw new NotImplementedException();
+        }
+
+        public static Department ReadDepartment(SqlDataReader reader)
+        {
+            ConvertingHelper converter = new ConvertingHelper(reader);
+
+            return new Department()
+            {
+                ID = converter.ConvertValue<int>("ID"),
+
+                Name = converter.ConvertValue<string>("DepartmentName"),
+                Phone = converter.ConvertValue<string>("DepartmentPhone")
+            };
         }
     }
 }

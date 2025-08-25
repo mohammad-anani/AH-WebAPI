@@ -1,8 +1,7 @@
-using AH.Application
-    ;
-using AH.Application.DTOs.Extra;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
+using AH.Application.IRepositories;
 using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
 using Microsoft.Extensions.Logging;
@@ -19,11 +18,11 @@ namespace AH.Infrastructure.Repositories
             _logger = logger;
         }
 
-        public async Task<ListResponseDTO<AppointmentRowDTO>> GetAllAsync(AppointmentFilterDTO filterDTO)
+        public async Task<GetAllResponseDTO<AppointmentRowDTO>> GetAllAsync(AppointmentFilterDTO filterDTO)
         {
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
-                ["PreviousAppointmentID"] = (null, SqlDbType.Int, null, null),
+                ["PreviousAppointmentID"] = (filterDTO.PreviousAppointmentID, SqlDbType.Int, null, null),
                 ["DoctorID"] = (filterDTO.DoctorID, SqlDbType.Int, null, null),
             };
 
@@ -35,24 +34,25 @@ namespace AH.Infrastructure.Repositories
                 new AppointmentRowDTO(converter.ConvertValue<int>("ID"),
                                     converter.ConvertValue<string>("PatientFullName"),
                                     converter.ConvertValue<string>("DoctorFullName"),
+                                    converter.ConvertValue<bool>("IsFollowUp"),
                                     converter.ConvertValue<DateTime>("ScheduledDate"),
-                                    converter.ConvertValue<string>("Status"))
+                                    converter.ConvertValue<string>("Status"), converter.ConvertValue<bool>("IsPaid"))
             , parameters);
         }
 
-        public async Task<ListResponseDTO<AppointmentRowDTO>> GetAllByDoctorIDAsync(int doctorID)
+        public async Task<GetAllResponseDTO<AppointmentRowDTO>> GetAllByDoctorIDAsync(int doctorID)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var filterDTO = new AppointmentFilterDTO { DoctorID = doctorID };
+            return await this.GetAllAsync(filterDTO);
         }
 
-        public async Task<ListResponseDTO<AppointmentRowDTO>> GetAllByPatientIDAsync(int patientID)
+        public async Task<GetAllResponseDTO<AppointmentRowDTO>> GetAllByPatientIDAsync(int patientID)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var filterDTO = new AppointmentFilterDTO { PatientID = patientID };
+            return await this.GetAllAsync(filterDTO);
         }
 
-        public async Task<Appointment> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<Appointment>> GetByIDAsync(int id)
         {
             // Implementation placeholder
             throw new NotImplementedException();

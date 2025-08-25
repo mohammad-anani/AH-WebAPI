@@ -1,4 +1,4 @@
-using AH.Application.DTOs.Extra;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Filter.Finance;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
@@ -18,7 +18,7 @@ namespace AH.Infrastructure.Repositories
             _logger = logger;
         }
 
-        public async Task<ListResponseDTO<PaymentRowDTO>> GetAllByBillIDAsync(PaymentFilterDTO filterDTO)
+        public async Task<GetAllResponseDTO<PaymentRowDTO>> GetAllByBillIDAsync(PaymentFilterDTO filterDTO)
         {
             var extraParameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
@@ -48,7 +48,7 @@ namespace AH.Infrastructure.Repositories
 
             totalCount = rowCountOutputHelper.GetRowCount();
 
-            return new ListResponseDTO<PaymentRowDTO>(items, totalCount, ex);
+            return new GetAllResponseDTO<PaymentRowDTO>(items, totalCount, ex);
         }
 
         public async Task<Payment> GetByIDAsync(int id)

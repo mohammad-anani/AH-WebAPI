@@ -17,7 +17,7 @@ namespace AH.Application.DTOs.Row
         public PaymentRowDTO()
         {
             ID = -1;
-            Amount = 0;
+            Amount = -1;
             Method = string.Empty;
         }
     }

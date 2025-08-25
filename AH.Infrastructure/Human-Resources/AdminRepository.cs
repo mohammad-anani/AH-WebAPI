@@ -1,4 +1,4 @@
-using AH.Application.DTOs.Extra;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
@@ -18,7 +18,7 @@ namespace AH.Infrastructure.Repositories
             _logger = logger;
         }
 
-        public async Task<ListResponseDTO<AdminRowDTO>> GetAllAsync(AdminFilterDTO filterDTO)
+        public async Task<GetAllResponseDTO<AdminRowDTO>> GetAllAsync(AdminFilterDTO filterDTO)
         {
             return await ReusableCRUD.GetAllAsync<AdminRowDTO, AdminFilterDTO>("Fetch_Admins", _logger, filterDTO, cmd =>
             {
@@ -30,10 +30,13 @@ namespace AH.Infrastructure.Repositories
             , null);
         }
 
-        public async Task<Admin> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<Admin>> GetByIDAsync(int id)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            return await ReusableCRUD.GetByID<Admin>("Fetch_AdminByID", _logger, id, null, (reader, converter) =>
+            {
+                Employee employee = EmployeeHelper.ReadEmployee(reader);
+                return new Admin(converter.ConvertValue<int>("ID"), employee);
+            });
         }
 
         public async Task<int> AddAsync(Admin admin)

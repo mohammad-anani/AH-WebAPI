@@ -20,7 +20,7 @@ namespace AH.Application.DTOs.Row
             ID = -1;
             Name = string.Empty;
             DepartmentName = string.Empty;
-            Cost = 0;
+            Cost = -1;
         }
     }
 }
