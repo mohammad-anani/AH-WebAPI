@@ -52,7 +52,7 @@ namespace AH.Infrastructure.Repositories
             return await this.GetAllAsync(filterDTO);
         }
 
-        public async Task<GetByIDResponseDTO<Appointment>> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<AppointmentDTODTO>> GetByIDAsync(int id)
         {
             // Implementation placeholder
             throw new NotImplementedException();

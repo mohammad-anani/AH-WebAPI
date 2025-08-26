@@ -9,7 +9,7 @@ namespace AH.Application.IRepositories
     {
         Task<GetAllResponseDTO<AdminRowDTO>> GetAllAsync(AdminFilterDTO filterDTO);
 
-        Task<GetByIDResponseDTO<Admin>> GetByIDAsync(int id);
+        Task<GetByIDResponseDTO<AdminDTODTO>> GetByIDAsync(int id);
 
         Task<int> AddAsync(Admin admin);
 

@@ -14,7 +14,7 @@ namespace AH.Application.IRepositories
 
         Task<GetAllResponseDTO<AppointmentRowDTO>> GetAllByPatientIDAsync(int patientID);
 
-        Task<GetByIDResponseDTO<Appointment>> GetByIDAsync(int id);
+        Task<GetByIDResponseDTO<AppointmentDTODTO>> GetByIDAsync(int id);
 
         Task<int> AddAsync(Appointment appointment);
 

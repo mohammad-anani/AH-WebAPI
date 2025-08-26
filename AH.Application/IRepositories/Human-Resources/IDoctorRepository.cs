@@ -9,7 +9,7 @@ namespace AH.Application.IRepositories
     {
         Task<GetAllResponseDTO<DoctorRowDTO>> GetAllAsync(DoctorFilterDTO filterDTO);
 
-        Task<GetByIDResponseDTO<Doctor>> GetByIDAsync(int id);
+        Task<GetByIDResponseDTO<DoctorDTO>> GetByIDAsync(int id);
 
         Task<int> AddAsync(Doctor doctor);
 

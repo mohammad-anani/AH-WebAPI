@@ -30,7 +30,7 @@ namespace AH.Infrastructure.Repositories
             , null);
         }
 
-        public async Task<GetByIDResponseDTO<Admin>> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<AdminDTODTO>> GetByIDAsync(int id)
         {
             return await ReusableCRUD.GetByID<Admin>("Fetch_AdminByID", _logger, id, null, (reader, converter) =>
             {

@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
@@ -55,7 +56,7 @@ namespace AH.Infrastructure.Repositories
       );
         }
 
-        public async Task<GetByIDResponseDTO<Patient>> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<PatientDTO>> GetByIDAsync(int id)
         {
             return await ReusableCRUD.GetByID<Patient>("Fetch_PatientByID", _logger, id, null, (reader, converter) =>
             {

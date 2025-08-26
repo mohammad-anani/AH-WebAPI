@@ -6,6 +6,7 @@ using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
 using Microsoft.Extensions.Logging;
 using System.Data;
+using AH.Application.DTOs.Entities;
 
 namespace AH.Infrastructure.Repositories
 {
@@ -63,7 +64,7 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<GetByIDResponseDTO<Prescription>> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<PrescriptionDTO>> GetByIDAsync(int id)
         {
             throw new NotImplementedException();
         }

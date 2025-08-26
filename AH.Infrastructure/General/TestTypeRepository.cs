@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
@@ -40,11 +41,11 @@ namespace AH.Infrastructure.Repositories
      , null);
         }
 
-        public async Task<GetByIDResponseDTO<TestType>> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<TestTypeDTO>> GetByIDAsync(int id)
         {
-            return await ReusableCRUD.GetByID<TestType>("Fetch_TestTypeByID", _logger, id, null, (reader, converter) =>
+            return await ReusableCRUD.GetByID<TestTypeDTO>("Fetch_TestTypeByID", _logger, id, null, (reader, converter) =>
             {
-                return new TestType(converter.ConvertValue<int>("ID"), converter.ConvertValue<string>("Name"), new Department
+                return new TestTypeDTO(converter.ConvertValue<int>("ID"), converter.ConvertValue<string>("Name"), new Department
                 {
                     ID = converter.ConvertValue<int>("DepartmentID"),
                     Name = converter.ConvertValue<string>("DepartmentName")

@@ -32,12 +32,16 @@ namespace AH.Application.DTOs.Filter
             DateTime? resultDateTo = null,
             byte? status = null,
             string? notes = null,
-            int? billID = null,
+            int? amountFrom = null,
+            int? amountTo = null,
+            int? amountPaidFrom = null,
+            int? amountPaidTo = null,
             int? createdByReceptionistID = null,
             DateTime? createdAtFrom = null,
             DateTime? createdAtTo = null)
             : base(patientID, scheduledDateFrom, scheduledDateTo, actualStartingDateFrom, actualStartingDateTo,
-                   reason, result, resultDateFrom, resultDateTo, status, notes, billID, createdByReceptionistID, createdAtFrom, createdAtTo)
+                   reason, result, resultDateFrom, resultDateTo, status, notes, amountFrom, amountTo,
+                   amountPaidFrom, amountPaidTo, createdByReceptionistID, createdAtFrom, createdAtTo)
         {
             Name = name;
             Description = description;

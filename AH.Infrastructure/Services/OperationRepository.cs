@@ -6,6 +6,7 @@ using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
 using Microsoft.Extensions.Logging;
 using System.Data;
+using AH.Application.DTOs.Entities;
 
 namespace AH.Infrastructure.Repositories
 {
@@ -67,7 +68,7 @@ namespace AH.Infrastructure.Repositories
             return await this.GetAllAsync(filterDTO);
         }
 
-        public async Task<GetByIDResponseDTO<Operation>> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<OperationDTO>> GetByIDAsync(int id)
         {
             // Implementation placeholder
             throw new NotImplementedException();

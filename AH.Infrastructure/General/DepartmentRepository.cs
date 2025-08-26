@@ -39,7 +39,7 @@ namespace AH.Infrastructure.Repositories
      , null);
         }
 
-        public async Task<GetByIDResponseDTO<Department>> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<DepartmentDTODTO>> GetByIDAsync(int id)
         {
             return await ReusableCRUD.GetByID<Department>("Fetch_DepartmentByID", _logger, id, null, (reader, converter) =>
             new Department(converter.ConvertValue<int>("ID"), converter.ConvertValue<string>("Name"),

@@ -2,6 +2,7 @@ using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
+using AH.Application.DTOs.Entities;
 
 namespace AH.Application.IRepositories
 {
@@ -9,7 +10,7 @@ namespace AH.Application.IRepositories
     {
         Task<GetAllResponseDTO<TestTypeRowDTO>> GetAllAsync(TestTypeFilterDTO filterDTO);
 
-        Task<GetByIDResponseDTO<TestType>> GetByIDAsync(int id);
+        Task<GetByIDResponseDTO<TestTypeDTO>> GetByIDAsync(int id);
 
         Task<int> AddAsync(TestType testType);
 

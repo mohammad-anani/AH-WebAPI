@@ -6,6 +6,7 @@ using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
 using Microsoft.Extensions.Logging;
 using System.Data;
+using AH.Application.DTOs.Entities;
 
 namespace AH.Infrastructure.Repositories
 {
@@ -51,7 +52,7 @@ namespace AH.Infrastructure.Repositories
             return new GetAllResponseDTO<InsuranceRowDTO>(items, totalCount, ex);
         }
 
-        public async Task<GetByIDResponseDTO<Insurance>> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<InsuranceDTO>> GetByIDAsync(int id)
         {
             throw new NotImplementedException();
             //Insurance insurance = new Insurance();

@@ -29,7 +29,7 @@ namespace AH.Infrastructure.Repositories
           , null);
         }
 
-        public async Task<GetByIDResponseDTO<Receptionist>> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<ReceptionistDTODTO>> GetByIDAsync(int id)
         {
             Receptionist receptionist = new Receptionist();
 
