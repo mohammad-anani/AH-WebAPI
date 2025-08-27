@@ -12,9 +12,9 @@ namespace AH.Application.IRepositories
 
         Task<GetByIDResponseDTO<TestTypeDTO>> GetByIDAsync(int id);
 
-        Task<int> AddAsync(TestType testType);
+        Task<CreateResponseDTO> AddAsync(TestType testType);
 
-        Task<bool> UpdateAsync(TestType testType);
+        Task<SuccessResponseDTO> UpdateAsync(TestType testType);
 
         Task<DeleteResponseDTO> DeleteAsync(int id);
     }

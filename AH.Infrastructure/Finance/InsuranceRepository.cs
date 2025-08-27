@@ -66,19 +66,35 @@ namespace AH.Infrastructure.Repositories
                        converter.ConvertValue<DateTime>("CreatedAt"), ReceptionistAuditHelper.ReadReceptionist(reader)));
         }
 
-        public async Task<bool> Renew(int id)
+        public async Task<SuccessResponseDTO> Renew(int id, decimal coverage, DateOnly expirationdate)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
+            {
+                ["Coverage"] = (coverage, SqlDbType.Decimal, null, null),
+                ["ExpirationDate"] = (expirationdate, SqlDbType.Date, null, null),
+            };
+
+            return await ReusableCRUD.ExecuteByIDAsync("Renew_Insurance", _logger, id, extraParams);
         }
 
-        public async Task<int> AddAsync(Insurance insurance)
+        public async Task<CreateResponseDTO> AddAsync(Insurance insurance)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["PatientID"] = (insurance.Patient?.ID, SqlDbType.Int, null, null),
+                ["ProviderName"] = (insurance.ProviderName, SqlDbType.NVarChar, 100, null),
+                ["Coverage"] = (insurance.Coverage, SqlDbType.Decimal, null, null),
+                ["ExpirationDate"] = (insurance.ExpirationDate, SqlDbType.Date, null, null),
+                ["CreatedByReceptionistID"] = (insurance.CreatedByReceptionist?.ID, SqlDbType.Int, null, null)
+            };
+
+            return await ReusableCRUD.AddAsync("Create_Insurance", _logger, (cmd) =>
+            {
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+            });
         }
 
-        public async Task<bool> UpdateAsync(Insurance insurance)
+        public async Task<SuccessResponseDTO> UpdateAsync(Insurance insurance)
         {
             // Implementation placeholder
             throw new NotImplementedException();

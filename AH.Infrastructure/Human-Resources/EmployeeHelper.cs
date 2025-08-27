@@ -9,10 +9,10 @@ namespace AH.Infrastructure.Helpers
 {
     public static class EmployeeHelper
     {
-        public static void AddEmployeeParameters(EmployeeFilter employeeFilter, SqlCommand cmd)
+        public static void AddEmployeeFilterParameters(EmployeeFilter employeeFilter, SqlCommand cmd)
         {
             // Reuse Person parameters
-            PersonHelper.AddPersonParameters(employeeFilter, cmd);
+            PersonHelper.AddPersonFilterParameters(employeeFilter, cmd);
 
             // Employee-specific parameters as dictionary
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
@@ -35,6 +35,26 @@ namespace AH.Infrastructure.Helpers
 
             AdminAuditHelper.AddAdminAuditParameters
                 (employeeFilter.CreatedByAdminID, employeeFilter.CreatedAtFrom, employeeFilter.CreatedAtTo, cmd);
+        }
+
+        public static void AddEmployeeEntityParameters(Employee employee, SqlCommand cmd)
+        {
+            // Reuse Person parameters
+            PersonHelper.AddPersonEntityParameters(employee.Person, cmd);
+
+            // Employee-specific parameters as dictionary
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["DepartmentID"] = (employee.Department.ID, SqlDbType.Int, null, null),
+                ["Salary"] = (employee.Salary, SqlDbType.Int, null, null),
+                ["HireDate"] = (employee.HireDate, SqlDbType.Date, null, null),
+                ["ShiftStart"] = (employee.ShiftStart, SqlDbType.Time, null, null),
+                ["ShiftEnd"] = (employee.ShiftEnd, SqlDbType.Time, null, null),
+                ["WorkingDays"] = (employee.WorkingDays, SqlDbType.Int, null, null),
+                ["CreatedByAdminID"] = (employee.CreatedByAdmin?.ID, SqlDbType.Int, null, null)
+            };
+
+            SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
         }
 
         public static Func<SqlDataReader, EmployeeDTO> ReadEmployee = reader =>

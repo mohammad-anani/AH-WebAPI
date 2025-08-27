@@ -14,9 +14,9 @@ namespace AH.Application.IRepositories
 
         Task<GetByIDResponseDTO<PatientDTO>> GetByIDAsync(int id);
 
-        Task<int> AddAsync(Patient patient);
+        Task<CreateResponseDTO> AddAsync(Patient patient);
 
-        Task<bool> UpdateAsync(Patient patient);
+        Task<SuccessResponseDTO> UpdateAsync(Patient patient);
 
         Task<DeleteResponseDTO> DeleteAsync(int id);
     }

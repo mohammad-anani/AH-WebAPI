@@ -30,7 +30,7 @@ namespace AH.Infrastructure.Repositories
 
             return await ReusableCRUD.GetAllAsync<OperationRowDTO, OperationFilterDTO>("Fetch_Operations", _logger, filterDTO, cmd =>
             {
-                ServiceHelper.AddServiceParameters(filterDTO, cmd);
+                ServiceHelper.AddServiceFilterParameters(filterDTO, cmd);
             }, (reader, converter) =>
 
                 new OperationRowDTO(converter.ConvertValue<int>("ID"),
@@ -51,7 +51,7 @@ namespace AH.Infrastructure.Repositories
 
             return await ReusableCRUD.GetAllAsync<OperationRowDTO, OperationFilterDTO>("Fetch_OperationsForDoctor", _logger, filterDTO, cmd =>
             {
-                ServiceHelper.AddServiceParameters(filterDTO, cmd);
+                ServiceHelper.AddServiceFilterParameters(filterDTO, cmd);
             }, (reader, converter) =>
 
                 new OperationRowDTO(converter.ConvertValue<int>("ID"),
@@ -81,13 +81,26 @@ namespace AH.Infrastructure.Repositories
               });
         }
 
-        public async Task<int> AddAsync(Operation operation)
+        public async Task<CreateResponseDTO> AddAsync(Operation operation)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["Name"]=(operation.Name,SqlDbType.NVarChar,100,null),
+                ["Description"]=(operation.Description, SqlDbType.NVarChar, -1, null),
+                ["DepartmentID"]= (operation.Department.ID, SqlDbType.Int, null, null)
+            };
+
+            return await ReusableCRUD.AddAsync("Create_Operation", _logger, cmd =>
+            {
+
+                ServiceHelper.AddServiceEntityParameters(operation.Service, cmd);
+
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+
+            });
         }
 
-        public async Task<bool> UpdateAsync(Operation operation)
+        public async Task<SuccessResponseDTO> UpdateAsync(Operation operation)
         {
             // Implementation placeholder
             throw new NotImplementedException();
@@ -98,28 +111,46 @@ namespace AH.Infrastructure.Repositories
             return await ReusableCRUD.DeleteAsync("Delete_Operation", _logger, id);
         }
 
-        public async Task<bool> StartAsync(int id, string? notes)
+        public async Task<SuccessResponseDTO> StartAsync(int id, string? notes)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
+            {
+                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
+            };
+
+            return await ReusableCRUD.ExecuteByIDAsync("Start_Operation", _logger, id, extraParams);
         }
 
-        public async Task<bool> CancelAsync(int id, string? notes)
+        public async Task<SuccessResponseDTO> CancelAsync(int id, string? notes)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
+            {
+                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
+            };
+
+            return await ReusableCRUD.ExecuteByIDAsync("Cancel_Operation", _logger, id, extraParams);
         }
 
-        public async Task<bool> CompleteAsync(int id, string? notes, string result)
+        public async Task<SuccessResponseDTO> CompleteAsync(int id, string? notes, string result)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
+            {
+                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
+                ["Result"] = (result, SqlDbType.NVarChar, null, null),
+            };
+
+            return await ReusableCRUD.ExecuteByIDAsync("Complete_Operation", _logger, id, extraParams);
         }
 
-        public async Task<bool> RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
+        public async Task<SuccessResponseDTO> RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
+            {
+                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
+                ["ScheduledDate"] = (newScheduledDate, SqlDbType.DateTime, null, null),
+            };
+
+            return await ReusableCRUD.ExecuteByIDAsync("Reschedule_Operation", _logger, id, extraParams);
         }
     }
 }

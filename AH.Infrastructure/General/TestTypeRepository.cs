@@ -56,13 +56,24 @@ namespace AH.Infrastructure.Repositories
             });
         }
 
-        public async Task<int> AddAsync(TestType testType)
+        public async Task<CreateResponseDTO> AddAsync(TestType testType)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["Name"] = (testType.Name, SqlDbType.NVarChar, 20, null),
+                ["DepartmentID"] = (testType.Department?.ID, SqlDbType.Int, null, null),
+                ["Cost"] = (testType.Cost, SqlDbType.NVarChar, 8, null),
+                ["CreatedByAdminID"] = (testType.CreatedByAdmin?.ID, SqlDbType.Int, null, null)
+            };
+
+            return await ReusableCRUD.AddAsync("Create_TestType", _logger, (cmd) =>
+            {
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+
+            });
         }
 
-        public async Task<bool> UpdateAsync(TestType testType)
+        public async Task<SuccessResponseDTO> UpdateAsync(TestType testType)
         {
             // Implementation placeholder
             throw new NotImplementedException();

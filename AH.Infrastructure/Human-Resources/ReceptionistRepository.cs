@@ -22,7 +22,7 @@ namespace AH.Infrastructure.Repositories
         {
             return await ReusableCRUD.GetAllAsync<ReceptionistRowDTO, ReceptionistFilterDTO>("Fetch_Receptionists", _logger, filterDTO, cmd =>
             {
-                EmployeeHelper.AddEmployeeParameters(filterDTO, cmd);
+                EmployeeHelper.AddEmployeeFilterParameters(filterDTO, cmd);
             }, (reader, converter) =>
 
                 new ReceptionistRowDTO(converter.ConvertValue<int>("ID"),
@@ -40,13 +40,15 @@ namespace AH.Infrastructure.Repositories
             );
         }
 
-        public async Task<int> AddAsync(Receptionist receptionist)
+        public async Task<CreateResponseDTO> AddAsync(Receptionist receptionist)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            return await ReusableCRUD.AddAsync("Create_Receptionist", _logger, (cmd) =>
+            {
+                EmployeeHelper.AddEmployeeEntityParameters(receptionist.Employee, cmd);
+            });
         }
 
-        public async Task<bool> UpdateAsync(Receptionist receptionist)
+        public async Task<SuccessResponseDTO> UpdateAsync(Receptionist receptionist)
         {
             // Implementation placeholder
             throw new NotImplementedException();
@@ -57,10 +59,9 @@ namespace AH.Infrastructure.Repositories
             return await ReusableCRUD.DeleteAsync("Delete_Receptionist", _logger, id);
         }
 
-        public async Task<bool> LeaveAsync(int employeeID)
+        public async Task<SuccessResponseDTO> LeaveAsync(int ID)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            return await ReusableCRUD.ExecuteByIDAsync("Leave_Receptionist", _logger, ID, null);
         }
     }
 }

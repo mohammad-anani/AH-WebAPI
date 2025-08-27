@@ -54,9 +54,24 @@ namespace AH.Infrastructure.Repositories
             return new GetAllResponseDTO<PrescriptionRowDTO>(items, totalCount, ex);
         }
 
-        public async Task<int> AddAsync(Prescription prescription)
+        public async Task<CreateResponseDTO> AddAsync(Prescription prescription)
         {
-            throw new NotImplementedException();
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["AppointmentID"] = (prescription.Appointment.ID, SqlDbType.Int, null, null),
+                ["Diagnosis"] = (prescription.Diagnosis, SqlDbType.NVarChar, 256, null),
+                ["Medication"] = (prescription.Medication, SqlDbType.NVarChar, 256, null),
+                ["Dosage"] = (prescription.Dosage, SqlDbType.NVarChar, 50, null),
+                ["Frequency"] = (prescription.Frequency, SqlDbType.NVarChar, 256, null),
+                ["MedicationStart"] = (prescription.MedicationStart, SqlDbType.DateTime, null, null),
+                ["MedicationEnd"] = (prescription.MedicationEnd, SqlDbType.DateTime, null, null),
+                ["Notes"] = (prescription.Notes, SqlDbType.NVarChar, -1, null)
+            };
+
+            return await ReusableCRUD.AddAsync("Create_Prescription", _logger, cmd =>
+            {
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+            });
         }
 
         public async Task<DeleteResponseDTO> DeleteAsync(int id)
@@ -80,7 +95,7 @@ namespace AH.Infrastructure.Repositories
                );
         }
 
-        public async Task<bool> UpdateAsync(Prescription prescription)
+        public async Task<SuccessResponseDTO> UpdateAsync(Prescription prescription)
         {
             throw new NotImplementedException();
         }

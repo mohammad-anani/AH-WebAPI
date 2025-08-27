@@ -1,12 +1,13 @@
-using AH.Application.DTOs.Response;
+using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
 using Microsoft.Extensions.Logging;
 using System;
-using AH.Application.DTOs.Entities;
+using System.Data;
 
 namespace AH.Infrastructure.Repositories
 {
@@ -23,7 +24,7 @@ namespace AH.Infrastructure.Repositories
         {
             return await ReusableCRUD.GetAllAsync<AdminRowDTO, AdminFilterDTO>("Fetch_Admins", _logger, filterDTO, cmd =>
             {
-                EmployeeHelper.AddEmployeeParameters(filterDTO, cmd);
+                EmployeeHelper.AddEmployeeFilterParameters(filterDTO, cmd);
             }, (reader, converter) =>
 
                 new AdminRowDTO(converter.ConvertValue<int>("ID"),
@@ -40,13 +41,20 @@ namespace AH.Infrastructure.Repositories
             });
         }
 
-        public async Task<int> AddAsync(Admin admin)
+        public async Task<CreateResponseDTO> AddAsync(Admin admin)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+
+
+
+            return await ReusableCRUD.AddAsync("Create_Admin", _logger, (cmd) =>
+            {
+                EmployeeHelper.AddEmployeeEntityParameters(admin.Employee, cmd);
+
+
+            });
         }
 
-        public async Task<bool> UpdateAsync(Admin admin)
+        public async Task<SuccessResponseDTO> UpdateAsync(Admin admin)
         {
             // Implementation placeholder
             throw new NotImplementedException();
@@ -57,10 +65,9 @@ namespace AH.Infrastructure.Repositories
             return await ReusableCRUD.DeleteAsync("Delete_Admin", _logger, id);
         }
 
-        public async Task<bool> LeaveAsync(int employeeID)
+        public async Task<SuccessResponseDTO> LeaveAsync(int ID)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            return await ReusableCRUD.ExecuteByIDAsync("Leave_Admin", _logger, ID, null);
         }
     }
 }

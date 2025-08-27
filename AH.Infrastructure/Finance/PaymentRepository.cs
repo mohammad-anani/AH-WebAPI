@@ -63,10 +63,21 @@ namespace AH.Infrastructure.Repositories
                 converter.ConvertValue<DateTime>("CreatedAt"), ReceptionistAuditHelper.ReadReceptionist(reader)));
         }
 
-        public async Task<int> AddAsync(Payment payment)
+        public async Task<CreateResponseDTO> AddAsync(Payment payment)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["BillID"]= (payment.Bill?.ID, SqlDbType.Int, null, null),
+                ["Amount"]= (payment.Amount, SqlDbType.Int, null, null),
+                ["Method"]= (Payment.GetMethod(payment.Method), SqlDbType.Int, null, null),
+                ["CreatedByReceptionistID"]= (payment.CreatedByReceptionist?.ID, SqlDbType.Int, null, null)
+            };
+
+            return await ReusableCRUD.AddAsync("Create_Payment", _logger, (cmd) =>
+            {
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+
+            });
         }
 
         public async Task<DeleteResponseDTO> DeleteAsync(int id)

@@ -3,6 +3,7 @@ using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
 using AH.Application.DTOs.Entities;
+using AH.Application.DTOs.Create;
 
 namespace AH.Application.IRepositories
 {
@@ -14,11 +15,11 @@ namespace AH.Application.IRepositories
 
         Task<GetByIDResponseDTO<TestAppointmentDTO>> GetByIDAsync(int id);
 
-        Task<int> AddAsync(TestAppointment testAppointment);
+        Task<CreateResponseDTO> AddAsync(TestAppointment testAppointment);
 
-        Task<int> AddFromTestOrderAsync(TestAppointment testAppointment);
+        Task<CreateResponseDTO> AddFromTestOrderAsync( CreateTestAppointmentFromTestOrderDTO app);
 
-        Task<bool> UpdateAsync(TestAppointment testAppointment);
+        Task<SuccessResponseDTO> UpdateAsync(TestAppointment testAppointment);
 
         Task<DeleteResponseDTO> DeleteAsync(int id);
     }

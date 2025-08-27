@@ -50,9 +50,18 @@ namespace AH.Infrastructure.Repositories
             return new GetAllResponseDTO<TestOrderRowDTO>(items, totalCount, ex);
         }
 
-        public async Task<int> AddAsync(TestOrder testOrder)
+        public async Task<CreateResponseDTO> AddAsync(TestOrder testOrder)
         {
-            throw new NotImplementedException();
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["TestTypeID"] = (testOrder.TestType.ID, SqlDbType.Int, null, null),
+                ["AppointmentID"] = (testOrder.Appointment.ID, SqlDbType.Int, null, null)
+            };
+
+            return await ReusableCRUD.AddAsync("Create_TestOrder", logger, cmd =>
+            {
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+            });
         }
 
         public async Task<DeleteResponseDTO> DeleteAsync(int id)
@@ -71,7 +80,7 @@ namespace AH.Infrastructure.Repositories
             });
         }
 
-        public async Task<bool> UpdateAsync(TestOrder testOrder)
+        public async Task<SuccessResponseDTO> UpdateAsync(TestOrder testOrder)
         {
             throw new NotImplementedException();
         }

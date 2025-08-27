@@ -1,13 +1,15 @@
-using AH.Application.DTOs.Response;
+using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using System.Data;
-using AH.Application.DTOs.Entities;
-using Microsoft.Data.SqlClient;
+using static Azure.Core.HttpHeader;
 
 namespace AH.Infrastructure.Repositories
 {
@@ -30,7 +32,7 @@ namespace AH.Infrastructure.Repositories
 
             return await ReusableCRUD.GetAllAsync<AppointmentRowDTO, AppointmentFilterDTO>("Fetch_Appointments", _logger, filterDTO, cmd =>
             {
-                ServiceHelper.AddServiceParameters(filterDTO, cmd);
+                ServiceHelper.AddServiceFilterParameters(filterDTO, cmd);
             }, (reader, converter) =>
 
                 new AppointmentRowDTO(converter.ConvertValue<int>("ID"),
@@ -65,19 +67,39 @@ DoctorRepository.ReadDoctor(reader),
             ));
         }
 
-        public async Task<int> AddAsync(Appointment appointment)
+        public async Task<CreateResponseDTO> AddAsync(Appointment appointment)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["DoctorID"] = (appointment.Doctor.ID, SqlDbType.Int, null, null),
+            };
+
+            return await ReusableCRUD.AddAsync("Create_Appointment", _logger, cmd =>
+            {
+                ServiceHelper.AddServiceEntityParameters(appointment.Service, cmd);
+
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+            });
         }
 
-        public async Task<int> AddFromPreviousAppointmentAsync(Appointment appointment)
+        public async Task<CreateResponseDTO> AddFromPreviousAppointmentAsync(CreateAppointmentFromPreviousDTO app)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["TestOrderID"] = (app.AppointmentID, SqlDbType.Int, null, null),
+                ["ScheduledDate"] = (app.ScheduledDate, SqlDbType.DateTime, null, null),
+                ["Notes"] = (app.Notes, SqlDbType.NVarChar, -1, null),
+                ["CreatedByReceptionistID"] = (app.CreatedByReceptionistID, SqlDbType.Int, null, null),
+                ["Status"] = (3, SqlDbType.TinyInt, null, null)
+            };
+
+            return await ReusableCRUD.AddAsync("Create_AppointmentFromPreviousAppointment", _logger, cmd =>
+            {
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+            });
         }
 
-        public async Task<bool> UpdateAsync(Appointment appointment)
+        public async Task<SuccessResponseDTO> UpdateAsync(Appointment appointment)
         {
             // Implementation placeholder
             throw new NotImplementedException();
@@ -88,28 +110,45 @@ DoctorRepository.ReadDoctor(reader),
             return await ReusableCRUD.DeleteAsync("Delete_Appointment", _logger, id);
         }
 
-        public async Task<bool> StartAsync(int id, string? notes)
+        public async Task<SuccessResponseDTO> StartAsync(int id, string? notes)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
+            {
+                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
+            };
+
+            return await ReusableCRUD.ExecuteByIDAsync("Start_Appointment", _logger, id, extraParams);
         }
 
-        public async Task<bool> CancelAsync(int id, string? notes)
+        public async Task<SuccessResponseDTO> CancelAsync(int id, string? notes)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
+            {
+                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
+            };
+
+            return await ReusableCRUD.ExecuteByIDAsync("Cancel_Appointment", _logger, id, extraParams);
         }
 
-        public async Task<bool> CompleteAsync(int id, string? notes, string result)
+        public async Task<SuccessResponseDTO> CompleteAsync(int id, string? notes, string result)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
+            {
+                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
+                ["Result"] = (result, SqlDbType.NVarChar, null, null),
+            };
+
+            return await ReusableCRUD.ExecuteByIDAsync("Complete_Appointment", _logger, id, extraParams);
         }
 
-        public async Task<bool> RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
+        public async Task<SuccessResponseDTO> RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
+            {
+                ["ScheduledDate"] = (newScheduledDate, SqlDbType.DateTime, null, null),
+            };
+
+            return await ReusableCRUD.ExecuteByIDAsync("Reschedule_Appointment", _logger, id, extraParams);
         }
 
         public static AppointmentRowDTO ReadAppointment(SqlDataReader reader, string? prefix)

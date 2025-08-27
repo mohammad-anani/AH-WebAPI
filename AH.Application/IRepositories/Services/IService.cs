@@ -1,13 +1,15 @@
-﻿namespace AH.Application.IRepositories
+﻿using AH.Application.DTOs.Response;
+
+namespace AH.Application.IRepositories
 {
     public interface IService
     {
-        Task<bool> StartAsync(int id, string? notes);
+        Task<SuccessResponseDTO> StartAsync(int id, string? notes);
 
-        Task<bool> CancelAsync(int id, string? notes);
+        Task<SuccessResponseDTO> CancelAsync(int id, string? notes);
 
-        Task<bool> CompleteAsync(int id, string? notes, string result);
+        Task<SuccessResponseDTO> CompleteAsync(int id, string? notes, string result);
 
-        Task<bool> RescheduleAsync(int id, string? notes, DateTime newScheduledDate);
+        Task<SuccessResponseDTO> RescheduleAsync(int id, string? notes, DateTime newScheduledDate);
     }
 }

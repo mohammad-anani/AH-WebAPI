@@ -12,9 +12,9 @@ namespace AH.Application.IRepositories
 
         Task<GetByIDResponseDTO<AdminDTO>> GetByIDAsync(int id);
 
-        Task<int> AddAsync(Admin admin);
+        Task<CreateResponseDTO> AddAsync(Admin admin);
 
-        Task<bool> UpdateAsync(Admin admin);
+        Task<SuccessResponseDTO> UpdateAsync(Admin admin);
 
         Task<DeleteResponseDTO> DeleteAsync(int id);
     }

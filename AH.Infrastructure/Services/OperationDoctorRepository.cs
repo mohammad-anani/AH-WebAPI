@@ -6,6 +6,7 @@ using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
 using Microsoft.Extensions.Logging;
 using System.Data;
+using AH.Application.DTOs.Create;
 
 namespace AH.Infrastructure.Repositories
 {
@@ -52,10 +53,20 @@ namespace AH.Infrastructure.Repositories
             return new GetAllResponseDTO<OperationDoctorRowDTO>(items, totalCount, ex);
         }
 
-        public async Task<int> AddUpdateAsync(OperationDoctor operationDoctor)
+        public async Task<SuccessResponseDTO> AddUpdateAsync(AddUpdateOperationDoctorDTO opDoctDTO)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            SuccessOutputHelper successOutputHelper = new SuccessOutputHelper();
+
+            Exception? ex = await ADOHelper.ExecuteNonQueryAsync("AddUpdate_OperationDoctor", _logger, cmd =>
+         {
+             successOutputHelper.AddToCommand(cmd);
+             var param = cmd.Parameters.AddWithValue("@OperationDoctors", opDoctDTO.ToDatatable());
+             param.SqlDbType = SqlDbType.Structured;
+             param.TypeName = "dbo.OperationDoctorsType";
+             cmd.Parameters.AddWithValue("@OperationID", opDoctDTO.OperationID);
+         }, null);
+
+            return new SuccessResponseDTO(successOutputHelper.GetResult(), ex);
         }
     }
 }

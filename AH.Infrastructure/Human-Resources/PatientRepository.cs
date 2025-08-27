@@ -25,7 +25,7 @@ namespace AH.Infrastructure.Repositories
         {
             return await ReusableCRUD.GetAllAsync<PatientRowDTO, PatientFilterDTO>("Fetch_Patients", _logger, filterDTO, cmd =>
             {
-                PersonHelper.AddPersonParameters(filterDTO, cmd);
+                PersonHelper.AddPersonFilterParameters(filterDTO, cmd);
                 ReceptionistAuditHelper.AddReceptionistAuditParameters(filterDTO.CreatedByReceptionistID,
                     filterDTO.CreatedAtFrom, filterDTO.CreatedAtTo, cmd);
             }, (reader, converter) =>
@@ -45,7 +45,7 @@ namespace AH.Infrastructure.Repositories
 
             return await ReusableCRUD.GetAllAsync<PatientRowDTO, PatientFilterDTO>("Fetch_PatientsForDoctor", _logger, filterDTO, cmd =>
             {
-                PersonHelper.AddPersonParameters(filterDTO, cmd);
+                PersonHelper.AddPersonFilterParameters(filterDTO, cmd);
                 ReceptionistAuditHelper.AddReceptionistAuditParameters(filterDTO.CreatedByReceptionistID,
                     filterDTO.CreatedAtFrom, filterDTO.CreatedAtTo, cmd);
             }, (reader, converter) =>
@@ -66,13 +66,20 @@ namespace AH.Infrastructure.Repositories
             });
         }
 
-        public async Task<int> AddAsync(Patient patient)
+        public async Task<CreateResponseDTO> AddAsync(Patient patient)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["CreatedByReceptionistID"] = (patient.CreatedByReceptionist, SqlDbType.Int, null, null),
+            };
+
+            return await ReusableCRUD.AddAsync("Create_Patient", _logger, (cmd) =>
+            {
+                PersonHelper.AddPersonEntityParameters(patient.Person, cmd);
+            });
         }
 
-        public async Task<bool> UpdateAsync(Patient patient)
+        public async Task<SuccessResponseDTO> UpdateAsync(Patient patient)
         {
             // Implementation placeholder
             throw new NotImplementedException();

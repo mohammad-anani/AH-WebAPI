@@ -70,5 +70,33 @@
             CreatedByReceptionist = createdByReceptionist;
             CreatedAt = DateTime.MinValue;
         }
+
+        public static int GetStatus(string status)
+        {
+            switch (status.ToLower())
+            {
+                case "in progress": return 1;
+                case "requested": return 2;
+                case "scheduled": return 3;
+                case "cancelled": return 4;
+                case "completed": return 5;
+                case "rejected": return 6;
+                default: return -1;
+            }
+        }
+
+        public static string GetStatus(int status)
+        {
+            switch (status)
+            {
+                case 1: return "In Progress";
+                case 2: return "Requested";
+                case 3: return "Scheduled";
+                case 4: return "Cancelled";
+                case 5: return "Completed";
+                case 6: return "Rejected";
+                default: return "Invalid Status";
+            }
+        }
     }
 }

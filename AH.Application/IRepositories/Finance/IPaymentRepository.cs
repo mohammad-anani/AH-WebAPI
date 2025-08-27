@@ -12,7 +12,7 @@ namespace AH.Application.IRepositories
 
         Task<GetByIDResponseDTO<PaymentDTO>> GetByIDAsync(int id);
 
-        Task<int> AddAsync(Payment payment);
+        Task<CreateResponseDTO> AddAsync(Payment payment);
 
         Task<DeleteResponseDTO> DeleteAsync(int id);
     }

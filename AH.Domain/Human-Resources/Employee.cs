@@ -20,7 +20,7 @@ namespace AH.Domain.Entities
 
         public TimeOnly ShiftEnd { get; set; }
 
-        public AdminAudit CreatedByAdmin { get; set; }
+        public AdminAudit? CreatedByAdmin { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
@@ -38,7 +38,7 @@ namespace AH.Domain.Entities
             CreatedAt = DateTime.MinValue;
         }
 
-        public Employee(Person person, Department department, int salary, DateTime hireDate, DateTime? leaveDate, int workingDays, TimeOnly shiftStart, TimeOnly shiftEnd, AdminAudit createdByAdmin, DateTime createdAt)
+        public Employee(Person person, Department department, int salary, DateTime hireDate, DateTime? leaveDate, int workingDays, TimeOnly shiftStart, TimeOnly shiftEnd, AdminAudit? createdByAdmin, DateTime createdAt)
         {
             Person = person;
             Department = department;
@@ -52,7 +52,7 @@ namespace AH.Domain.Entities
             CreatedAt = createdAt;
         }
 
-        public Employee(Person person, Department department, int salary, DateTime hireDate, DateTime? leaveDate, int workingDays, TimeOnly shiftStart, TimeOnly shiftEnd, AdminAudit createdByAdmin)
+        public Employee(Person person, Department department, int salary, DateTime hireDate, DateTime? leaveDate, int workingDays, TimeOnly shiftStart, TimeOnly shiftEnd, AdminAudit? createdByAdmin)
         {
             Person = person;
             Department = department;

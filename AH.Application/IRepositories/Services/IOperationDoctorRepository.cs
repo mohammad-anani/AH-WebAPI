@@ -1,5 +1,6 @@
-using AH.Application.DTOs.Response;
+using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Filter;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
 
@@ -9,6 +10,6 @@ namespace AH.Application.IRepositories
     {
         Task<GetAllResponseDTO<OperationDoctorRowDTO>> GetAllByOperationIDAsync(OperationDoctorFilterDTO filterDTO);
 
-        Task<int> AddUpdateAsync(OperationDoctor operationDoctor);
+        Task<SuccessResponseDTO> AddUpdateAsync(AddUpdateOperationDoctorDTO opDoctDTO);
     }
 }

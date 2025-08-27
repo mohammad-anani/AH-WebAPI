@@ -12,11 +12,11 @@ namespace AH.Application.IRepositories
 
         Task<GetByIDResponseDTO<InsuranceDTO>> GetByIDAsync(int id);
 
-        Task<bool> Renew(int id);
+        Task<SuccessResponseDTO> Renew(int ID, decimal coverage, DateOnly expirationDate);
 
-        Task<int> AddAsync(Insurance insurance);
+        Task<CreateResponseDTO> AddAsync(Insurance insurance);
 
-        Task<bool> UpdateAsync(Insurance insurance);
+        Task<SuccessResponseDTO> UpdateAsync(Insurance insurance);
 
         Task<DeleteResponseDTO> DeleteAsync(int id);
     }

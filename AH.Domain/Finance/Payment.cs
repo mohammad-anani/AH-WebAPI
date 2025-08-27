@@ -38,5 +38,27 @@
             CreatedAt = DateTime.MinValue;
             CreatedByReceptionist = createdByReceptionist;
         }
+
+        public static int GetMethod(string Method)
+        {
+            switch (Method.ToLower())
+            {
+                case "Card": return 1;
+                case "Cash": return 2;
+                case "Insurance": return 3;
+                default: return -1;
+            }
+        }
+
+        public static string GetMethod(int method)
+        {
+            switch (method)
+            {
+                case 1: return "Card";
+                case 2: return "Cash";
+                case 3: return "Insurance";
+                default: return "Invalid Method";
+            }
+        }
     }
 }

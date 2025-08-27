@@ -1,12 +1,14 @@
-using AH.Application.DTOs.Response;
+using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
+using Azure;
 using Microsoft.Extensions.Logging;
 using System.Data;
-using AH.Application.DTOs.Entities;
 
 namespace AH.Infrastructure.Repositories
 {
@@ -29,7 +31,7 @@ namespace AH.Infrastructure.Repositories
 
             return await ReusableCRUD.GetAllAsync<TestAppointmentRowDTO, TestAppointmentFilterDTO>("Fetch_TestAppointments", _logger, filterDTO, cmd =>
             {
-                ServiceHelper.AddServiceParameters(filterDTO, cmd);
+                ServiceHelper.AddServiceFilterParameters(filterDTO, cmd);
             }, (reader, converter) =>
 
                 new TestAppointmentRowDTO(converter.ConvertValue<int>("ID"),
@@ -61,19 +63,44 @@ ServiceHelper.ReadService(reader));
             );
         }
 
-        public async Task<int> AddAsync(TestAppointment testAppointment)
+        public async Task<CreateResponseDTO> AddAsync(TestAppointment testAppointment)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["TestTypeID"] = (testAppointment.TestType.ID, SqlDbType.Int, null, null)
+            };
+
+            return await ReusableCRUD.AddAsync("Create_TestAppointment", _logger, cmd =>
+            {
+
+                ServiceHelper.AddServiceEntityParameters(testAppointment.Service, cmd);
+
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+
+            });
         }
 
-        public async Task<int> AddFromTestOrderAsync(TestAppointment testAppointment)
+        public async Task<CreateResponseDTO> AddFromTestOrderAsync(CreateTestAppointmentFromTestOrderDTO app)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["TestOrderID"] = (app.TestOrderID, SqlDbType.Int, null, null),
+                ["ScheduledDate"] = (app.ScheduledDate, SqlDbType.DateTime, null, null),
+                ["Notes"]=(app.Notes, SqlDbType.NVarChar, -1, null),
+                ["CreatedByReceptionistID"]=(app.CreatedByReceptionistID, SqlDbType.Int, null, null),
+                ["Status"]=(3, SqlDbType.TinyInt, null, null)
+            };
+
+            return await ReusableCRUD.AddAsync("Create_TestAppointmentFromTestOrder", _logger, cmd =>
+            {
+
+
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+
+            });
         }
 
-        public async Task<bool> UpdateAsync(TestAppointment testAppointment)
+        public async Task<SuccessResponseDTO> UpdateAsync(TestAppointment testAppointment)
         {
             // Implementation placeholder
             throw new NotImplementedException();
@@ -84,28 +111,46 @@ ServiceHelper.ReadService(reader));
             return await ReusableCRUD.DeleteAsync("Delete_TestAppointment", _logger, id);
         }
 
-        public async Task<bool> StartAsync(int id, string? notes)
+        public async Task<SuccessResponseDTO> StartAsync(int id, string? notes)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
+            {
+                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
+            };
+
+            return await ReusableCRUD.ExecuteByIDAsync("Start_TestAppointment", _logger, id, extraParams);
         }
 
-        public async Task<bool> CancelAsync(int id, string? notes)
+        public async Task<SuccessResponseDTO> CancelAsync(int id, string? notes)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
+            {
+                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
+            };
+
+            return await ReusableCRUD.ExecuteByIDAsync("Cancel_TestAppointment", _logger, id, extraParams);
         }
 
-        public async Task<bool> CompleteAsync(int id, string? notes, string result)
+        public async Task<SuccessResponseDTO> CompleteAsync(int id, string? notes, string result)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
+            {
+                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
+                ["Result"] = (result, SqlDbType.NVarChar, null, null),
+            };
+
+            return await ReusableCRUD.ExecuteByIDAsync("Complete_TestAppointment", _logger, id, extraParams);
         }
 
-        public async Task<bool> RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
+        public async Task<SuccessResponseDTO> RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
+            {
+                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
+                ["ScheduledDate"] = (newScheduledDate, SqlDbType.DateTime, null, null),
+            };
+
+            return await ReusableCRUD.ExecuteByIDAsync("Reschedule_TestAppointment", _logger, id, extraParams);
         }
     }
 }

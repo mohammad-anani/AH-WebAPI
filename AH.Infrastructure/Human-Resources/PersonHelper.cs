@@ -7,7 +7,7 @@ namespace AH.Infrastructure.Helpers
 {
     public static class PersonHelper
     {
-        public static void AddPersonParameters(PersonFilter personFilter, SqlCommand cmd)
+        public static void AddPersonFilterParameters(PersonFilter personFilter, SqlCommand cmd)
         {
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
@@ -20,6 +20,23 @@ namespace AH.Infrastructure.Helpers
                 ["CountryID"] = (personFilter.CountryID, SqlDbType.Int, null, null),
                 ["Phone"] = (personFilter.Phone, SqlDbType.NVarChar, 8, null),
                 ["Email"] = (personFilter.Email, SqlDbType.NVarChar, 40, null)
+            };
+            SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+        }
+
+        public static void AddPersonEntityParameters(Person person, SqlCommand cmd)
+        {
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["FirstName"] = (person.FirstName, SqlDbType.NVarChar, 20, null),
+                ["MiddleName"] = (person.MiddleName, SqlDbType.NVarChar, 20, null),
+                ["LastName"] = (person.LastName, SqlDbType.NVarChar, 20, null),
+                ["Gender"] = (person.Gender, SqlDbType.Char, 1, null),
+                ["BirthDate"] = (person.BirthDate, SqlDbType.Date, null, null),
+                ["CountryID"] = (person.Country.ID, SqlDbType.Int, null, null),
+                ["Phone"] = (person.Phone, SqlDbType.NVarChar, 8, null),
+                ["Email"] = (person.User.Email, SqlDbType.NVarChar, 40, null),
+                ["Password"] = (person.User.Password, SqlDbType.NVarChar, 64, null)
             };
             SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
         }

@@ -10,7 +10,7 @@
 
         public decimal Coverage { get; set; }
 
-        public DateTime ExpirationDate { get; set; }
+        public DateOnly ExpirationDate { get; set; }
 
         public bool IsActive { get; set; }
 
@@ -24,13 +24,13 @@
             Patient = new Patient(); // Fix: Don't create new Patient to avoid circular dependency
             ProviderName = "";
             Coverage = -1;
-            ExpirationDate = DateTime.MinValue;
+            ExpirationDate = DateOnly.MinValue;
             IsActive = false;
             CreatedAt = DateTime.MinValue;
             CreatedByReceptionist = new Receptionist(); // Fix: Don't create new Receptionist to avoid circular dependency
         }
 
-        public Insurance(int id, Patient patient, string providerName, decimal coverage, DateTime expirationDate, bool isActive, DateTime createdAt, Receptionist createdByReceptionist)
+        public Insurance(int id, Patient patient, string providerName, decimal coverage, DateOnly expirationDate, bool isActive, DateTime createdAt, Receptionist createdByReceptionist)
         {
             ID = id;
             Patient = patient;
@@ -42,16 +42,16 @@
             CreatedByReceptionist = createdByReceptionist;
         }
 
-        public Insurance(Patient patient, string providerName, decimal coverage, DateTime expirationDate, bool isActive, Receptionist createdByReceptionist)
+        public Insurance(int id, decimal coverage, DateOnly expirationDate)
         {
             ID = -1;
-            Patient = patient;
-            ProviderName = providerName;
+            Patient = new Patient();
+            ProviderName = String.Empty;
             Coverage = coverage;
             ExpirationDate = expirationDate;
-            IsActive = isActive;
+            IsActive = false;
             CreatedAt = DateTime.MinValue;
-            CreatedByReceptionist = createdByReceptionist;
+            CreatedByReceptionist = new Receptionist();
         }
     }
 }

@@ -51,13 +51,24 @@ namespace AH.Infrastructure.Repositories
             );
         }
 
-        public async Task<int> AddAsync(Department department)
+        public async Task<CreateResponseDTO> AddAsync(Department department)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["Name"]= (department.Name, SqlDbType.NVarChar, 20, null),
+                ["Phone"]= (department.Phone, SqlDbType.NVarChar, 8, null),
+                ["CreatedByAdminID"]= (department.CreatedByAdmin?.ID, SqlDbType.Int, null, null)
+            };
+
+            return await ReusableCRUD.AddAsync("Create_Department", _logger, (cmd) =>
+            {
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+
+            });
+
         }
 
-        public async Task<bool> UpdateAsync(Department department)
+        public async Task<SuccessResponseDTO> UpdateAsync(Department department)
         {
             // Implementation placeholder
             throw new NotImplementedException();

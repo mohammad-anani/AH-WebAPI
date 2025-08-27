@@ -12,9 +12,9 @@ namespace AH.Application.IRepositories
 
         Task<GetByIDResponseDTO<PrescriptionDTO>> GetByIDAsync(int id);
 
-        Task<int> AddAsync(Prescription prescription);
+        Task<CreateResponseDTO> AddAsync(Prescription prescription);
 
-        Task<bool> UpdateAsync(Prescription prescription);
+        Task<SuccessResponseDTO> UpdateAsync(Prescription prescription);
 
         Task<DeleteResponseDTO> DeleteAsync(int id);
     }

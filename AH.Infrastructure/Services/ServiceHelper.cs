@@ -15,7 +15,7 @@ namespace AH.Infrastructure.Helpers
 {
     public static class ServiceHelper
     {
-        public static void AddServiceParameters(ServiceFilter serviceFilter, SqlCommand cmd)
+        public static void AddServiceFilterParameters(ServiceFilter serviceFilter, SqlCommand cmd)
         {
             // Service-specific parameters based on ServiceFilter properties
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
@@ -45,6 +45,22 @@ namespace AH.Infrastructure.Helpers
                 serviceFilter.CreatedAtFrom,
                 serviceFilter.CreatedAtTo,
                 cmd);
+        }
+
+        public static void AddServiceEntityParameters(Service service, SqlCommand cmd)
+        {
+            // Service-specific parameters based on ServiceFilter properties
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["PatientID"] = (service.Patient.ID, SqlDbType.Int, null, null),
+                ["ScheduledDate"] = (service.ScheduledDate, SqlDbType.DateTime, null, null),
+                ["Status"] = (Service.GetStatus(service.Status), SqlDbType.TinyInt, null, null),
+                ["Reason"] = (service.Reason, SqlDbType.NVarChar, -1, null),
+                ["Notes"] = (service.Notes, SqlDbType.NVarChar, 500, null),
+                ["BillAmount"] = (service.Bill.Amount, SqlDbType.Decimal, null, null),
+            };
+
+            SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
         }
 
         public static ServiceDTO ReadService(SqlDataReader reader)

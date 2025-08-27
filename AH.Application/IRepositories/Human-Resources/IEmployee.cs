@@ -1,7 +1,9 @@
-﻿namespace AH.Application.IRepositories
+﻿using AH.Application.DTOs.Response;
+
+namespace AH.Application.IRepositories
 {
     public interface IEmployee
     {
-        Task<bool> LeaveAsync(int employeeID);
+        Task<SuccessResponseDTO> LeaveAsync(int ID);
     }
 }
