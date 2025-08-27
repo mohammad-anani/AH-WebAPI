@@ -53,7 +53,7 @@ namespace AH.Infrastructure.Repositories
         {
             var param = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
             {
-                ["Spcecialization"] = (doctor.Specialization, SqlDbType.NVarChar, 100, null),
+                ["Specialization"] = (doctor.Specialization, SqlDbType.NVarChar, 100, null),
                 ["CostPerAppointment"] = (doctor.CostPerAppointment, SqlDbType.Int, null, null)
             };
 
@@ -69,7 +69,7 @@ namespace AH.Infrastructure.Repositories
         {
             var param = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
             {
-                ["Spcecialization"] = (doctor.Specialization, SqlDbType.NVarChar, 100, null),
+                ["Specialization"] = (doctor.Specialization, SqlDbType.NVarChar, 100, null),
                 ["CostPerAppointment"] = (doctor.CostPerAppointment, SqlDbType.Int, null, null)
             };
 
