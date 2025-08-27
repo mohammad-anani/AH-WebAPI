@@ -45,11 +45,8 @@ namespace AH.Infrastructure.Repositories
         {
             return await ReusableCRUD.GetByID<TestTypeDTO>("Fetch_TestTypeByID", _logger, id, null, (reader, converter) =>
             {
-                return new TestTypeDTO(converter.ConvertValue<int>("ID"), converter.ConvertValue<string>("Name"), new Department
-                {
-                    ID = converter.ConvertValue<int>("DepartmentID"),
-                    Name = converter.ConvertValue<string>("DepartmentName")
-                },
+                return new TestTypeDTO(converter.ConvertValue<int>("ID"),
+                    converter.ConvertValue<string>("Name"), DepartmentRepository.ReadDepartment(reader),
                     converter.ConvertValue<int>("Cost"),
                     AdminAuditHelper.ReadAdmin(reader),
                     converter.ConvertValue<DateTime>("CreatedAt"));
@@ -74,19 +71,18 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public static TestType ReadTestType(SqlDataReader reader)
+        public static TestTypeRowDTO ReadTestType(SqlDataReader reader)
         {
             ConvertingHelper converter = new ConvertingHelper(reader);
 
-            return new TestType()
-            {
-                ID = converter.ConvertValue<int>("TestTypeID"),
-                Name = converter.ConvertValue<string>("TestTypeName"),
-                Department = new Department
-                {
-                    Name = converter.ConvertValue<string>("TestTypeDepartmentName")
-                },
-            };
+            return new TestTypeRowDTO(
+
+                converter.ConvertValue<int>("TestTypeID"),
+                 converter.ConvertValue<string>("TestTypeName"),
+                     converter.ConvertValue<string>("TestTypeDepartmentName"),
+                converter.ConvertValue<int>("Cost")
+
+            );
         }
     }
 }

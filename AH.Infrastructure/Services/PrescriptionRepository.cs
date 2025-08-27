@@ -66,7 +66,18 @@ namespace AH.Infrastructure.Repositories
 
         public async Task<GetByIDResponseDTO<PrescriptionDTO>> GetByIDAsync(int id)
         {
-            throw new NotImplementedException();
+            return await ReusableCRUD.GetByID<PrescriptionDTO>("Fetch_PrescriptionByID", _logger, id, null, (reader, converter) =>
+               new PrescriptionDTO(converter.ConvertValue<int>("ID"),
+                                   AppointmentRepository.ReadAppointment(reader, ""),
+                                   converter.ConvertValue<string>("Diagnosis"),
+
+                                   converter.ConvertValue<string>("Medication"),
+                                   converter.ConvertValue<string>("Dosage"),
+                                   converter.ConvertValue<string>("Frequency"),
+                                   converter.ConvertValue<DateTime>("MedicationStart"),
+                                converter.ConvertValue<DateTime>("MedicationEnd"), converter.ConvertValue<string>("Notes")
+   )
+               );
         }
 
         public async Task<bool> UpdateAsync(Prescription prescription)

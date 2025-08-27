@@ -54,34 +54,16 @@ namespace AH.Infrastructure.Repositories
 
         public async Task<GetByIDResponseDTO<InsuranceDTO>> GetByIDAsync(int id)
         {
-            throw new NotImplementedException();
-            //Insurance insurance = new Insurance();
+            return await ReusableCRUD.GetByID<InsuranceDTO>("Fetch_InsuranceByID", _logger, id, null, (reader, converter) =>
 
-            //Exception? ex = await ReusableCRUD.GetByID<Admin>("Fetch_InsuranceByID", _logger, id, null, (reader, converter) =>
-            //{
-            //    insurance  new Insurance(converter.ConvertValue<int>("ID"), new Patient()
-            //    {
-            //        ID = converter.ConvertValue<int>("PatientID"),
-            //        Person = new Person
-            //        {
-            //            FirstName = converter.ConvertValue<string>("PatientFirstName"),
-            //            MiddleName = converter.ConvertValue<string>("PatientMiddleName"),
-            //            LastName = converter.ConvertValue<string>("PatientLastName"),
-            //        }
-            //    },
-            //        converter.ConvertValue<string>("ProviderName"),
-            //        converter.ConvertValue<decimal>("Coverage", new Department
-            //        {
-            //            ID = converter.ConvertValue<int>("DepartmentID"),
-            //            Name = converter.ConvertValue<string>("DepartmentName")
-            //        },
-            //        converter.ConvertValue<int>("Cost"),
-            //        AdminAuditHelper.ReadAdmin(reader),
-            //        converter.ConvertValue<DateTime>("CreatedAt"));
-            //}
-            //);
-
-            //return new GetByIDResponseDTO<Insurance>(insurance, ex);
+                new InsuranceDTO(
+                    converter.ConvertValue<int>("ID"),
+                    PatientRepository.ReadPatient(reader),
+                    converter.ConvertValue<string>("ProviderName"),
+                    converter.ConvertValue<decimal>("Coverage"),
+                    converter.ConvertValue<DateTime>("ExpirationDate"),
+                    converter.ConvertValue<bool>("IsActive"),
+                       converter.ConvertValue<DateTime>("CreatedAt"), ReceptionistAuditHelper.ReadReceptionist(reader)));
         }
 
         public async Task<bool> Renew(int id)

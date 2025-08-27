@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
@@ -39,10 +40,10 @@ namespace AH.Infrastructure.Repositories
      , null);
         }
 
-        public async Task<GetByIDResponseDTO<DepartmentDTODTO>> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<DepartmentDTO>> GetByIDAsync(int id)
         {
-            return await ReusableCRUD.GetByID<Department>("Fetch_DepartmentByID", _logger, id, null, (reader, converter) =>
-            new Department(converter.ConvertValue<int>("ID"), converter.ConvertValue<string>("Name"),
+            return await ReusableCRUD.GetByID<DepartmentDTO>("Fetch_DepartmentByID", _logger, id, null, (reader, converter) =>
+            new DepartmentDTO(converter.ConvertValue<int>("ID"), converter.ConvertValue<string>("Name"),
                     converter.ConvertValue<string>("Phone"),
                     AdminAuditHelper.ReadAdmin(reader),
                     converter.ConvertValue<DateTime>("CreatedAt"))
@@ -68,17 +69,13 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public static Department ReadDepartment(SqlDataReader reader)
+        public static DepartmentRowDTO ReadDepartment(SqlDataReader reader)
         {
             ConvertingHelper converter = new ConvertingHelper(reader);
 
-            return new Department()
-            {
-                ID = converter.ConvertValue<int>("ID"),
-
-                Name = converter.ConvertValue<string>("DepartmentName"),
-                Phone = converter.ConvertValue<string>("DepartmentPhone")
-            };
+            return new DepartmentRowDTO(converter.ConvertValue<int>("ID"), converter.ConvertValue<string>("DepartmentName"),
+               converter.ConvertValue<string>("DepartmentPhone")
+            );
         }
     }
 }

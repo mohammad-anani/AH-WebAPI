@@ -1,4 +1,5 @@
-﻿using AH.Domain.Entities;
+﻿using AH.Application.DTOs.Row;
+using AH.Domain.Entities;
 using AH.Domain.Entities.Audit;
 using Microsoft.Data.SqlClient;
 using System;
@@ -23,23 +24,17 @@ namespace AH.Infrastructure.Helpers
             SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
         }
 
-        public static AdminAudit ReadAdmin(SqlDataReader reader)
+        public static AdminRowDTO ReadAdmin(SqlDataReader reader)
         {
             var converter = new ConvertingHelper(reader);
 
-            AdminAudit CreatedByAdmin = new AdminAudit()
-            {
-                ID = converter.ConvertValue<int>("CreatedByAdminID"),
+            AdminRowDTO CreatedByAdmin = new AdminRowDTO(
 
-                Employee = {
-                    Person =
-                        {
-                        FirstName = converter.ConvertValue<string>("CreatedByAdminFirstName"),
-                        MiddleName = converter.ConvertValue<string>("CreatedByAdminMiddleName"),
-                        LastName = converter.ConvertValue<string>("CreatedByAdminLastName"),
-                        }
-                }
-            };
+                 converter.ConvertValue<int>("CreatedByAdminID"),
+
+                        converter.ConvertValue<string>("CreatedByAdminFullName")
+
+            );
 
             return CreatedByAdmin;
         }

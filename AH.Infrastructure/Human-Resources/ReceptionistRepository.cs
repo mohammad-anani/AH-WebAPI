@@ -5,6 +5,7 @@ using AH.Application.IRepositories;
 using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
 using Microsoft.Extensions.Logging;
+using AH.Application.DTOs.Entities;
 
 namespace AH.Infrastructure.Repositories
 {
@@ -29,18 +30,14 @@ namespace AH.Infrastructure.Repositories
           , null);
         }
 
-        public async Task<GetByIDResponseDTO<ReceptionistDTODTO>> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<ReceptionistDTO>> GetByIDAsync(int id)
         {
-            Receptionist receptionist = new Receptionist();
-
-            Exception? ex = await ReusableCRUD.GetByID<Admin>("Fetch_ReceptionistByID", _logger, id, null, (reader, converter) =>
+            return await ReusableCRUD.GetByID<ReceptionistDTO>("Fetch_ReceptionistByID", _logger, id, null, (reader, converter) =>
             {
-                Employee employee = EmployeeHelper.ReadEmployee(reader);
-                receptionist = new Receptionist(converter.ConvertValue<int>("ID"), employee);
+                EmployeeDTO employee = EmployeeHelper.ReadEmployee(reader);
+                return new ReceptionistDTO(converter.ConvertValue<int>("ID"), employee);
             }
             );
-
-            return new GetByIDResponseDTO<Receptionist>(receptionist, ex);
         }
 
         public async Task<int> AddAsync(Receptionist receptionist)

@@ -6,6 +6,7 @@ using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
 using Microsoft.Extensions.Logging;
 using System;
+using AH.Application.DTOs.Entities;
 
 namespace AH.Infrastructure.Repositories
 {
@@ -30,12 +31,12 @@ namespace AH.Infrastructure.Repositories
             , null);
         }
 
-        public async Task<GetByIDResponseDTO<AdminDTODTO>> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<AdminDTO>> GetByIDAsync(int id)
         {
-            return await ReusableCRUD.GetByID<Admin>("Fetch_AdminByID", _logger, id, null, (reader, converter) =>
+            return await ReusableCRUD.GetByID<AdminDTO>("Fetch_AdminByID", _logger, id, null, (reader, converter) =>
             {
-                Employee employee = EmployeeHelper.ReadEmployee(reader);
-                return new Admin(converter.ConvertValue<int>("ID"), employee);
+                EmployeeDTO employee = EmployeeHelper.ReadEmployee(reader);
+                return new AdminDTO(converter.ConvertValue<int>("ID"), employee);
             });
         }
 

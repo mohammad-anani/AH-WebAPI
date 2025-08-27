@@ -6,6 +6,8 @@ using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
 using Microsoft.Extensions.Logging;
 using System.Data;
+using AH.Application.DTOs.Entities;
+using Microsoft.Data.SqlClient;
 
 namespace AH.Infrastructure.Repositories
 {
@@ -52,10 +54,15 @@ namespace AH.Infrastructure.Repositories
             return await this.GetAllAsync(filterDTO);
         }
 
-        public async Task<GetByIDResponseDTO<AppointmentDTODTO>> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<AppointmentDTO>> GetByIDAsync(int id)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            return await ReusableCRUD.GetByID<AppointmentDTO>("Fetch_AppointmentByID", _logger, id, null, (reader, converter) =>
+            new AppointmentDTO(converter.ConvertValue<int>("ID"), ReadAppointment(reader, "Previous"),
+DoctorRepository.ReadDoctor(reader),
+
+                    ServiceHelper.ReadService(reader)
+
+            ));
         }
 
         public async Task<int> AddAsync(Appointment appointment)
@@ -104,6 +111,18 @@ namespace AH.Infrastructure.Repositories
         {
             // Implementation placeholder
             throw new NotImplementedException();
+        }
+
+        public static AppointmentRowDTO ReadAppointment(SqlDataReader reader, string? prefix)
+        {
+            var converter = new ConvertingHelper(reader);
+            return new AppointmentRowDTO(converter.ConvertValue<int>(prefix + "AppointmenID"),
+                                        converter.ConvertValue<string>(prefix + "AppointmentPatientFullName"),
+                                        converter.ConvertValue<string>(prefix + "AppointmentDoctorFullName"),
+                                        converter.ConvertValue<bool>(prefix + "AppointmentIsFollowUp"),
+                                        converter.ConvertValue<DateTime>(prefix + "AppointmentScheduledDate"),
+                                        converter.ConvertValue<string>(prefix + "AppointmentStatus"),
+                                        converter.ConvertValue<bool>(prefix + "AppointmentIsPaid"));
         }
     }
 }

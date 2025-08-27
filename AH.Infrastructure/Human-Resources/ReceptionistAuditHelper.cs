@@ -1,4 +1,5 @@
-﻿using AH.Domain.Entities;
+﻿using AH.Application.DTOs.Row;
+using AH.Domain.Entities;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -22,21 +23,16 @@ namespace AH.Infrastructure.Helpers
             SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
         }
 
-        public static Receptionist ReadReceptionist(SqlDataReader reader)
+        public static ReceptionistRowDTO ReadReceptionist(SqlDataReader reader)
         {
             var converter = new ConvertingHelper(reader);
-            Receptionist CreatedByReceptionist = new Receptionist()
-            {
-                ID = converter.ConvertValue<int>("CreatedByReceptionistID"),
-                Employee = {
-                    Person =
-                        {
-                        FirstName = converter.ConvertValue<string>("CreatedByReceptionistFirstName"),
-                        MiddleName = converter.ConvertValue<string>("CreatedByReceptionistMiddleName"),
-                        LastName = converter.ConvertValue<string>("CreatedByReceptionistLastName"),
-                        }
-                }
-            };
+            ReceptionistRowDTO CreatedByReceptionist = new ReceptionistRowDTO(
+
+                  converter.ConvertValue<int>("CreatedByReceptionistID"),
+
+                         converter.ConvertValue<string>("CreatedByReceptionistFullName")
+
+             ); ;
             return CreatedByReceptionist;
         }
     }

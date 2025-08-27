@@ -6,6 +6,8 @@ using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
 using Microsoft.Extensions.Logging;
 using System.Data;
+using AH.Application.DTOs.Entities;
+using AH.Infrastructure.Finance;
 
 namespace AH.Infrastructure.Repositories
 {
@@ -51,10 +53,14 @@ namespace AH.Infrastructure.Repositories
             return new GetAllResponseDTO<PaymentRowDTO>(items, totalCount, ex);
         }
 
-        public async Task<Payment> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<PaymentDTO>> GetByIDAsync(int id)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            return await ReusableCRUD.GetByID<PaymentDTO>("Fetch_PaymentByID", _logger, id, null, (reader, converter) =>
+            new PaymentDTO(converter.ConvertValue<int>("ID"),
+                BillHelper.ReadBill(reader),
+                converter.ConvertValue<int>("AmountToPay"),
+                converter.ConvertValue<string>("Method"),
+                converter.ConvertValue<DateTime>("CreatedAt"), ReceptionistAuditHelper.ReadReceptionist(reader)));
         }
 
         public async Task<int> AddAsync(Payment payment)

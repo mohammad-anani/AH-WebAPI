@@ -70,8 +70,15 @@ namespace AH.Infrastructure.Repositories
 
         public async Task<GetByIDResponseDTO<OperationDTO>> GetByIDAsync(int id)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            return await ReusableCRUD.GetByID<OperationDTO>("Fetch_OperationByID", _logger, id, null, (reader, converter) =>
+              {
+                  ServiceDTO service = ServiceHelper.ReadService(reader);
+                  DepartmentRowDTO department = DepartmentRepository.ReadDepartment(reader);
+                  AdminRowDTO adminAudit = AdminAuditHelper.ReadAdmin(reader);
+                  return new OperationDTO(converter.ConvertValue<int>("ID"), converter.ConvertValue<string>("Name"),
+                      department, converter.ConvertValue<string>("Description"), service
+             );
+              });
         }
 
         public async Task<int> AddAsync(Operation operation)

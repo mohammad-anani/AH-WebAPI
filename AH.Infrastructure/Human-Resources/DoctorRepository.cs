@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
@@ -38,12 +39,12 @@ namespace AH.Infrastructure.Repositories
             , parameters);
         }
 
-        public async Task<GetByIDResponseDTO<DoctorDTODTO>> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<DoctorDTO>> GetByIDAsync(int id)
         {
-            return await ReusableCRUD.GetByID<Doctor>("Fetch_DoctorByID", _logger, id, null, (reader, converter) =>
+            return await ReusableCRUD.GetByID<DoctorDTO>("Fetch_DoctorByID", _logger, id, null, (reader, converter) =>
             {
-                Employee employee = EmployeeHelper.ReadEmployee(reader);
-                return new Doctor(converter.ConvertValue<int>("ID"), employee, converter.ConvertValue<int>("CostPerAppointment"),
+                EmployeeDTO employee = EmployeeHelper.ReadEmployee(reader);
+                return new DoctorDTO(converter.ConvertValue<int>("ID"), employee, converter.ConvertValue<int>("CostPerAppointment"),
                     converter.ConvertValue<string>("Specialization"));
             });
         }
@@ -72,24 +73,15 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public static Doctor ReadDoctor(SqlDataReader reader)
+        public static DoctorRowDTO ReadDoctor(SqlDataReader reader)
         {
             ConvertingHelper converter = new ConvertingHelper(reader);
 
-            return new Doctor()
-            {
-                ID = converter.ConvertValue<int>("DoctorID"),
-                Employee =
-                {
-                    Person=
-                new Person
-                {
-                    FirstName = converter.ConvertValue<string>("DoctorFirstName"),
-                    MiddleName = converter.ConvertValue<string>("DoctorMiddleName"),
-                    LastName = converter.ConvertValue<string>("DoctorLastName"),
-                }
-                }
-            };
+            return new DoctorRowDTO(
+                    converter.ConvertValue<int>("DoctorID"),
+                    converter.ConvertValue<string>("DoctorFullName"),
+                    converter.ConvertValue<string>("DoctorSpecialization")
+                    );
         }
     }
 }

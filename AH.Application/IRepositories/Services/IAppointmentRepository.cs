@@ -3,6 +3,7 @@ using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
+using AH.Application.DTOs.Entities;
 
 namespace AH.Application.IRepositories
 {
@@ -14,7 +15,7 @@ namespace AH.Application.IRepositories
 
         Task<GetAllResponseDTO<AppointmentRowDTO>> GetAllByPatientIDAsync(int patientID);
 
-        Task<GetByIDResponseDTO<AppointmentDTODTO>> GetByIDAsync(int id);
+        Task<GetByIDResponseDTO<AppointmentDTO>> GetByIDAsync(int id);
 
         Task<int> AddAsync(Appointment appointment);
 

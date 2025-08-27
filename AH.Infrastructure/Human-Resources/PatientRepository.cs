@@ -58,10 +58,10 @@ namespace AH.Infrastructure.Repositories
 
         public async Task<GetByIDResponseDTO<PatientDTO>> GetByIDAsync(int id)
         {
-            return await ReusableCRUD.GetByID<Patient>("Fetch_PatientByID", _logger, id, null, (reader, converter) =>
+            return await ReusableCRUD.GetByID<PatientDTO>("Fetch_PatientByID", _logger, id, null, (reader, converter) =>
             {
                 Person person = PersonHelper.ReadPerson(reader);
-                return new Patient(converter.ConvertValue<int>("ID"), person, ReceptionistAuditHelper.ReadReceptionist(reader),
+                return new PatientDTO(converter.ConvertValue<int>("ID"), person, ReceptionistAuditHelper.ReadReceptionist(reader),
                     converter.ConvertValue<DateTime>("CreatedAt"));
             });
         }
@@ -84,20 +84,15 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public static Patient ReadPatient(SqlDataReader reader)
+        public static PatientRowDTO ReadPatient(SqlDataReader reader)
         {
             ConvertingHelper converter = new ConvertingHelper(reader);
 
-            return new Patient()
-            {
-                ID = converter.ConvertValue<int>("PatientID"),
-                Person = new Person
-                {
-                    FirstName = converter.ConvertValue<string>("PatientFirstName"),
-                    MiddleName = converter.ConvertValue<string>("PatientMiddleName"),
-                    LastName = converter.ConvertValue<string>("PatientLastName"),
-                }
-            };
+            return new PatientRowDTO(
+
+                 converter.ConvertValue<int>("PatientID"),
+
+ converter.ConvertValue<string>("PatientFullName"), converter.ConvertValue<int>("Age"), converter.ConvertValue<string>("Phone"));
         }
     }
 }

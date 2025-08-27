@@ -1,5 +1,8 @@
-﻿using AH.Application.DTOs.Filter;
+﻿using AH.Application.DTOs.Entities;
+using AH.Application.DTOs.Filter;
+using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
+using AH.Infrastructure.Repositories;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -42,6 +45,20 @@ namespace AH.Infrastructure.Helpers
                 serviceFilter.CreatedAtFrom,
                 serviceFilter.CreatedAtTo,
                 cmd);
+        }
+
+        public static ServiceDTO ReadService(SqlDataReader reader)
+        {
+            ConvertingHelper converter = new ConvertingHelper(reader);
+
+            return new ServiceDTO(PatientRepository.ReadPatient(reader),
+                converter.ConvertValue<DateTime>("ScheduledDate"),
+                converter.ConvertValue<DateTime?>("ActualStartingDate"), converter.ConvertValue<string>("Reason"),
+                 converter.ConvertValue<string?>("Result"), converter.ConvertValue<DateTime?>("ResultDate"), converter.ConvertValue<string>("Status"),
+                   converter.ConvertValue<string?>("Notes"), new Bill(converter.ConvertValue<int>("BillID"), converter.ConvertValue<int>("Amount"), converter.ConvertValue<int>("AmountPaid")),
+                   ReceptionistAuditHelper.ReadReceptionist(reader), converter.ConvertValue<DateTime>("CreatedAt")
+
+                 );
         }
     }
 }

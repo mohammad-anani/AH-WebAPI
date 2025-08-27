@@ -1,5 +1,7 @@
-﻿using AH.Application.DTOs.Filter;
+﻿using AH.Application.DTOs.Entities;
+using AH.Application.DTOs.Filter;
 using AH.Domain.Entities;
+using AH.Infrastructure.Repositories;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -35,19 +37,15 @@ namespace AH.Infrastructure.Helpers
                 (employeeFilter.CreatedByAdminID, employeeFilter.CreatedAtFrom, employeeFilter.CreatedAtTo, cmd);
         }
 
-        public static Func<SqlDataReader, Employee> ReadEmployee = reader =>
+        public static Func<SqlDataReader, EmployeeDTO> ReadEmployee = reader =>
         {
             var converter = new ConvertingHelper(reader);
 
-            var employee = new Employee
+            var employee = new EmployeeDTO
             {
                 Person = PersonHelper.ReadPerson(reader),
 
-                Department = new Department
-                {
-                    ID = converter.ConvertValue<int>("DepartmentID"),
-                    Name = converter.ConvertValue<string>("DepartmentName")
-                },
+                Department = DepartmentRepository.ReadDepartment(reader),
                 Salary = converter.ConvertValue<int>("Salary"),
                 HireDate = converter.ConvertValue<DateTime>("HireDate"),
                 LeaveDate = converter.ConvertValue<DateTime>("LeaveDate"),

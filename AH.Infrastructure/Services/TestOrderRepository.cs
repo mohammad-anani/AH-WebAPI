@@ -62,7 +62,13 @@ namespace AH.Infrastructure.Repositories
 
         public async Task<GetByIDResponseDTO<TestOrderDTO>> GetByIDAsync(int id)
         {
-            throw new NotImplementedException();
+            return await ReusableCRUD.GetByID<TestOrderDTO>("Fetch_TestOrderByID", logger, id, null, (reader, converter) =>
+            {
+                TestTypeRowDTO testType = TestTypeRepository.ReadTestType(reader);
+                AppointmentRowDTO appointment = AppointmentRepository.ReadAppointment(reader, "");
+                return new TestOrderDTO(converter.ConvertValue<int>("ID"), appointment, testType
+                      );
+            });
         }
 
         public async Task<bool> UpdateAsync(TestOrder testOrder)
