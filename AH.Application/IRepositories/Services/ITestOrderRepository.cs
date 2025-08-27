@@ -14,8 +14,6 @@ namespace AH.Application.IRepositories
 
         Task<CreateResponseDTO> AddAsync(TestOrder testOrder);
 
-        Task<SuccessResponseDTO> UpdateAsync(TestOrder testOrder);
-
         Task<DeleteResponseDTO> DeleteAsync(int id);
     }
 }

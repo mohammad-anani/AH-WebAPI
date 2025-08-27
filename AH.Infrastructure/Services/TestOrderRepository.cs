@@ -79,10 +79,5 @@ namespace AH.Infrastructure.Repositories
                       );
             });
         }
-
-        public async Task<SuccessResponseDTO> UpdateAsync(TestOrder testOrder)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

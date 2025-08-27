@@ -24,7 +24,7 @@ namespace AH.Infrastructure.Helpers
             SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
         }
 
-        public static void AddPersonEntityParameters(Person person, SqlCommand cmd)
+        public static void AddCreateUpdatePersonParameters(Person person, SqlCommand cmd)
         {
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {

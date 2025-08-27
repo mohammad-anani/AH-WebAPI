@@ -69,14 +69,22 @@ namespace AH.Infrastructure.Repositories
             return await ReusableCRUD.AddAsync("Create_TestType", _logger, (cmd) =>
             {
                 SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
-
             });
         }
 
         public async Task<SuccessResponseDTO> UpdateAsync(TestType testType)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["Name"] = (testType.Name, SqlDbType.NVarChar, 20, null),
+                ["DepartmentID"] = (testType.Department?.ID, SqlDbType.Int, null, null),
+                ["Cost"] = (testType.Cost, SqlDbType.NVarChar, 8, null),
+            };
+
+            return await ReusableCRUD.UpdateAsync("Update_TestType", _logger, testType.ID, (cmd) =>
+            {
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+            });
         }
 
         public async Task<DeleteResponseDTO> DeleteAsync(int id)

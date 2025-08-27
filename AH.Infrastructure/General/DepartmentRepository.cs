@@ -55,23 +55,29 @@ namespace AH.Infrastructure.Repositories
         {
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
-                ["Name"]= (department.Name, SqlDbType.NVarChar, 20, null),
-                ["Phone"]= (department.Phone, SqlDbType.NVarChar, 8, null),
-                ["CreatedByAdminID"]= (department.CreatedByAdmin?.ID, SqlDbType.Int, null, null)
+                ["Name"] = (department.Name, SqlDbType.NVarChar, 20, null),
+                ["Phone"] = (department.Phone, SqlDbType.NVarChar, 8, null),
+                ["CreatedByAdminID"] = (department.CreatedByAdmin?.ID, SqlDbType.Int, null, null)
             };
 
             return await ReusableCRUD.AddAsync("Create_Department", _logger, (cmd) =>
             {
                 SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
-
             });
-
         }
 
         public async Task<SuccessResponseDTO> UpdateAsync(Department department)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["Name"] = (department.Name, SqlDbType.NVarChar, 20, null),
+                ["Phone"] = (department.Phone, SqlDbType.NVarChar, 8, null),
+            };
+
+            return await ReusableCRUD.UpdateAsync("Update_Department", _logger, department.ID, (cmd) =>
+            {
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+            });
         }
 
         public async Task<DeleteResponseDTO> DeleteAsync(int id)

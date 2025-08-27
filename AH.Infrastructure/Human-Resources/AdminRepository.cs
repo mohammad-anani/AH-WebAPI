@@ -43,21 +43,18 @@ namespace AH.Infrastructure.Repositories
 
         public async Task<CreateResponseDTO> AddAsync(Admin admin)
         {
-
-
-
             return await ReusableCRUD.AddAsync("Create_Admin", _logger, (cmd) =>
             {
-                EmployeeHelper.AddEmployeeEntityParameters(admin.Employee, cmd);
-
-
+                EmployeeHelper.AddCreateEmployeeParameters(admin.Employee, cmd);
             });
         }
 
         public async Task<SuccessResponseDTO> UpdateAsync(Admin admin)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            return await ReusableCRUD.UpdateAsync("Update_Admin", _logger, admin.ID, (cmd) =>
+            {
+                EmployeeHelper.AddUpdateEmployeeParameters(admin.Employee, cmd);
+            });
         }
 
         public async Task<DeleteResponseDTO> DeleteAsync(int id)

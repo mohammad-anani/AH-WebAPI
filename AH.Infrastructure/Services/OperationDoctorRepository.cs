@@ -52,21 +52,5 @@ namespace AH.Infrastructure.Repositories
 
             return new GetAllResponseDTO<OperationDoctorRowDTO>(items, totalCount, ex);
         }
-
-        public async Task<SuccessResponseDTO> AddUpdateAsync(AddUpdateOperationDoctorDTO opDoctDTO)
-        {
-            SuccessOutputHelper successOutputHelper = new SuccessOutputHelper();
-
-            Exception? ex = await ADOHelper.ExecuteNonQueryAsync("AddUpdate_OperationDoctor", _logger, cmd =>
-         {
-             successOutputHelper.AddToCommand(cmd);
-             var param = cmd.Parameters.AddWithValue("@OperationDoctors", opDoctDTO.ToDatatable());
-             param.SqlDbType = SqlDbType.Structured;
-             param.TypeName = "dbo.OperationDoctorsType";
-             cmd.Parameters.AddWithValue("@OperationID", opDoctDTO.OperationID);
-         }, null);
-
-            return new SuccessResponseDTO(successOutputHelper.GetResult(), ex);
-        }
     }
 }

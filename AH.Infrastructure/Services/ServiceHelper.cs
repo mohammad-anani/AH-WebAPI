@@ -47,7 +47,7 @@ namespace AH.Infrastructure.Helpers
                 cmd);
         }
 
-        public static void AddServiceEntityParameters(Service service, SqlCommand cmd)
+        public static void AddCreateServiceParameters(Service service, SqlCommand cmd)
         {
             // Service-specific parameters based on ServiceFilter properties
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
@@ -58,6 +58,19 @@ namespace AH.Infrastructure.Helpers
                 ["Reason"] = (service.Reason, SqlDbType.NVarChar, -1, null),
                 ["Notes"] = (service.Notes, SqlDbType.NVarChar, 500, null),
                 ["BillAmount"] = (service.Bill.Amount, SqlDbType.Decimal, null, null),
+            };
+
+            SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+        }
+
+        public static void AddUpdateServiceParameters(Service service, SqlCommand cmd)
+        {
+            // Service-specific parameters based on ServiceFilter properties
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["Status"] = (Service.GetStatus(service.Status), SqlDbType.TinyInt, null, null),
+                ["Reason"] = (service.Reason, SqlDbType.NVarChar, -1, null),
+                ["Notes"] = (service.Notes, SqlDbType.NVarChar, 500, null),
             };
 
             SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);

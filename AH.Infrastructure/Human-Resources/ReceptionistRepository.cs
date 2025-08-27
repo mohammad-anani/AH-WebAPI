@@ -44,14 +44,16 @@ namespace AH.Infrastructure.Repositories
         {
             return await ReusableCRUD.AddAsync("Create_Receptionist", _logger, (cmd) =>
             {
-                EmployeeHelper.AddEmployeeEntityParameters(receptionist.Employee, cmd);
+                EmployeeHelper.AddCreateEmployeeParameters(receptionist.Employee, cmd);
             });
         }
 
         public async Task<SuccessResponseDTO> UpdateAsync(Receptionist receptionist)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            return await ReusableCRUD.UpdateAsync("Update_Receptionist", _logger, receptionist.ID, (cmd) =>
+            {
+                EmployeeHelper.AddUpdateEmployeeParameters(receptionist.Employee, cmd);
+            });
         }
 
         public async Task<DeleteResponseDTO> DeleteAsync(int id)

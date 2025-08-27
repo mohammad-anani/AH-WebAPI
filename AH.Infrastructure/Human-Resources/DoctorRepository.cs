@@ -51,25 +51,33 @@ namespace AH.Infrastructure.Repositories
 
         public async Task<CreateResponseDTO> AddAsync(Doctor doctor)
         {
-            
             var param = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
             {
                 ["Spcecialization"] = (doctor.Specialization, SqlDbType.NVarChar, 100, null),
-                ["CostPerAppointment"]= (doctor.CostPerAppointment, SqlDbType.Int, null, null)
+                ["CostPerAppointment"] = (doctor.CostPerAppointment, SqlDbType.Int, null, null)
             };
 
             return await ReusableCRUD.AddAsync("Create_Doctor", _logger, (cmd) =>
             {
-                EmployeeHelper.AddEmployeeEntityParameters(doctor.Employee, cmd);
+                EmployeeHelper.AddCreateEmployeeParameters(doctor.Employee, cmd);
 
-                SqlParameterHelper.AddParametersFromDictionary(cmd,param);
+                SqlParameterHelper.AddParametersFromDictionary(cmd, param);
             });
         }
 
         public async Task<SuccessResponseDTO> UpdateAsync(Doctor doctor)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var param = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
+            {
+                ["Spcecialization"] = (doctor.Specialization, SqlDbType.NVarChar, 100, null),
+                ["CostPerAppointment"] = (doctor.CostPerAppointment, SqlDbType.Int, null, null)
+            };
+
+            return await ReusableCRUD.UpdateAsync("Update_Doctor", _logger, doctor.ID, (cmd) =>
+            {
+                EmployeeHelper.AddUpdateEmployeeParameters(doctor.Employee, cmd);
+                SqlParameterHelper.AddParametersFromDictionary(cmd, param);
+            });
         }
 
         public async Task<DeleteResponseDTO> DeleteAsync(int id)

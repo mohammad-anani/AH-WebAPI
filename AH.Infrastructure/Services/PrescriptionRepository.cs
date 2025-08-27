@@ -97,7 +97,21 @@ namespace AH.Infrastructure.Repositories
 
         public async Task<SuccessResponseDTO> UpdateAsync(Prescription prescription)
         {
-            throw new NotImplementedException();
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["Diagnosis"] = (prescription.Diagnosis, SqlDbType.NVarChar, 256, null),
+                ["Medication"] = (prescription.Medication, SqlDbType.NVarChar, 256, null),
+                ["Dosage"] = (prescription.Dosage, SqlDbType.NVarChar, 50, null),
+                ["Frequency"] = (prescription.Frequency, SqlDbType.NVarChar, 256, null),
+                ["MedicationStart"] = (prescription.MedicationStart, SqlDbType.DateTime, null, null),
+                ["MedicationEnd"] = (prescription.MedicationEnd, SqlDbType.DateTime, null, null),
+                ["Notes"] = (prescription.Notes, SqlDbType.NVarChar, -1, null)
+            };
+
+            return await ReusableCRUD.UpdateAsync("Update_Prescription", _logger, prescription.ID, cmd =>
+            {
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+            });
         }
     }
 }

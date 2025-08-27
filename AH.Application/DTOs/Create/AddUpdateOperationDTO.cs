@@ -9,13 +9,12 @@ using System.Threading.Tasks;
 
 namespace AH.Application.DTOs.Create
 {
-    public class AddUpdateOperationDoctorDTO
+    public class AddUpdateOperationDTO
     {
+        public Operation Operation { get; set; }
         public List<OperationDoctorDTO> OperationDoctors { get; set; }
 
-        public int OperationID { get; set; }
-
-        public AddUpdateOperationDoctorDTO(List<OperationDoctorDTO> operationDoctors, int operationID)
+        public AddUpdateOperationDTO(Operation operation, List<OperationDoctorDTO> operationDoctors)
         {
             if (operationDoctors.Count > 5 || operationDoctors.Count == 0)
             {
@@ -23,7 +22,7 @@ namespace AH.Application.DTOs.Create
             }
 
             OperationDoctors = operationDoctors;
-            OperationID = operationID;
+            Operation = operation;
         }
 
         public DataTable ToDatatable()

@@ -75,14 +75,16 @@ namespace AH.Infrastructure.Repositories
 
             return await ReusableCRUD.AddAsync("Create_Patient", _logger, (cmd) =>
             {
-                PersonHelper.AddPersonEntityParameters(patient.Person, cmd);
+                PersonHelper.AddCreateUpdatePersonParameters(patient.Person, cmd);
             });
         }
 
         public async Task<SuccessResponseDTO> UpdateAsync(Patient patient)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            return await ReusableCRUD.UpdateAsync("Update_Patient", _logger, patient.ID, (cmd) =>
+            {
+                PersonHelper.AddCreateUpdatePersonParameters(patient.Person, cmd);
+            });
         }
 
         public async Task<DeleteResponseDTO> DeleteAsync(int id)

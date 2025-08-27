@@ -76,7 +76,7 @@ DoctorRepository.ReadDoctor(reader),
 
             return await ReusableCRUD.AddAsync("Create_Appointment", _logger, cmd =>
             {
-                ServiceHelper.AddServiceEntityParameters(appointment.Service, cmd);
+                ServiceHelper.AddCreateServiceParameters(appointment.Service, cmd);
 
                 SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
             });
@@ -101,8 +101,10 @@ DoctorRepository.ReadDoctor(reader),
 
         public async Task<SuccessResponseDTO> UpdateAsync(Appointment appointment)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            return await ReusableCRUD.UpdateAsync("Update_Appointment", _logger, appointment.ID, cmd =>
+            {
+                ServiceHelper.AddCreateServiceParameters(appointment.Service, cmd);
+            });
         }
 
         public async Task<DeleteResponseDTO> DeleteAsync(int id)

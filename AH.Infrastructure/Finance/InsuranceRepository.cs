@@ -96,8 +96,16 @@ namespace AH.Infrastructure.Repositories
 
         public async Task<SuccessResponseDTO> UpdateAsync(Insurance insurance)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["ProviderName"] = (insurance.ProviderName, SqlDbType.NVarChar, 100, null),
+                ["Coverage"] = (insurance.Coverage, SqlDbType.Decimal, null, null),
+            };
+
+            return await ReusableCRUD.UpdateAsync("Update_Insurance", _logger, insurance.ID, (cmd) =>
+            {
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+            });
         }
 
         public async Task<DeleteResponseDTO> DeleteAsync(int id)

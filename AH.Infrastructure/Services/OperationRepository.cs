@@ -7,6 +7,7 @@ using AH.Infrastructure.Helpers;
 using Microsoft.Extensions.Logging;
 using System.Data;
 using AH.Application.DTOs.Entities;
+using AH.Application.DTOs.Create;
 
 namespace AH.Infrastructure.Repositories
 {
@@ -81,29 +82,50 @@ namespace AH.Infrastructure.Repositories
               });
         }
 
-        public async Task<CreateResponseDTO> AddAsync(Operation operation)
+        public async Task<CreateResponseDTO> AddAsync(AddUpdateOperationDTO operationDTO)
         {
+            Operation operation = operationDTO.Operation;
+
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
-                ["Name"]=(operation.Name,SqlDbType.NVarChar,100,null),
-                ["Description"]=(operation.Description, SqlDbType.NVarChar, -1, null),
-                ["DepartmentID"]= (operation.Department.ID, SqlDbType.Int, null, null)
+                ["Name"] = (operation.Name, SqlDbType.NVarChar, 100, null),
+                ["Description"] = (operation.Description, SqlDbType.NVarChar, -1, null),
+                ["DepartmentID"] = (operation.Department.ID, SqlDbType.Int, null, null)
             };
 
             return await ReusableCRUD.AddAsync("Create_Operation", _logger, cmd =>
             {
-
-                ServiceHelper.AddServiceEntityParameters(operation.Service, cmd);
+                ServiceHelper.AddCreateServiceParameters(operation.Service, cmd);
 
                 SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
 
+                var param = cmd.Parameters.AddWithValue("@OperationDoctors", operationDTO.ToDatatable());
+                param.SqlDbType = SqlDbType.Structured;
+                param.TypeName = "dbo.OperationDoctorsType";
             });
         }
 
-        public async Task<SuccessResponseDTO> UpdateAsync(Operation operation)
+        public async Task<SuccessResponseDTO> UpdateAsync(AddUpdateOperationDTO operationDTO)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            Operation operation = operationDTO.Operation;
+
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["Name"] = (operation.Name, SqlDbType.NVarChar, 100, null),
+                ["Description"] = (operation.Description, SqlDbType.NVarChar, -1, null),
+                ["DepartmentID"] = (operation.Department.ID, SqlDbType.Int, null, null)
+            };
+
+            return await ReusableCRUD.UpdateAsync("Update_Operation", _logger, operation.ID, cmd =>
+            {
+                ServiceHelper.AddCreateServiceParameters(operation.Service, cmd);
+
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+
+                var param = cmd.Parameters.AddWithValue("@OperationDoctors", operationDTO.ToDatatable());
+                param.SqlDbType = SqlDbType.Structured;
+                param.TypeName = "dbo.OperationDoctorsType";
+            });
         }
 
         public async Task<DeleteResponseDTO> DeleteAsync(int id)

@@ -3,6 +3,7 @@ using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
 using AH.Application.DTOs.Entities;
+using AH.Application.DTOs.Create;
 
 namespace AH.Application.IRepositories
 {
@@ -16,9 +17,9 @@ namespace AH.Application.IRepositories
 
         Task<GetByIDResponseDTO<OperationDTO>> GetByIDAsync(int id);
 
-        Task<CreateResponseDTO> AddAsync(Operation operation);
+        Task<CreateResponseDTO> AddAsync(AddUpdateOperationDTO operationDTO);
 
-        Task<SuccessResponseDTO> UpdateAsync(Operation operation);
+        Task<SuccessResponseDTO> UpdateAsync(AddUpdateOperationDTO operationDTO);
 
         Task<DeleteResponseDTO> DeleteAsync(int id);
     }

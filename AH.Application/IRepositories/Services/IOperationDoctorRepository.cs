@@ -9,7 +9,5 @@ namespace AH.Application.IRepositories
     public interface IOperationDoctorRepository
     {
         Task<GetAllResponseDTO<OperationDoctorRowDTO>> GetAllByOperationIDAsync(OperationDoctorFilterDTO filterDTO);
-
-        Task<SuccessResponseDTO> AddUpdateAsync(AddUpdateOperationDoctorDTO opDoctDTO);
     }
 }

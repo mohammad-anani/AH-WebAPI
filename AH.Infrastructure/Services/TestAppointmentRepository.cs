@@ -72,11 +72,9 @@ ServiceHelper.ReadService(reader));
 
             return await ReusableCRUD.AddAsync("Create_TestAppointment", _logger, cmd =>
             {
-
-                ServiceHelper.AddServiceEntityParameters(testAppointment.Service, cmd);
+                ServiceHelper.AddCreateServiceParameters(testAppointment.Service, cmd);
 
                 SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
-
             });
         }
 
@@ -86,24 +84,23 @@ ServiceHelper.ReadService(reader));
             {
                 ["TestOrderID"] = (app.TestOrderID, SqlDbType.Int, null, null),
                 ["ScheduledDate"] = (app.ScheduledDate, SqlDbType.DateTime, null, null),
-                ["Notes"]=(app.Notes, SqlDbType.NVarChar, -1, null),
-                ["CreatedByReceptionistID"]=(app.CreatedByReceptionistID, SqlDbType.Int, null, null),
-                ["Status"]=(3, SqlDbType.TinyInt, null, null)
+                ["Notes"] = (app.Notes, SqlDbType.NVarChar, -1, null),
+                ["CreatedByReceptionistID"] = (app.CreatedByReceptionistID, SqlDbType.Int, null, null),
+                ["Status"] = (3, SqlDbType.TinyInt, null, null)
             };
 
             return await ReusableCRUD.AddAsync("Create_TestAppointmentFromTestOrder", _logger, cmd =>
             {
-
-
                 SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
-
             });
         }
 
         public async Task<SuccessResponseDTO> UpdateAsync(TestAppointment testAppointment)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            return await ReusableCRUD.UpdateAsync("Update_TestAppointment", _logger, testAppointment.ID, cmd =>
+            {
+                ServiceHelper.AddCreateServiceParameters(testAppointment.Service, cmd);
+            });
         }
 
         public async Task<DeleteResponseDTO> DeleteAsync(int id)

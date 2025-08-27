@@ -191,5 +191,41 @@ namespace AH.Infrastructure
 
             return new CreateResponseDTO(newId, ex);
         }
+
+        public static async Task<SuccessResponseDTO> UpdateAsync(
+ string spName,
+ ILogger logger, int id,
+ Action<SqlCommand>? addParams = null)
+        {
+            logger.LogInformation("Executing {StoredProcedure} for Update operation", spName);
+
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                { "@ID", (id, SqlDbType.Int, null, null) }
+            };
+
+            SuccessOutputHelper successOutputHelper = new SuccessOutputHelper();
+
+            Exception? ex = await ADOHelper.ExecuteNonQueryAsync(
+                spName,
+                logger,
+                cmd =>
+                {
+                    successOutputHelper.AddToCommand(cmd);
+                    addParams?.Invoke(cmd);
+                    SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);// caller adds parameters here
+                },
+                null
+            );
+
+            var success = successOutputHelper.GetResult();
+
+            if (ex != null)
+                logger.LogError(ex, "Error executing {StoredProcedure} for Add operation", spName);
+            else
+                logger.LogInformation("Successfully executed {StoredProcedure}.", spName);
+
+            return new SuccessResponseDTO(success, ex);
+        }
     }
 }
