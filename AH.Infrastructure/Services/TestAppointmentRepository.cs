@@ -43,10 +43,9 @@ namespace AH.Infrastructure.Repositories
             , parameters);
         }
 
-        public async Task<GetAllResponseDTO<AppointmentRowDTO>> GetAllByPatientIDAsync(int patientID)
+        public async Task<GetAllResponseDTO<TestAppointmentRowDTO>> GetAllByPatientIDAsync(TestAppointmentFilterDTO filterDTO)
         {
-            // Implementation placeholder - should return appointments for specific patient
-            throw new NotImplementedException();
+            return await GetAllAsync(filterDTO);
         }
 
         public async Task<GetByIDResponseDTO<TestAppointmentDTO>> GetByIDAsync(int id)
@@ -80,10 +79,9 @@ ServiceHelper.ReadService(reader));
             throw new NotImplementedException();
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<DeleteResponseDTO> DeleteAsync(int id)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            return await ReusableCRUD.DeleteAsync("Delete_TestAppointment", _logger, id);
         }
 
         public async Task<bool> StartAsync(int id, string? notes)

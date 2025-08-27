@@ -10,7 +10,7 @@ namespace AH.Application.IRepositories
     {
         Task<GetAllResponseDTO<TestAppointmentRowDTO>> GetAllAsync(TestAppointmentFilterDTO filterDTO);
 
-        Task<GetAllResponseDTO<AppointmentRowDTO>> GetAllByPatientIDAsync(int patientID);
+        Task<GetAllResponseDTO<TestAppointmentRowDTO>> GetAllByPatientIDAsync(TestAppointmentFilterDTO filterDTO);
 
         Task<GetByIDResponseDTO<TestAppointmentDTO>> GetByIDAsync(int id);
 
@@ -20,6 +20,6 @@ namespace AH.Application.IRepositories
 
         Task<bool> UpdateAsync(TestAppointment testAppointment);
 
-        Task<bool> DeleteAsync(int id);
+        Task<DeleteResponseDTO> DeleteAsync(int id);
     }
 }

@@ -71,5 +71,23 @@ namespace AH.Infrastructure
 
             return new GetByIDResponseDTO<T>(item, ex);
         }
+
+        public static async Task<DeleteResponseDTO> DeleteAsync(string spName, ILogger logger, int ID)
+        {
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                { "@ID", (ID, SqlDbType.Int, null, null) }
+            };
+
+            SuccessOutputHelper successParam = new SuccessOutputHelper();
+
+            Exception? ex = await ADOHelper.ExecuteNonQueryAsync(
+                 spName, logger, cmd =>
+                 {
+                     successParam.AddToCommand(cmd);
+                     SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+                 }, null);
+            return new DeleteResponseDTO(successParam.GetResult(), ex);
+        }
     }
 }

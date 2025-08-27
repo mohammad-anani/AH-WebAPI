@@ -45,8 +45,11 @@ namespace AH.Infrastructure.Repositories
         {
             return await ReusableCRUD.GetByID<TestTypeDTO>("Fetch_TestTypeByID", _logger, id, null, (reader, converter) =>
             {
-                return new TestTypeDTO(converter.ConvertValue<int>("ID"),
-                    converter.ConvertValue<string>("Name"), DepartmentRepository.ReadDepartment(reader),
+                return new TestTypeDTO(converter.ConvertValue<int>("ID"), converter.ConvertValue<string>("Name"), new DepartmentRowDTO(
+                    converter.ConvertValue<int>("DepartmentID"),
+                    converter.ConvertValue<string>("DepartmentName"),
+                    converter.ConvertValue<string>("DepartmentPhone")
+                ),
                     converter.ConvertValue<int>("Cost"),
                     AdminAuditHelper.ReadAdmin(reader),
                     converter.ConvertValue<DateTime>("CreatedAt"));
@@ -65,10 +68,9 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<DeleteResponseDTO> DeleteAsync(int id)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            return await ReusableCRUD.DeleteAsync("Delete_TestType", _logger, id);
         }
 
         public static TestTypeRowDTO ReadTestType(SqlDataReader reader)
@@ -76,12 +78,10 @@ namespace AH.Infrastructure.Repositories
             ConvertingHelper converter = new ConvertingHelper(reader);
 
             return new TestTypeRowDTO(
-
                 converter.ConvertValue<int>("TestTypeID"),
-                 converter.ConvertValue<string>("TestTypeName"),
-                     converter.ConvertValue<string>("TestTypeDepartmentName"),
-                converter.ConvertValue<int>("Cost")
-
+                converter.ConvertValue<string>("TestTypeName"),
+                converter.ConvertValue<string>("TestTypeDepartmentName"),
+                converter.ConvertValue<int>("TestTypeCost")
             );
         }
     }

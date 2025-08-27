@@ -18,6 +18,6 @@ namespace AH.Application.IRepositories
 
         Task<bool> UpdateAsync(Patient patient);
 
-        Task<bool> DeleteAsync(int id);
+        Task<DeleteResponseDTO> DeleteAsync(int id);
     }
 }

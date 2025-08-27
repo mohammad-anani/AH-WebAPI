@@ -16,6 +16,6 @@ namespace AH.Application.IRepositories
 
         Task<bool> UpdateAsync(Department department);
 
-        Task<bool> DeleteAsync(int id);
+        Task<DeleteResponseDTO> DeleteAsync(int id);
     }
 }

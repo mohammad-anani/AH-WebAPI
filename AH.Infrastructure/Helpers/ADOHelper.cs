@@ -102,10 +102,10 @@ namespace AH.Infrastructure.Helpers
             return null;
         }
 
-        public static async Task<int> ExecuteNonQueryAsync(
+        public static async Task<Exception?> ExecuteNonQueryAsync(
             string spName,
-            Action<SqlCommand>? addParameters,
             ILogger logger,
+            Action<SqlCommand>? addParameters,
             Action<SqlCommand>? postAction = null)
         {
             await using var conn = new SqlConnection(_connectionString);
@@ -114,16 +114,45 @@ namespace AH.Infrastructure.Helpers
                 CommandType = CommandType.StoredProcedure
             };
 
-            addParameters?.Invoke(cmd);
+            if (addParameters != null)
+            {
+                logger.LogDebug("Command parameter count before executing addParameters:{count}", cmd.Parameters.Count);
+                addParameters?.Invoke(cmd);
+                logger.LogDebug("Command parameter count after executing addParameters:{count}", cmd.Parameters.Count);
+            }
+            else
+            {
+                logger.LogDebug("No addParameters action provided, skipping parameter addition.");
+            }
 
-            await conn.OpenAsync();
-            int affected = await cmd.ExecuteNonQueryAsync();
+            try
+            {
+                logger.LogInformation("Opening Connection");
+                await conn.OpenAsync();
 
-            logger.LogInformation("Post action executing");
-            postAction?.Invoke(cmd);
-            logger.LogInformation("Post action executed");
+                logger.LogInformation("Executing non-query stored procedure {spName}", spName);
+                int rowsAffected = await cmd.ExecuteNonQueryAsync();
+                logger.LogDebug("Rows affected by non-query execution: {rowsAffected}", rowsAffected);
 
-            return affected;
+                if (postAction != null)
+                {
+                    logger.LogInformation("Post action executing");
+                    postAction?.Invoke(cmd);
+                    logger.LogInformation("Post action executed");
+                }
+                else
+                {
+                    logger.LogDebug("No postAction provided, skipping post-action hook.");
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error executing stored procedure {spName}", spName);
+                return ex;
+            }
+
+            logger.LogInformation("Successfully executed stored procedure {spName}", spName);
+            return null;
         }
 
         public static async Task<object?> ExecuteScalarAsync(

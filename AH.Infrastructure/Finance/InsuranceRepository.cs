@@ -84,10 +84,9 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<DeleteResponseDTO> DeleteAsync(int id)
         {
-            // Implementation placeholder
-            throw new NotImplementedException();
+            return await ReusableCRUD.DeleteAsync("Delete_Insurance", _logger, id);
         }
     }
 }

@@ -14,6 +14,6 @@ namespace AH.Application.IRepositories
 
         Task<int> AddAsync(Payment payment);
 
-        Task<bool> DeleteAsync(int id);
+        Task<DeleteResponseDTO> DeleteAsync(int id);
     }
 }

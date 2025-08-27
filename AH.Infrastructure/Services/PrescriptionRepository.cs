@@ -1,12 +1,12 @@
-using AH.Application.DTOs.Response;
+using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
 using Microsoft.Extensions.Logging;
 using System.Data;
-using AH.Application.DTOs.Entities;
 
 namespace AH.Infrastructure.Repositories
 {
@@ -59,9 +59,9 @@ namespace AH.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<DeleteResponseDTO> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            return await ReusableCRUD.DeleteAsync("Delete_Prescription", _logger, id);
         }
 
         public async Task<GetByIDResponseDTO<PrescriptionDTO>> GetByIDAsync(int id)
