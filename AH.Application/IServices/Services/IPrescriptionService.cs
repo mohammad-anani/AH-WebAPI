@@ -1,0 +1,21 @@
+using AH.Application.DTOs.Response;
+using AH.Application.DTOs.Filter;
+using AH.Application.DTOs.Row;
+using AH.Domain.Entities;
+using AH.Application.DTOs.Entities;
+
+namespace AH.Application.IServices
+{
+    public interface IPrescriptionService
+    {
+        Task<GetAllResponseDataDTO<PrescriptionRowDTO>> GetAllByAppointmentIDAsync(PrescriptionFilterDTO filterDTO);
+
+        Task<PrescriptionDTO> GetByIDAsync(int id);
+
+        Task<int> AddAsync(Prescription prescription);
+
+        Task<bool> UpdateAsync(Prescription prescription);
+
+        Task<bool> DeleteAsync(int id);
+    }
+}

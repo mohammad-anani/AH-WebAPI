@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AH.Application.DTOs.Filter.Finance
+namespace AH.Application.DTOs.Filter
 {
     public class InsuranceFilterDTO
     {

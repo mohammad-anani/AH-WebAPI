@@ -6,7 +6,7 @@ using AH.Application.DTOs.Entities;
 
 namespace AH.Application.IRepositories
 {
-    public interface IPrescriptionRepository
+    public interface IPrescriptionService
     {
         Task<GetAllResponseDTO<PrescriptionRowDTO>> GetAllByAppointmentIDAsync(PrescriptionFilterDTO filterDTO);
 

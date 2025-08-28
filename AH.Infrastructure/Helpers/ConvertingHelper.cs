@@ -52,10 +52,10 @@ namespace AH.Infrastructure.Helpers
         /// <remarks>
         /// This method properly handles:
         /// - Nullable value types (int?, DateTime?, etc.) - returns null for DBNull
-        /// - Reference types (string, object, etc.) - returns null for DBNull  
+        /// - Reference types (string, object, etc.) - returns null for DBNull
         /// - Non-nullable value types (int, DateTime, etc.) - throws exception for DBNull
         /// - Type conversion using Convert.ChangeType for compatible types
-        /// 
+        ///
         /// Database column naming conventions should match the provided columnName parameter exactly.
         /// The method uses SqlDataReader indexer which is case-sensitive.
         /// </remarks>
@@ -65,15 +65,30 @@ namespace AH.Infrastructure.Helpers
 
             if (value == DBNull.Value)
             {
-                // Return default for nullable types or reference types
                 if (Nullable.GetUnderlyingType(typeof(T)) != null || !typeof(T).IsValueType)
                     return default!;
-
-                throw new InvalidOperationException($"Column '{columnName}' is NULL but target type '{typeof(T).Name}' is not nullable.");
+                throw new InvalidOperationException(
+                    $"Column '{columnName}' is NULL but target type '{typeof(T).Name}' is not nullable.");
             }
 
-            // Convert to target type (handles nullable underlying type)
-            return (T)Convert.ChangeType(value, Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T));
+            var targetType = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
+
+            if (targetType == typeof(Guid))
+                return (T)(object)(Guid)value;
+
+            if (targetType == typeof(byte[]))
+                return (T)(object)(byte[])value;
+
+            if (targetType == typeof(TimeSpan))
+                return (T)(object)(TimeSpan)value;
+
+            if (targetType == typeof(TimeOnly))
+                return (T)(object)TimeOnly.FromTimeSpan((TimeSpan)value);
+
+            if (targetType.IsEnum)
+                return (T)Enum.ToObject(targetType, value);
+
+            return (T)Convert.ChangeType(value, targetType);
         }
     }
 }

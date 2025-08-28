@@ -10,8 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
 ConfigHelper.Initialize(builder.Configuration);
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers();// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -47,7 +46,13 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
        .SingleInstance();
 });
 
-builder.Host.UseSerilog();
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration) // load from appsettings.json
+    .Enrich.FromLogContext()
+    .WriteTo.Console() // at least write to console
+    .CreateLogger();
+
+builder.Host.UseSerilog(Log.Logger);
 
 var app = builder.Build();
 
@@ -66,5 +71,4 @@ app.UseSerilogRequestLogging();
 app.UseAuthorization();
 
 app.MapControllers();
-
 app.Run();

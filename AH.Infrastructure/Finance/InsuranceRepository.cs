@@ -1,5 +1,5 @@
 using AH.Application.DTOs.Response;
-using AH.Application.DTOs.Filter.Finance;
+using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;

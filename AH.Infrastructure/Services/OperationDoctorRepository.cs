@@ -10,7 +10,7 @@ using AH.Application.DTOs.Create;
 
 namespace AH.Infrastructure.Repositories
 {
-    public class OperationDoctorRepository : IOperationDoctorRepository
+    public class OperationDoctorRepository : IOperationDoctorService
     {
         private readonly ILogger<OperationDoctorRepository> _logger;
 

@@ -4,10 +4,10 @@ using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
 
-namespace AH.Application.IRepositories
+namespace AH.Application.IServices
 {
     public interface IOperationDoctorService
     {
-        Task<GetAllResponseDTO<OperationDoctorRowDTO>> GetAllByOperationIDAsync(OperationDoctorFilterDTO filterDTO);
+        Task<GetAllResponseDataDTO<OperationDoctorRowDTO>> GetAllByOperationIDAsync(OperationDoctorFilterDTO filterDTO);
     }
 }

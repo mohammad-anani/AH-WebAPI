@@ -80,6 +80,7 @@ namespace AH.Infrastructure.Helpers
         {
             var converter = new ConvertingHelper(reader);
 
+            int? createdByAdminID = converter.ConvertValue<int?>("CreatedByAdminID");
             var employee = new EmployeeDTO
             {
                 Person = PersonHelper.ReadPerson(reader),
@@ -87,11 +88,11 @@ namespace AH.Infrastructure.Helpers
                 Department = DepartmentRepository.ReadDepartment(reader),
                 Salary = converter.ConvertValue<int>("Salary"),
                 HireDate = converter.ConvertValue<DateTime>("HireDate"),
-                LeaveDate = converter.ConvertValue<DateTime>("LeaveDate"),
+                LeaveDate = converter.ConvertValue<DateTime?>("LeaveDate"),
                 WorkingDays = converter.ConvertValue<int>("WorkingDays"),
                 ShiftStart = converter.ConvertValue<TimeOnly>("ShiftStart"),
                 ShiftEnd = converter.ConvertValue<TimeOnly>("ShiftEnd"),
-                CreatedByAdmin = AdminAuditHelper.ReadAdmin(reader),
+                CreatedByAdmin = createdByAdminID != null ? AdminAuditHelper.ReadAdmin(reader) : null,
                 CreatedAt = converter.ConvertValue<DateTime>("CreatedAt")
             };
 
