@@ -31,6 +31,16 @@ namespace AH.Domain.Entities
             CreatedAt = createdAt;
         }
 
+        public TestType(int id)
+        {
+            ID = id;
+            Name = "";
+            Department = new Department();
+            Cost = -1;
+            CreatedByAdmin = new AdminAudit();
+            CreatedAt = DateTime.MinValue;
+        }
+
         public TestType(string name, Department department, int cost, AdminAudit createdByAdmin)
         {
             ID = -1;

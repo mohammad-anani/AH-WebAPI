@@ -26,6 +26,14 @@
             Specialization = specialization;
         }
 
+        public Doctor(int id)
+        {
+            ID = id;
+            Employee = new Employee();
+            CostPerAppointment = -1;
+            Specialization = "";
+        }
+
         public Doctor(Employee employee, int costPerAppointment, string specialization)
         {
             ID = -1;

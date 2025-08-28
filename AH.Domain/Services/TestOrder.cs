@@ -20,6 +20,13 @@
             TestType = testType;
         }
 
+        public TestOrder(int id)
+        {
+            ID = id;
+            Appointment = new Appointment();
+            TestType = new TestType();
+        }
+
         public TestOrder(Appointment appointment, TestType testType)
         {
             ID = -1;

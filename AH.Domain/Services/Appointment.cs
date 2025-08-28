@@ -23,6 +23,14 @@
             Service = service;
         }
 
+        public Appointment(int id)
+        {
+            ID = id;
+            PreviousAppointment = null;
+            Doctor = new Doctor();
+            Service = new Service();
+        }
+
         public Appointment(PreviousAppointment? previousAppointment, Doctor doctor, Service service)
         {
             ID = -1;
