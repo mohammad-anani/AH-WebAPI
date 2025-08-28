@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="AH.Application\Services\Human-Resources\" />
     <Folder Include="Controllers\" />
   </ItemGroup>
 

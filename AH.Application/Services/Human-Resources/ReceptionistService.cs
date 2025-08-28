@@ -1,0 +1,138 @@
+using AH.Application.DTOs.Entities;
+using AH.Application.DTOs.Filter;
+using AH.Application.DTOs.Response;
+using AH.Application.DTOs.Row;
+using AH.Application.IRepositories;
+using AH.Application.IServices;
+using AH.Domain.Entities;
+
+namespace AH.Application.Services
+{
+    /// <summary>
+    /// Service implementation for Receptionist business operations.
+    /// Acts as a business layer wrapper around the receptionist repository.
+    /// </summary>
+    public class ReceptionistService : IReceptionistService
+    {
+        private readonly IReceptionistRepository _receptionistRepository;
+
+        /// <summary>
+        /// Initializes a new instance of the ReceptionistService.
+        /// </summary>
+        /// <param name="receptionistRepository">The receptionist repository instance</param>
+        /// <exception cref="ArgumentNullException">Thrown when repository is null</exception>
+        public ReceptionistService(IReceptionistRepository receptionistRepository)
+        {
+            _receptionistRepository = receptionistRepository ?? throw new ArgumentNullException(nameof(receptionistRepository));
+        }
+
+        /// <summary>
+        /// Retrieves a paginated list of receptionists based on filter criteria.
+        /// </summary>
+        /// <param name="filterDTO">Filter criteria for receptionist search</param>
+        /// <returns>Response containing receptionist row DTOs and count</returns>
+        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
+        public async Task<GetAllResponseDataDTO<ReceptionistRowDTO>> GetAllAsync(ReceptionistFilterDTO filterDTO)
+        {
+            var response = await _receptionistRepository.GetAllAsync(filterDTO);
+
+            if (response.Exception != null)
+            {
+                throw new InvalidOperationException("Failed to retrieve receptionists.", response.Exception);
+            }
+
+            return new GetAllResponseDataDTO<ReceptionistRowDTO>(response);
+        }
+
+        /// <summary>
+        /// Retrieves a specific receptionist by their unique identifier.
+        /// </summary>
+        /// <param name="id">The unique identifier of the receptionist</param>
+        /// <returns>Receptionist DTO with complete information or null if not found</returns>
+        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
+        public async Task<ReceptionistDTO?> GetByIDAsync(int id)
+        {
+            var response = await _receptionistRepository.GetByIDAsync(id);
+
+            if (response.Exception != null)
+            {
+                throw new InvalidOperationException($"Failed to retrieve receptionist with ID {id}.", response.Exception);
+            }
+
+            return response.Item;
+        }
+
+        /// <summary>
+        /// Creates a new receptionist in the system.
+        /// </summary>
+        /// <param name="receptionist">The receptionist entity to create</param>
+        /// <returns>The ID of the newly created receptionist</returns>
+        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
+        public async Task<int> AddAsync(Receptionist receptionist)
+        {
+            var response = await _receptionistRepository.AddAsync(receptionist);
+
+            if (response.Exception != null)
+            {
+                throw new InvalidOperationException("Failed to create receptionist.", response.Exception);
+            }
+
+            return response.ID;
+        }
+
+        /// <summary>
+        /// Updates an existing receptionist's information.
+        /// </summary>
+        /// <param name="receptionist">The receptionist entity with updated information</param>
+        /// <returns>True if update was successful, false otherwise</returns>
+        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
+        public async Task<bool> UpdateAsync(Receptionist receptionist)
+        {
+            var response = await _receptionistRepository.UpdateAsync(receptionist);
+
+            if (response.Exception != null)
+            {
+                throw new InvalidOperationException($"Failed to update receptionist with ID {receptionist.ID}.", response.Exception);
+            }
+
+            return response.Success;
+        }
+
+        /// <summary>
+        /// Deletes a receptionist from the system.
+        /// </summary>
+        /// <param name="id">The unique identifier of the receptionist to delete</param>
+        /// <returns>True if deletion was successful, false otherwise</returns>
+        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var response = await _receptionistRepository.DeleteAsync(id);
+
+            if (response.Exception != null)
+            {
+                throw new InvalidOperationException($"Failed to delete receptionist with ID {id}.", response.Exception);
+            }
+
+            return response.Success;
+        }
+
+        /// <summary>
+        /// Marks a receptionist as having left the organization by setting their leave date.
+        /// This is a non-destructive operation that maintains the receptionist record for audit purposes.
+        /// </summary>
+        /// <param name="id">The unique identifier of the receptionist who is leaving</param>
+        /// <returns>True if leave processing was successful, false otherwise</returns>
+        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
+        public async Task<bool> LeaveAsync(int id)
+        {
+            var response = await _receptionistRepository.LeaveAsync(id);
+
+            if (response.Exception != null)
+            {
+                throw new InvalidOperationException($"Failed to process leave for receptionist with ID {id}.", response.Exception);
+            }
+
+            return response.Success;
+        }
+    }
+}
