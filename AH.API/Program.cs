@@ -29,6 +29,18 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     .AsImplementedInterfaces()
     .InstancePerLifetimeScope();
 
+    //IServices Injection
+    containerBuilder.RegisterAssemblyTypes(Assembly.Load("AH.Application"))
+    .Where(t => t.Namespace == "AH.Application.IServices")
+    .AsImplementedInterfaces()
+    .InstancePerLifetimeScope();
+
+    //IRepositories Injection
+    containerBuilder.RegisterAssemblyTypes(Assembly.Load("AH.Infrastructure"))
+    .Where(t => t.Namespace == "AH.Infrastructure.IRepositories")
+    .AsImplementedInterfaces()
+    .InstancePerLifetimeScope();
+
     //Configuration Injection
     containerBuilder.Register(ctx => builder.Configuration)
        .As<IConfiguration>()
