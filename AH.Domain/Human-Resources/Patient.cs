@@ -23,6 +23,14 @@
             CreatedAt = createdAt;
         }
 
+        public Patient(int id, Person person, Receptionist createdByReceptionist)
+        {
+            ID = id;
+            Person = person;
+            CreatedByReceptionist = createdByReceptionist;
+            CreatedAt = DateTime.MinValue;
+        }
+
         public Patient(Person person, Receptionist createdByReceptionist)
         {
             ID = -1;

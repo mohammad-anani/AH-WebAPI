@@ -17,6 +17,12 @@
             Employee = employee;
         }
 
+        public Receptionist(int id)
+        {
+            ID = id;
+            Employee = new Employee();
+        }
+
         public Receptionist(Employee employee)
         {
             ID = -1;

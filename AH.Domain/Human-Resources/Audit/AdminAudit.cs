@@ -17,6 +17,12 @@
             Employee = employee;
         }
 
+        public AdminAudit(int id)
+        {
+            ID = id;
+            Employee = new EmployeeAudit();
+        }
+
         public AdminAudit(EmployeeAudit employee)
         {
             ID = -1;

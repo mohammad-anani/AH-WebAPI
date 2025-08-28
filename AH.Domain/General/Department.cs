@@ -28,6 +28,15 @@ namespace AH.Domain.Entities
             CreatedAt = createdAt;
         }
 
+        public Department(int id)
+        {
+            ID = id;
+            Name = "";
+            Phone = "";
+            CreatedByAdmin = new AdminAudit(); // Fix: Don't create new AdminAudit to avoid circular dependency
+            CreatedAt = DateTime.MinValue;
+        }
+
         public Department(string name, string phone, AdminAudit createdByAdmin)
         {
             ID = -1;
