@@ -6,7 +6,7 @@ using AH.Domain.Entities;
 
 namespace AH.Application.IRepositories
 {
-    public interface IOperationDoctorService
+    public interface IOperationDoctorRepository
     {
         Task<GetAllResponseDTO<OperationDoctorRowDTO>> GetAllByOperationIDAsync(OperationDoctorFilterDTO filterDTO);
     }

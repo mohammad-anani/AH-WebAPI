@@ -6,7 +6,7 @@ using AH.Application.DTOs.Entities;
 
 namespace AH.Application.IRepositories
 {
-    public interface ITestOrderService
+    public interface ITestOrderRepository
     {
         Task<GetAllResponseDTO<TestOrderRowDTO>> GetAllAsync(TestOrderFilterDTO filterDTO);
 

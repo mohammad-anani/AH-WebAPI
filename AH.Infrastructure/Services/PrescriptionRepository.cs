@@ -10,7 +10,7 @@ using System.Data;
 
 namespace AH.Infrastructure.Repositories
 {
-    public class PrescriptionRepository : IPrescriptionService
+    public class PrescriptionRepository : IPrescriptionRepository
     {
         private readonly ILogger<PrescriptionRepository> _logger;
 

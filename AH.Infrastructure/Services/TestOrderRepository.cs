@@ -10,7 +10,7 @@ using System.Data;
 
 namespace AH.Infrastructure.Repositories
 {
-    public class TestOrderRepository : ITestOrderService
+    public class TestOrderRepository : ITestOrderRepository
     {
         private readonly ILogger<TestOrderRepository> logger;
 
