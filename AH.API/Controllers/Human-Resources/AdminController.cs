@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.IServices;
@@ -49,11 +50,11 @@ namespace AH.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] Admin admin)
+        public async Task<IActionResult> Add([FromBody] CreateAdminDTO createAdminDTO)
         {
             try
             {
-                var result = await _adminService.AddAsync(admin);
+                var result = await _adminService.AddAsync(createAdminDTO);
                 return CreatedAtAction(nameof(GetById), new { id = result }, result);
             }
             catch (Exception ex)

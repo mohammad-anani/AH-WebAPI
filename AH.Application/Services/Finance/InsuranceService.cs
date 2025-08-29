@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -38,7 +39,7 @@ namespace AH.Application.Services
 
             if (response.Exception != null)
             {
-                throw new InvalidOperationException("Failed to retrieve insurance records.", response.Exception);
+                throw new InvalidOperationException("Failed to retrieve insurance records by patient ID.", response.Exception);
             }
 
             return new GetAllResponseDataDTO<InsuranceRowDTO>(response);
@@ -76,7 +77,7 @@ namespace AH.Application.Services
 
             if (response.Exception != null)
             {
-                throw new InvalidOperationException($"Failed to renew insurance with ID {ID}.", response.Exception);
+                throw new InvalidOperationException($"Failed to renew insurance record with ID {ID}.", response.Exception);
             }
 
             return response.Success;
@@ -85,11 +86,12 @@ namespace AH.Application.Services
         /// <summary>
         /// Creates a new insurance record in the system.
         /// </summary>
-        /// <param name="insurance">The insurance entity to create</param>
+        /// <param name="createInsuranceDTO">The insurance create DTO containing creation information</param>
         /// <returns>The ID of the newly created insurance record</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddAsync(Insurance insurance)
+        public async Task<int> AddAsync(CreateInsuranceDTO createInsuranceDTO)
         {
+            var insurance = createInsuranceDTO.ToInsurance();
             var response = await _insuranceRepository.AddAsync(insurance);
 
             if (response.Exception != null)

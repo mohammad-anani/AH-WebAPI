@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -65,11 +66,12 @@ namespace AH.Application.Services
         /// <summary>
         /// Creates a new test order in the system.
         /// </summary>
-        /// <param name="testOrder">The test order entity to create</param>
+        /// <param name="createTestOrderDTO">The test order create DTO containing creation information</param>
         /// <returns>The ID of the newly created test order</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddAsync(TestOrder testOrder)
+        public async Task<int> AddAsync(CreateTestOrderDTO createTestOrderDTO)
         {
+            var testOrder = createTestOrderDTO.ToTestOrder();
             var response = await _testOrderRepository.AddAsync(testOrder);
 
             if (response.Exception != null)

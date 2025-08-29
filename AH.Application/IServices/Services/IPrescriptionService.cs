@@ -1,8 +1,9 @@
-using AH.Application.DTOs.Response;
+using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
-using AH.Application.DTOs.Entities;
 
 namespace AH.Application.IServices
 {
@@ -29,9 +30,9 @@ namespace AH.Application.IServices
         /// <summary>
         /// Creates a new prescription in the system.
         /// </summary>
-        /// <param name="prescription">The prescription entity to create</param>
+        /// <param name="createPrescriptionDTO">The prescription create DTO containing creation information</param>
         /// <returns>The ID of the newly created prescription</returns>
-        Task<int> AddAsync(Prescription prescription);
+        Task<int> AddAsync(CreatePrescriptionDTO createPrescriptionDTO);
 
         /// <summary>
         /// Updates an existing prescription's information.

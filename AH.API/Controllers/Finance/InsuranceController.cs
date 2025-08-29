@@ -1,6 +1,6 @@
+using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
-
 using AH.Application.IServices;
 using AH.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -50,11 +50,11 @@ namespace AH.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] Insurance insurance)
+        public async Task<IActionResult> Add([FromBody] CreateInsuranceDTO createInsuranceDTO)
         {
             try
             {
-                var result = await _insuranceService.AddAsync(insurance);
+                var result = await _insuranceService.AddAsync(createInsuranceDTO);
                 return CreatedAtAction(nameof(GetById), new { id = result }, result);
             }
             catch (Exception ex)

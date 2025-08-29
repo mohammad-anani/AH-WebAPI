@@ -1,8 +1,8 @@
+using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
-using AH.Application.DTOs.Create;
 using AH.Application.IRepositories;
 using AH.Application.IServices;
 using AH.Domain.Entities;
@@ -102,12 +102,13 @@ namespace AH.Application.Services
         /// <summary>
         /// Creates a new operation in the system.
         /// </summary>
-        /// <param name="operationDTO">The operation DTO containing creation information</param>
+        /// <param name="createOperationDTO">The operation create DTO containing creation information</param>
         /// <returns>The ID of the newly created operation</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddAsync(AddUpdateOperationDTO operationDTO)
+        public async Task<int> AddAsync(CreateOperationDTO createOperationDTO)
         {
-            var response = await _operationRepository.AddAsync(operationDTO);
+            var addUpdateOperationDTO = createOperationDTO.ToAddUpdateOperationDTO();
+            var response = await _operationRepository.AddAsync(addUpdateOperationDTO);
 
             if (response.Exception != null)
             {

@@ -1,8 +1,8 @@
+using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
-using AH.Application.DTOs.Create;
 using AH.Domain.Entities;
 
 namespace AH.Application.IServices
@@ -44,9 +44,9 @@ namespace AH.Application.IServices
         /// <summary>
         /// Creates a new operation in the system.
         /// </summary>
-        /// <param name="operationDTO">The operation DTO containing creation information</param>
+        /// <param name="createOperationDTO">The operation create DTO containing creation information</param>
         /// <returns>The ID of the newly created operation</returns>
-        Task<int> AddAsync(AddUpdateOperationDTO operationDTO);
+        Task<int> AddAsync(CreateOperationDTO createOperationDTO);
 
         /// <summary>
         /// Updates an existing operation's information.

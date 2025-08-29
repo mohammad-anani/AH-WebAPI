@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -29,9 +30,9 @@ namespace AH.Application.IServices
         /// <summary>
         /// Creates a new department in the system.
         /// </summary>
-        /// <param name="department">The department entity to create</param>
+        /// <param name="createDepartmentDTO">The department create DTO containing creation information</param>
         /// <returns>The ID of the newly created department</returns>
-        Task<int> AddAsync(Department department);
+        Task<int> AddAsync(CreateDepartmentDTO createDepartmentDTO);
 
         /// <summary>
         /// Updates an existing department's information.

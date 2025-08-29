@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -65,11 +66,12 @@ namespace AH.Application.Services
         /// <summary>
         /// Creates a new doctor in the system.
         /// </summary>
-        /// <param name="doctor">The doctor entity to create</param>
+        /// <param name="createDoctorDTO">The doctor create DTO containing creation information</param>
         /// <returns>The ID of the newly created doctor</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddAsync(Doctor doctor)
+        public async Task<int> AddAsync(CreateDoctorDTO createDoctorDTO)
         {
+            var doctor = createDoctorDTO.ToDoctor();
             var response = await _doctorRepository.AddAsync(doctor);
 
             if (response.Exception != null)

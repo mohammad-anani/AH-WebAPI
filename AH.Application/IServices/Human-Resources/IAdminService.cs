@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -30,9 +31,9 @@ namespace AH.Application.IServices
         /// <summary>
         /// Creates a new admin in the system.
         /// </summary>
-        /// <param name="admin">The admin entity to create</param>
+        /// <param name="createAdminDTO">The admin create DTO containing creation information</param>
         /// <returns>The ID of the newly created admin</returns>
-        Task<int> AddAsync(Admin admin);
+        Task<int> AddAsync(CreateAdminDTO createAdminDTO);
 
         /// <summary>
         /// Updates an existing admin's information.

@@ -50,11 +50,11 @@ namespace AH.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] AddUpdateOperationDTO operation)
+        public async Task<IActionResult> Add([FromBody] CreateOperationDTO createOperationDTO)
         {
             try
             {
-                var result = await _operationService.AddAsync(operation);
+                var result = await _operationService.AddAsync(createOperationDTO);
                 return CreatedAtAction(nameof(GetById), new { id = result }, result);
             }
             catch (Exception ex)

@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -38,9 +39,9 @@ namespace AH.Application.IServices
         /// <summary>
         /// Creates a new insurance record in the system.
         /// </summary>
-        /// <param name="insurance">The insurance entity to create</param>
+        /// <param name="createInsuranceDTO">The insurance create DTO containing creation information</param>
         /// <returns>The ID of the newly created insurance record</returns>
-        Task<int> AddAsync(Insurance insurance);
+        Task<int> AddAsync(CreateInsuranceDTO createInsuranceDTO);
 
         /// <summary>
         /// Updates an existing insurance record's information.

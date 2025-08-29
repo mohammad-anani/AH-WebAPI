@@ -1,8 +1,8 @@
+using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
-using AH.Application.DTOs.Create;
 using AH.Application.IRepositories;
 using AH.Application.IServices;
 using AH.Domain.Entities;
@@ -102,11 +102,12 @@ namespace AH.Application.Services
         /// <summary>
         /// Creates a new appointment in the system.
         /// </summary>
-        /// <param name="appointment">The appointment entity to create</param>
+        /// <param name="createAppointmentDTO">The appointment create DTO containing creation information</param>
         /// <returns>The ID of the newly created appointment</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddAsync(Appointment appointment)
+        public async Task<int> AddAsync(CreateAppointmentDTO createAppointmentDTO)
         {
+            var appointment = createAppointmentDTO.ToAppointment();
             var response = await _appointmentRepository.AddAsync(appointment);
 
             if (response.Exception != null)

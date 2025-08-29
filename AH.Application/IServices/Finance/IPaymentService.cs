@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -29,9 +30,9 @@ namespace AH.Application.IServices
         /// <summary>
         /// Creates a new payment in the system.
         /// </summary>
-        /// <param name="payment">The payment entity to create</param>
+        /// <param name="createPaymentDTO">The payment create DTO containing creation information</param>
         /// <returns>The ID of the newly created payment</returns>
-        Task<int> AddAsync(Payment payment);
+        Task<int> AddAsync(CreatePaymentDTO createPaymentDTO);
 
         /// <summary>
         /// Deletes a payment from the system.

@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -65,11 +66,12 @@ namespace AH.Application.Services
         /// <summary>
         /// Creates a new prescription in the system.
         /// </summary>
-        /// <param name="prescription">The prescription entity to create</param>
+        /// <param name="createPrescriptionDTO">The prescription create DTO containing creation information</param>
         /// <returns>The ID of the newly created prescription</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddAsync(Prescription prescription)
+        public async Task<int> AddAsync(CreatePrescriptionDTO createPrescriptionDTO)
         {
+            var prescription = createPrescriptionDTO.ToPrescription();
             var response = await _prescriptionRepository.AddAsync(prescription);
 
             if (response.Exception != null)

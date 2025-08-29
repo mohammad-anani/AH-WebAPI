@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -65,11 +66,12 @@ namespace AH.Application.Services
         /// <summary>
         /// Creates a new receptionist in the system.
         /// </summary>
-        /// <param name="receptionist">The receptionist entity to create</param>
+        /// <param name="createReceptionistDTO">The receptionist create DTO containing creation information</param>
         /// <returns>The ID of the newly created receptionist</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddAsync(Receptionist receptionist)
+        public async Task<int> AddAsync(CreateReceptionistDTO createReceptionistDTO)
         {
+            var receptionist = createReceptionistDTO.ToReceptionist();
             var response = await _receptionistRepository.AddAsync(receptionist);
 
             if (response.Exception != null)

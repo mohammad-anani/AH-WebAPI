@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -38,7 +39,7 @@ namespace AH.Application.Services
 
             if (response.Exception != null)
             {
-                throw new InvalidOperationException("Failed to retrieve payments.", response.Exception);
+                throw new InvalidOperationException("Failed to retrieve payments by bill ID.", response.Exception);
             }
 
             return new GetAllResponseDataDTO<PaymentRowDTO>(response);
@@ -65,11 +66,12 @@ namespace AH.Application.Services
         /// <summary>
         /// Creates a new payment in the system.
         /// </summary>
-        /// <param name="payment">The payment entity to create</param>
+        /// <param name="createPaymentDTO">The payment create DTO containing creation information</param>
         /// <returns>The ID of the newly created payment</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddAsync(Payment payment)
+        public async Task<int> AddAsync(CreatePaymentDTO createPaymentDTO)
         {
+            var payment = createPaymentDTO.ToPayment();
             var response = await _paymentRepository.AddAsync(payment);
 
             if (response.Exception != null)

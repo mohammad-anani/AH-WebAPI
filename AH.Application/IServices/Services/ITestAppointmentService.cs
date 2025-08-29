@@ -1,8 +1,8 @@
+using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
-using AH.Application.DTOs.Create;
 using AH.Domain.Entities;
 
 namespace AH.Application.IServices
@@ -37,9 +37,9 @@ namespace AH.Application.IServices
         /// <summary>
         /// Creates a new test appointment in the system.
         /// </summary>
-        /// <param name="testAppointment">The test appointment entity to create</param>
+        /// <param name="createTestAppointmentDTO">The test appointment create DTO containing creation information</param>
         /// <returns>The ID of the newly created test appointment</returns>
-        Task<int> AddAsync(TestAppointment testAppointment);
+        Task<int> AddAsync(CreateTestAppointmentDTO createTestAppointmentDTO);
 
         /// <summary>
         /// Creates a new test appointment from an existing test order.

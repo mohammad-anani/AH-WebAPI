@@ -1,8 +1,8 @@
+using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
-using AH.Application.DTOs.Create;
 using AH.Domain.Entities;
 
 namespace AH.Application.IServices
@@ -44,9 +44,9 @@ namespace AH.Application.IServices
         /// <summary>
         /// Creates a new appointment in the system.
         /// </summary>
-        /// <param name="appointment">The appointment entity to create</param>
+        /// <param name="createAppointmentDTO">The appointment create DTO containing creation information</param>
         /// <returns>The ID of the newly created appointment</returns>
-        Task<int> AddAsync(Appointment appointment);
+        Task<int> AddAsync(CreateAppointmentDTO createAppointmentDTO);
 
         /// <summary>
         /// Creates a new appointment from a previous appointment.

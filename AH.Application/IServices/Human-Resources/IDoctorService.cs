@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -29,9 +30,9 @@ namespace AH.Application.IServices
         /// <summary>
         /// Creates a new doctor in the system.
         /// </summary>
-        /// <param name="doctor">The doctor entity to create</param>
+        /// <param name="createDoctorDTO">The doctor create DTO containing creation information</param>
         /// <returns>The ID of the newly created doctor</returns>
-        Task<int> AddAsync(Doctor doctor);
+        Task<int> AddAsync(CreateDoctorDTO createDoctorDTO);
 
         /// <summary>
         /// Updates an existing doctor's information.

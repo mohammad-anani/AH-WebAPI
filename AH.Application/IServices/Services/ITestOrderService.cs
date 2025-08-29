@@ -1,8 +1,9 @@
-using AH.Application.DTOs.Response;
+using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
-using AH.Application.DTOs.Entities;
 
 namespace AH.Application.IServices
 {
@@ -29,9 +30,9 @@ namespace AH.Application.IServices
         /// <summary>
         /// Creates a new test order in the system.
         /// </summary>
-        /// <param name="testOrder">The test order entity to create</param>
+        /// <param name="createTestOrderDTO">The test order create DTO containing creation information</param>
         /// <returns>The ID of the newly created test order</returns>
-        Task<int> AddAsync(TestOrder testOrder);
+        Task<int> AddAsync(CreateTestOrderDTO createTestOrderDTO);
 
         /// <summary>
         /// Deletes a test order from the system.
