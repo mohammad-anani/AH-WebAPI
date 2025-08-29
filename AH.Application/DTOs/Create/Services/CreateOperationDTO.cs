@@ -2,6 +2,7 @@ using AH.Application.DTOs.Entities.Services;
 using AH.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -11,9 +12,21 @@ namespace AH.Application.DTOs.Create
 {
     public class CreateOperationDTO : CreateServiceDTO
     {
+        [Required(ErrorMessage = "Operation name is required")]
+        [Range(10, 100, ErrorMessage = "Operation name must be between 10 and 100")]
         public int OperationName { get; set; }
+
+        [Required(ErrorMessage = "Department ID is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Department ID must be a positive number")]
         public int DepartmentID { get; set; }
+
+        [Required(ErrorMessage = "Description is required")]
+        [StringLength(int.MaxValue, MinimumLength = 10, ErrorMessage = "Description must be at least 10 characters")]
         public string Description { get; set; }
+
+        [Required(ErrorMessage = "Operation doctors list is required")]
+        [MinLength(1, ErrorMessage = "At least 1 doctor is required")]
+        [MaxLength(5, ErrorMessage = "Maximum 5 doctors allowed")]
         public List<OperationDoctorDTO> OperationDoctors { get; set; }
 
         public CreateOperationDTO() : base()
@@ -38,16 +51,39 @@ namespace AH.Application.DTOs.Create
             OperationDoctors = operationDoctors;
         }
 
-        public AddUpdateOperationDTO ToAddUpdateOperationDTO()
+        public Operation ToOperation()
         {
-            return new AddUpdateOperationDTO(
-                new Operation(
+            return new Operation(
                 OperationName,
                 new Department(DepartmentID),
                 Description,
                 base.ToService()
-                    ), OperationDoctors
             );
+        }
+
+        public AddUpdateOperationDTO ToAddUpdateOperationDTO()
+        {
+            return new AddUpdateOperationDTO(
+                ToOperation(),
+                OperationDoctors
+            );
+        }
+
+        public DataTable ToDatatable()
+        {
+            var table = new DataTable();
+            table.Columns.Add("DoctorID", typeof(int));
+            table.Columns.Add("Role", typeof(string));
+
+            OperationDoctors.ForEach(operationDoctor =>
+            {
+                var row = table.NewRow();
+                row["DoctorID"] = operationDoctor.DoctorID;
+                row["Role"] = operationDoctor.Role;
+                table.Rows.Add(row);
+            });
+
+            return table;
         }
     }
 }
