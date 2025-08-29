@@ -6,6 +6,7 @@ using AH.Application.DTOs.Row;
 using AH.Application.DTOs.Update;
 using AH.Application.IRepositories;
 using AH.Application.IServices;
+using System.Threading;
 
 namespace AH.Application.Services
 {
@@ -31,10 +32,11 @@ namespace AH.Application.Services
         /// Retrieves a paginated list of insurance records for a specific patient based on filter criteria.
         /// </summary>
         /// <param name="filterDTO">Filter criteria for insurance search including patient ID</param>
+        /// <param name="cancellationToken">Token to observe while waiting for the task to complete.</param>
         /// <returns>ServiceResult containing insurance row DTOs and count as tuple</returns>
-        public async Task<ServiceResult<(IEnumerable<InsuranceRowDTO> items, int count)>> GetAllByPatientIDAsync(InsuranceFilterDTO filterDTO)
+        public async Task<ServiceResult<(IEnumerable<InsuranceRowDTO> items, int count)>> GetAllByPatientIDAsync(InsuranceFilterDTO filterDTO, CancellationToken cancellationToken = default)
         {
-            var response = await _insuranceRepository.GetAllByPatientIDAsync(filterDTO);
+            var response = await _insuranceRepository.GetAllByPatientIDAsync(filterDTO, cancellationToken);
             return ServiceResult<(IEnumerable<InsuranceRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
@@ -42,10 +44,11 @@ namespace AH.Application.Services
         /// Retrieves a specific insurance record by its unique identifier.
         /// </summary>
         /// <param name="id">The unique identifier of the insurance record</param>
+        /// <param name="cancellationToken">Token to observe while waiting for the task to complete.</param>
         /// <returns>ServiceResult containing insurance DTO with complete information or null if not found</returns>
-        public async Task<ServiceResult<InsuranceDTO>> GetByIDAsync(int id)
+        public async Task<ServiceResult<InsuranceDTO>> GetByIDAsync(int id, CancellationToken cancellationToken = default)
         {
-            var response = await _insuranceRepository.GetByIDAsync(id);
+            var response = await _insuranceRepository.GetByIDAsync(id, cancellationToken);
             return ServiceResult<InsuranceDTO>.Create(response.Item, response.Exception);
         }
 
@@ -55,10 +58,11 @@ namespace AH.Application.Services
         /// <param name="ID">The unique identifier of the insurance record to renew</param>
         /// <param name="coverage">The new coverage amount</param>
         /// <param name="expirationDate">The new expiration date</param>
+        /// <param name="cancellationToken">Token to observe while waiting for the task to complete.</param>
         /// <returns>ServiceResult containing true if renewal was successful, false otherwise</returns>
-        public async Task<ServiceResult<bool>> RenewAsync(int ID, decimal coverage, DateOnly expirationDate)
+        public async Task<ServiceResult<bool>> RenewAsync(int ID, decimal coverage, DateOnly expirationDate, CancellationToken cancellationToken = default)
         {
-            var response = await _insuranceRepository.Renew(ID, coverage, expirationDate);
+            var response = await _insuranceRepository.Renew(ID, coverage, expirationDate, cancellationToken);
             return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
@@ -66,11 +70,12 @@ namespace AH.Application.Services
         /// Creates a new insurance record in the system.
         /// </summary>
         /// <param name="createInsuranceDTO">The insurance create DTO containing creation information</param>
+        /// <param name="cancellationToken">Token to observe while waiting for the task to complete.</param>
         /// <returns>ServiceResult containing the ID of the newly created insurance record</returns>
-        public async Task<ServiceResult<int>> AddAsync(CreateInsuranceDTO createInsuranceDTO)
+        public async Task<ServiceResult<int>> AddAsync(CreateInsuranceDTO createInsuranceDTO, CancellationToken cancellationToken = default)
         {
             var insurance = createInsuranceDTO.ToInsurance();
-            var response = await _insuranceRepository.AddAsync(insurance);
+            var response = await _insuranceRepository.AddAsync(insurance, cancellationToken);
             return ServiceResult<int>.Create(response.ID, response.Exception);
         }
 
@@ -78,11 +83,12 @@ namespace AH.Application.Services
         /// Updates an existing insurance record's information.
         /// </summary>
         /// <param name="updateInsuranceDTO">The insurance update DTO with updated information</param>
+        /// <param name="cancellationToken">Token to observe while waiting for the task to complete.</param>
         /// <returns>ServiceResult containing true if update was successful, false otherwise</returns>
-        public async Task<ServiceResult<bool>> UpdateAsync(UpdateInsuranceDTO updateInsuranceDTO)
+        public async Task<ServiceResult<bool>> UpdateAsync(UpdateInsuranceDTO updateInsuranceDTO, CancellationToken cancellationToken = default)
         {
             var insurance = updateInsuranceDTO.ToInsurance();
-            var response = await _insuranceRepository.UpdateAsync(insurance);
+            var response = await _insuranceRepository.UpdateAsync(insurance, cancellationToken);
             return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
@@ -90,10 +96,11 @@ namespace AH.Application.Services
         /// Deletes an insurance record from the system.
         /// </summary>
         /// <param name="id">The unique identifier of the insurance record to delete</param>
+        /// <param name="cancellationToken">Token to observe while waiting for the task to complete.</param>
         /// <returns>ServiceResult containing true if deletion was successful, false otherwise</returns>
-        public async Task<ServiceResult<bool>> DeleteAsync(int id)
+        public async Task<ServiceResult<bool>> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            var response = await _insuranceRepository.DeleteAsync(id);
+            var response = await _insuranceRepository.DeleteAsync(id, cancellationToken);
             return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
     }

@@ -7,6 +7,7 @@ using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
 using Microsoft.Extensions.Logging;
 using System.Data;
+using System.Threading;
 
 namespace AH.Infrastructure.Repositories
 {
@@ -19,7 +20,7 @@ namespace AH.Infrastructure.Repositories
             _logger = logger;
         }
 
-        public async Task<GetAllResponseDTO<InsuranceRowDTO>> GetAllByPatientIDAsync(InsuranceFilterDTO filterDTO)
+        public async Task<GetAllResponseDTO<InsuranceRowDTO>> GetAllByPatientIDAsync(InsuranceFilterDTO filterDTO, CancellationToken cancellationToken = default)
         {
             var extraParameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
@@ -45,14 +46,14 @@ namespace AH.Infrastructure.Repositories
                          converter.ConvertValue<string>("ProviderName"),
                          converter.ConvertValue<decimal>("Coverage"),
                          converter.ConvertValue<bool>("IsActive")));
-                 }, null, (reader, cmd) => { converter = new ConvertingHelper(reader); });
+                 }, null, (reader, cmd) => { converter = new ConvertingHelper(reader); }, cancellationToken);
 
             totalCount = rowCountOutputHelper.GetRowCount();
 
             return new GetAllResponseDTO<InsuranceRowDTO>(items, totalCount, ex);
         }
 
-        public async Task<GetByIDResponseDTO<InsuranceDTO>> GetByIDAsync(int id)
+        public async Task<GetByIDResponseDTO<InsuranceDTO>> GetByIDAsync(int id, CancellationToken cancellationToken = default)
         {
             return await ReusableCRUD.GetByID<InsuranceDTO>("Fetch_InsuranceByID", _logger, id, null, (reader, converter) =>
 
@@ -63,10 +64,10 @@ namespace AH.Infrastructure.Repositories
                     converter.ConvertValue<decimal>("Coverage"),
                     converter.ConvertValue<DateTime>("ExpirationDate"),
                     converter.ConvertValue<bool>("IsActive"),
-                       converter.ConvertValue<DateTime>("CreatedAt"), ReceptionistAuditHelper.ReadReceptionist(reader)));
+                       converter.ConvertValue<DateTime>("CreatedAt"), ReceptionistAuditHelper.ReadReceptionist(reader)), cancellationToken);
         }
 
-        public async Task<SuccessResponseDTO> Renew(int id, decimal coverage, DateOnly expirationdate)
+        public async Task<SuccessResponseDTO> Renew(int id, decimal coverage, DateOnly expirationdate, CancellationToken cancellationToken = default)
         {
             var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
             {
@@ -74,10 +75,10 @@ namespace AH.Infrastructure.Repositories
                 ["ExpirationDate"] = (expirationdate, SqlDbType.Date, null, null),
             };
 
-            return await ReusableCRUD.ExecuteByIDAsync("Renew_Insurance", _logger, id, extraParams);
+            return await ReusableCRUD.ExecuteByIDAsync("Renew_Insurance", _logger, id, extraParams, cancellationToken);
         }
 
-        public async Task<CreateResponseDTO> AddAsync(Insurance insurance)
+        public async Task<CreateResponseDTO> AddAsync(Insurance insurance, CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
@@ -91,10 +92,10 @@ namespace AH.Infrastructure.Repositories
             return await ReusableCRUD.AddAsync("Create_Insurance", _logger, (cmd) =>
             {
                 SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
-            });
+            }, cancellationToken);
         }
 
-        public async Task<SuccessResponseDTO> UpdateAsync(Insurance insurance)
+        public async Task<SuccessResponseDTO> UpdateAsync(Insurance insurance, CancellationToken cancellationToken = default)
         {
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
@@ -105,12 +106,12 @@ namespace AH.Infrastructure.Repositories
             return await ReusableCRUD.UpdateAsync("Update_Insurance", _logger, insurance.ID, (cmd) =>
             {
                 SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
-            });
+            }, cancellationToken);
         }
 
-        public async Task<DeleteResponseDTO> DeleteAsync(int id)
+        public async Task<DeleteResponseDTO> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            return await ReusableCRUD.DeleteAsync("Delete_Insurance", _logger, id);
+            return await ReusableCRUD.DeleteAsync("Delete_Insurance", _logger, id, cancellationToken);
         }
     }
 }

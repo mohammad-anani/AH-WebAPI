@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using System.Data;
+using System.Threading;
 
 namespace AH.Infrastructure.Helpers
 {
@@ -17,7 +18,8 @@ namespace AH.Infrastructure.Helpers
       Action<SqlCommand>? addParameters,
       Action<SqlDataReader, SqlCommand> readRow,
       Action<SqlCommand>? postAction = null,
-      Action<SqlDataReader, SqlCommand>? beforeIteration = null)
+      Action<SqlDataReader, SqlCommand>? beforeIteration = null,
+      CancellationToken cancellationToken = default)
         {
             await using var conn = new SqlConnection(_connectionString);
             await using var cmd = new SqlCommand(spName, conn)
@@ -39,7 +41,7 @@ namespace AH.Infrastructure.Helpers
             try
             {
                 logger.LogInformation("Opening Connection");
-                await conn.OpenAsync();
+                await conn.OpenAsync(cancellationToken);
 
                 logger.LogInformation("Starting reader");
 
@@ -47,7 +49,7 @@ namespace AH.Infrastructure.Helpers
                 while (!loop)
                 {
                     loop = true;
-                    await using (var reader = await cmd.ExecuteReaderAsync())
+                    await using (var reader = await cmd.ExecuteReaderAsync(cancellationToken))
                     {
                         logger.LogDebug("Reader has rows after executing reader before iterating:{hasRows}", reader.HasRows);
                         if (!reader.HasRows)
@@ -70,7 +72,7 @@ namespace AH.Infrastructure.Helpers
                         }
 
                         int rowcount = 0;
-                        while (await reader.ReadAsync())
+                        while (await reader.ReadAsync(cancellationToken))
                         {
                             readRow(reader, cmd);
                             rowcount++;
@@ -106,7 +108,8 @@ namespace AH.Infrastructure.Helpers
             string spName,
             ILogger logger,
             Action<SqlCommand>? addParameters,
-            Action<SqlCommand>? postAction = null)
+            Action<SqlCommand>? postAction = null,
+            CancellationToken cancellationToken = default)
         {
             await using var conn = new SqlConnection(_connectionString);
             await using var cmd = new SqlCommand(spName, conn)
@@ -128,10 +131,10 @@ namespace AH.Infrastructure.Helpers
             try
             {
                 logger.LogInformation("Opening Connection");
-                await conn.OpenAsync();
+                await conn.OpenAsync(cancellationToken);
 
                 logger.LogInformation("Executing non-query stored procedure {spName}", spName);
-                int rowsAffected = await cmd.ExecuteNonQueryAsync();
+                int rowsAffected = await cmd.ExecuteNonQueryAsync(cancellationToken);
                 logger.LogDebug("Rows affected by non-query execution: {rowsAffected}", rowsAffected);
 
                 if (postAction != null)
@@ -159,7 +162,8 @@ namespace AH.Infrastructure.Helpers
             string spName,
             Action<SqlCommand>? addParameters,
             ILogger logger,
-            Action<SqlCommand>? postAction = null)
+            Action<SqlCommand>? postAction = null,
+            CancellationToken cancellationToken = default)
         {
             await using var conn = new SqlConnection(_connectionString);
             await using var cmd = new SqlCommand(spName, conn)
@@ -169,8 +173,8 @@ namespace AH.Infrastructure.Helpers
 
             addParameters?.Invoke(cmd);
 
-            await conn.OpenAsync();
-            object? result = await cmd.ExecuteScalarAsync();
+            await conn.OpenAsync(cancellationToken);
+            object? result = await cmd.ExecuteScalarAsync(cancellationToken);
 
             logger.LogInformation("Post action executing");
             postAction?.Invoke(cmd);
