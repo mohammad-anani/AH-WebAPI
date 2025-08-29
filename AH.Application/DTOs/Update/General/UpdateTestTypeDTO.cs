@@ -11,6 +11,8 @@ namespace AH.Application.DTOs.Update
 {
     public class UpdateTestTypeDTO
     {
+        [Required(ErrorMessage = "Test type ID is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Test type ID must be a positive number")]
         public int ID { get; set; }
 
         [Required(ErrorMessage = "Test type name is required")]
@@ -27,10 +29,10 @@ namespace AH.Application.DTOs.Update
 
         public UpdateTestTypeDTO()
         {
+            ID = -1;
             Name = string.Empty;
             DepartmentID = -1;
             Cost = 0;
-            CreatedByAdminID = -1;
         }
 
         public UpdateTestTypeDTO(string name, int departmentID, int cost, int createdByAdminID)
@@ -38,7 +40,6 @@ namespace AH.Application.DTOs.Update
             Name = name;
             DepartmentID = departmentID;
             Cost = cost;
-            CreatedByAdminID = createdByAdminID;
         }
 
         public TestType ToTestType()
@@ -47,7 +48,7 @@ namespace AH.Application.DTOs.Update
                 Name,
                 new Department(DepartmentID),
                 Cost,
-                new AdminAudit(CreatedByAdminID)
+                new AdminAudit(-1)
             );
         }
     }

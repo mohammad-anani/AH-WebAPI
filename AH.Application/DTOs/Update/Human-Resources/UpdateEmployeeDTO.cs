@@ -13,6 +13,10 @@ namespace AH.Application.DTOs.Update
 {
     public class UpdateEmployeeDTO : UpdatePersonDTO
     {
+        [Required(ErrorMessage = "Employee ID is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Employee ID must be a positive number")]
+        public int ID { get; set; }
+
         [Required(ErrorMessage = "Department ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Department ID must be a positive number")]
         public int DepartmentID { get; set; }
@@ -33,20 +37,18 @@ namespace AH.Application.DTOs.Update
 
         public UpdateEmployeeDTO() : base()
         {
+            ID = -1;
             DepartmentID = -1;
             Salary = 0;
-            HireDate = DateTime.MinValue;
-            LeaveDate = null;
             WorkingDays = 0;
             ShiftStart = TimeOnly.MinValue;
             ShiftEnd = TimeOnly.MinValue;
-            CreatedByAdminID = -1;
         }
 
         public Employee ToEmployee()
         {
             return new Employee(base.ToPerson(), new Department(DepartmentID),
-                Salary, HireDate, LeaveDate, WorkingDays, ShiftStart, ShiftEnd, new AdminAudit(CreatedByAdminID));
+                Salary, DateTime.MinValue, WorkingDays, ShiftStart, ShiftEnd, new AdminAudit(-1));
         }
     }
 }

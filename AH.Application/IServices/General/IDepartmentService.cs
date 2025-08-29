@@ -1,4 +1,5 @@
 using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Update;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -37,9 +38,9 @@ namespace AH.Application.IServices
         /// <summary>
         /// Updates an existing department's information.
         /// </summary>
-        /// <param name="department">The department entity with updated information</param>
+        /// <param name="updateDepartmentDTO">The department update DTO with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
-        Task<bool> UpdateAsync(Department department);
+        Task<bool> UpdateAsync(UpdateDepartmentDTO updateDepartmentDTO);
 
         /// <summary>
         /// Deletes a department from the system.

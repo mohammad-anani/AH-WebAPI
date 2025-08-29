@@ -13,6 +13,8 @@ namespace AH.Application.DTOs.Update
 {
     public class UpdateOperationDTO : UpdateServiceDTO
     {
+        [Required(ErrorMessage = "Operation ID is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Operation ID must be a positive number")]
         public int ID { get; set; }
 
         [Required(ErrorMessage = "Operation name is required")]
@@ -34,6 +36,7 @@ namespace AH.Application.DTOs.Update
 
         public UpdateOperationDTO() : base()
         {
+            ID = -1;
             OperationName = -1;
             DepartmentID = -1;
             Description = string.Empty;

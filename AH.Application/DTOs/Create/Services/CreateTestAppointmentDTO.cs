@@ -24,8 +24,8 @@ namespace AH.Application.DTOs.Create
             TestTypeID = -1;
         }
 
-        public CreateTestAppointmentDTO(int testOrderID, int testTypeID, int patientID, DateTime scheduledDate, DateTime? actualStartingDate, string reason, string? result, DateTime? resultDate, string status, string? notes, int billAmount, int createdByReceptionistID)
-            : base(patientID, scheduledDate, actualStartingDate, reason, result, resultDate, status, notes, billAmount, createdByReceptionistID)
+        public CreateTestAppointmentDTO(int testOrderID, int testTypeID, int patientID, DateTime scheduledDate, string reason, string? notes, int billAmount, int createdByReceptionistID)
+            : base(patientID, scheduledDate, reason, notes, billAmount, createdByReceptionistID)
         {
             TestOrderID = testOrderID;
             TestTypeID = testTypeID;

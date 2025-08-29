@@ -1,4 +1,5 @@
 using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Update;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -104,16 +105,17 @@ namespace AH.Application.Services
         /// <summary>
         /// Updates an existing patient's information.
         /// </summary>
-        /// <param name="patient">The patient entity with updated information</param>
+        /// <param name="updatePatientDTO">The patient update DTO with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> UpdateAsync(Patient patient)
+        public async Task<bool> UpdateAsync(UpdatePatientDTO updatePatientDTO)
         {
+            var patient = updatePatientDTO.ToPatient();
             var response = await _patientRepository.UpdateAsync(patient);
 
             if (response.Exception != null)
             {
-                throw new InvalidOperationException($"Failed to update patient with ID {patient.ID}.", response.Exception);
+                throw new InvalidOperationException($"Failed to update patient with ID {updatePatientDTO.ID}.", response.Exception);
             }
 
             return response.Success;

@@ -1,4 +1,5 @@
 using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Update;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -37,9 +38,9 @@ namespace AH.Application.IServices
         /// <summary>
         /// Updates an existing test type's information.
         /// </summary>
-        /// <param name="testType">The test type entity with updated information</param>
+        /// <param name="updateTestTypeDTO">The test type update DTO with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
-        Task<bool> UpdateAsync(TestType testType);
+        Task<bool> UpdateAsync(UpdateTestTypeDTO updateTestTypeDTO);
 
         /// <summary>
         /// Deletes a test type from the system.

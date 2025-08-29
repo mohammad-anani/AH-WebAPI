@@ -1,4 +1,5 @@
 using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Update;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -139,16 +140,17 @@ namespace AH.Application.Services
         /// <summary>
         /// Updates an existing appointment's information.
         /// </summary>
-        /// <param name="appointment">The appointment entity with updated information</param>
+        /// <param name="updateAppointmentDTO">The appointment update DTO with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> UpdateAsync(Appointment appointment)
+        public async Task<bool> UpdateAsync(UpdateAppointmentDTO updateAppointmentDTO)
         {
+            var appointment = updateAppointmentDTO.ToAppointment();
             var response = await _appointmentRepository.UpdateAsync(appointment);
 
             if (response.Exception != null)
             {
-                throw new InvalidOperationException($"Failed to update appointment with ID {appointment.ID}.", response.Exception);
+                throw new InvalidOperationException($"Failed to update appointment with ID {updateAppointmentDTO.ID}.", response.Exception);
             }
 
             return response.Success;

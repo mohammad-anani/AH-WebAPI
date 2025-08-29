@@ -1,4 +1,5 @@
 using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Update;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -46,9 +47,9 @@ namespace AH.Application.IServices
         /// <summary>
         /// Updates an existing insurance record's information.
         /// </summary>
-        /// <param name="insurance">The insurance entity with updated information</param>
+        /// <param name="updateInsuranceDTO">The insurance update DTO with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
-        Task<bool> UpdateAsync(Insurance insurance);
+        Task<bool> UpdateAsync(UpdateInsuranceDTO updateInsuranceDTO);
 
         /// <summary>
         /// Deletes an insurance record from the system.

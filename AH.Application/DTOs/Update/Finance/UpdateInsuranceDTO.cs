@@ -11,6 +11,8 @@ namespace AH.Application.DTOs.Update
 {
     public class UpdateInsuranceDTO
     {
+        [Required(ErrorMessage = "Insurance ID is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Insurance ID must be a positive number")]
         public int ID { get; set; }
 
         [Required(ErrorMessage = "Provider name is required")]
@@ -23,35 +25,28 @@ namespace AH.Application.DTOs.Update
 
         public UpdateInsuranceDTO()
         {
-            PatientID = -1;
+            ID = -1;
             ProviderName = string.Empty;
             Coverage = 0;
-            ExpirationDate = DateOnly.MinValue;
-            IsActive = true;
-            CreatedByReceptionistID = -1;
         }
 
         public UpdateInsuranceDTO(int patientID, string providerName, decimal coverage, DateOnly expirationDate, bool isActive, int createdByReceptionistID)
         {
-            PatientID = patientID;
             ProviderName = providerName;
             Coverage = coverage;
-            ExpirationDate = expirationDate;
-            IsActive = isActive;
-            CreatedByReceptionistID = createdByReceptionistID;
         }
 
         public Insurance ToInsurance()
         {
             return new Insurance(
                 -1,
-                new Patient(PatientID),
+                new Patient(-1),
                 ProviderName,
                 Coverage,
-                ExpirationDate,
-                IsActive,
+                DateOnly.MinValue,
+                true,
                 DateTime.MinValue,
-                new Receptionist(CreatedByReceptionistID)
+                new Receptionist(-1)
             );
         }
     }

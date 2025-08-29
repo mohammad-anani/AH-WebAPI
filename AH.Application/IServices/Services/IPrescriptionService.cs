@@ -1,4 +1,5 @@
 using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Update;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -37,9 +38,9 @@ namespace AH.Application.IServices
         /// <summary>
         /// Updates an existing prescription's information.
         /// </summary>
-        /// <param name="prescription">The prescription entity with updated information</param>
+        /// <param name="updatePrescriptionDTO">The prescription update DTO with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
-        Task<bool> UpdateAsync(Prescription prescription);
+        Task<bool> UpdateAsync(UpdatePrescriptionDTO updatePrescriptionDTO);
 
         /// <summary>
         /// Deletes a prescription from the system.

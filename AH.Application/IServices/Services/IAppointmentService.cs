@@ -1,4 +1,5 @@
 using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Update;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -58,9 +59,9 @@ namespace AH.Application.IServices
         /// <summary>
         /// Updates an existing appointment's information.
         /// </summary>
-        /// <param name="appointment">The appointment entity with updated information</param>
+        /// <param name="updateAppointmentDTO">The appointment update DTO with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
-        Task<bool> UpdateAsync(Appointment appointment);
+        Task<bool> UpdateAsync(UpdateAppointmentDTO updateAppointmentDTO);
 
         /// <summary>
         /// Deletes an appointment from the system.

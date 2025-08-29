@@ -1,4 +1,5 @@
 using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Update;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -85,16 +86,17 @@ namespace AH.Application.Services
         /// <summary>
         /// Updates an existing prescription's information.
         /// </summary>
-        /// <param name="prescription">The prescription entity with updated information</param>
+        /// <param name="updatePrescriptionDTO">The prescription update DTO with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> UpdateAsync(Prescription prescription)
+        public async Task<bool> UpdateAsync(UpdatePrescriptionDTO updatePrescriptionDTO)
         {
+            var prescription = updatePrescriptionDTO.ToPrescription();
             var response = await _prescriptionRepository.UpdateAsync(prescription);
 
             if (response.Exception != null)
             {
-                throw new InvalidOperationException($"Failed to update prescription with ID {prescription.ID}.", response.Exception);
+                throw new InvalidOperationException($"Failed to update prescription with ID {updatePrescriptionDTO.ID}.", response.Exception);
             }
 
             return response.Success;

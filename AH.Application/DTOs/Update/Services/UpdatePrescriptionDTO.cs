@@ -11,6 +11,8 @@ namespace AH.Application.DTOs.Update
 {
     public class UpdatePrescriptionDTO
     {
+        [Required(ErrorMessage = "Prescription ID is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Prescription ID must be a positive number")]
         public int ID { get; set; }
 
         [Required(ErrorMessage = "Diagnosis is required")]
@@ -41,7 +43,7 @@ namespace AH.Application.DTOs.Update
 
         public UpdatePrescriptionDTO()
         {
-            AppointmentID = -1;
+            ID = -1;
             Diagnosis = string.Empty;
             Medication = string.Empty;
             Dosage = string.Empty;
@@ -53,7 +55,6 @@ namespace AH.Application.DTOs.Update
 
         public UpdatePrescriptionDTO(int appointmentID, string diagnosis, string medication, string dosage, string frequency, DateTime medicationStart, DateTime medicationEnd, string notes)
         {
-            AppointmentID = appointmentID;
             Diagnosis = diagnosis;
             Medication = medication;
             Dosage = dosage;
@@ -66,7 +67,7 @@ namespace AH.Application.DTOs.Update
         public Prescription ToPrescription()
         {
             return new Prescription(
-                new Appointment(AppointmentID),
+                new Appointment(-1),
                 Diagnosis,
                 Medication,
                 Dosage,

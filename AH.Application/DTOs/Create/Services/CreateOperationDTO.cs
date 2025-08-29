@@ -37,8 +37,8 @@ namespace AH.Application.DTOs.Create
             OperationDoctors = new List<OperationDoctorDTO>();
         }
 
-        public CreateOperationDTO(int operationName, int departmentID, string description, List<OperationDoctorDTO> operationDoctors, int patientID, DateTime scheduledDate, DateTime? actualStartingDate, string reason, string? result, DateTime? resultDate, string status, string? notes, int billAmount, int createdByReceptionistID)
-            : base(patientID, scheduledDate, actualStartingDate, reason, result, resultDate, status, notes, billAmount, createdByReceptionistID)
+        public CreateOperationDTO(int operationName, int departmentID, string description, List<OperationDoctorDTO> operationDoctors, int patientID, DateTime scheduledDate, string reason, string? notes, int billAmount, int createdByReceptionistID)
+            : base(patientID, scheduledDate, reason, notes, billAmount, createdByReceptionistID)
         {
             if (operationDoctors.Count > 5 || operationDoctors.Count == 0)
             {

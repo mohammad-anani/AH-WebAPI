@@ -11,6 +11,8 @@ namespace AH.Application.DTOs.Update
 {
     public class UpdateDepartmentDTO
     {
+        [Required(ErrorMessage = "Department ID is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Department ID must be a positive number")]
         public int ID { get; set; }
 
         [Required(ErrorMessage = "Department name is required")]
@@ -23,16 +25,15 @@ namespace AH.Application.DTOs.Update
 
         public UpdateDepartmentDTO()
         {
+            ID = -1;
             Name = string.Empty;
             Phone = string.Empty;
-            CreatedByAdminID = -1;
         }
 
         public UpdateDepartmentDTO(string name, string phone, int createdByAdminID)
         {
             Name = name;
             Phone = phone;
-            CreatedByAdminID = createdByAdminID;
         }
 
         public Department ToDepartment()
@@ -40,7 +41,7 @@ namespace AH.Application.DTOs.Update
             return new Department(
                 Name,
                 Phone,
-                new AdminAudit(CreatedByAdminID)
+                new AdminAudit(-1)
             );
         }
     }

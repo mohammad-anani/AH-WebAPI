@@ -1,13 +1,13 @@
 using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
+using AH.Application.DTOs.Update;
 using AH.Application.IServices;
 using AH.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AH.API.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
     public class TestTypeController : ControllerBase
@@ -65,7 +65,7 @@ namespace AH.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] TestType testType)
+        public async Task<IActionResult> Update([FromBody] UpdateTestTypeDTO testType)
         {
             try
             {

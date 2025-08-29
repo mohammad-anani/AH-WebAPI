@@ -1,4 +1,5 @@
 using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Update;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
@@ -37,9 +38,9 @@ namespace AH.Application.IServices
         /// <summary>
         /// Updates an existing doctor's information.
         /// </summary>
-        /// <param name="doctor">The doctor entity with updated information</param>
+        /// <param name="updateDoctorDTO">The doctor update DTO with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
-        Task<bool> UpdateAsync(Doctor doctor);
+        Task<bool> UpdateAsync(UpdateDoctorDTO updateDoctorDTO);
 
         /// <summary>
         /// Deletes a doctor from the system.

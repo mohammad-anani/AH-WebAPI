@@ -1,4 +1,5 @@
 using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Update;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.IServices;
@@ -92,12 +93,15 @@ namespace AH.API.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] Appointment appointment)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateAppointmentDTO updateAppointmentDTO)
         {
             try
             {
-                var result = await _appointmentService.UpdateAsync(appointment);
+                if (id != updateAppointmentDTO.ID)
+                    return BadRequest("ID mismatch between route and body.");
+
+                var result = await _appointmentService.UpdateAsync(updateAppointmentDTO);
                 if (!result)
                     return NotFound();
 

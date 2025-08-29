@@ -19,8 +19,8 @@ namespace AH.Application.DTOs.Create
             DoctorID = -1;
         }
 
-        public CreateAppointmentDTO(int? previousAppointmentID, int doctorID, int patientID, DateTime scheduledDate, DateTime? actualStartingDate, string reason, string? result, DateTime? resultDate, string status, string? notes, int billAmount, int createdByReceptionistID)
-            : base(patientID, scheduledDate, actualStartingDate, reason, result, resultDate, status, notes, billAmount, createdByReceptionistID)
+        public CreateAppointmentDTO(int? previousAppointmentID, int doctorID, int patientID, DateTime scheduledDate, string reason, string? notes, int billAmount, int createdByReceptionistID)
+            : base(patientID, scheduledDate, reason, notes, billAmount, createdByReceptionistID)
         {
             DoctorID = doctorID;
         }
