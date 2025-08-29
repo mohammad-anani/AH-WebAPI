@@ -38,5 +38,13 @@
             Doctor = doctor;
             Service = service;
         }
+
+        public Appointment(Doctor doctor, Service service)
+        {
+            ID = -1;
+            PreviousAppointment = null;
+            Doctor = doctor;
+            Service = service;
+        }
     }
 }

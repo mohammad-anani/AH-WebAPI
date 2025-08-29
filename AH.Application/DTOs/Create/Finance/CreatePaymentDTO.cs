@@ -20,7 +20,7 @@ namespace AH.Application.DTOs.Create
 
         [Required(ErrorMessage = "Payment method is required")]
         [Range(1, 3, ErrorMessage = "Method must be 1 (Card), 2 (Cash), or 3 (Insurance)")]
-        public string Method { get; set; }
+        public int Method { get; set; }
 
         [Required(ErrorMessage = "Created by receptionist ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Created by receptionist ID must be a positive number")]
@@ -30,11 +30,11 @@ namespace AH.Application.DTOs.Create
         {
             BillID = -1;
             Amount = 0;
-            Method = string.Empty;
+            Method = -1;
             CreatedByReceptionistID = -1;
         }
 
-        public CreatePaymentDTO(int billID, int amount, string method, int createdByReceptionistID)
+        public CreatePaymentDTO(int billID, int amount, int method, int createdByReceptionistID)
         {
             BillID = billID;
             Amount = amount;
@@ -47,7 +47,7 @@ namespace AH.Application.DTOs.Create
             return new Payment(
                 new Bill(BillID, 0, 0), // We only need the ID for the Bill reference
                 Amount,
-                Method,
+                Payment.GetMethod(Method),
                 new Receptionist(CreatedByReceptionistID)
             );
         }

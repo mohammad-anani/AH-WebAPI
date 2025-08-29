@@ -18,13 +18,15 @@ namespace AH.Application.DTOs.Create
         [Range(1, int.MaxValue, ErrorMessage = "Cost per appointment must be a positive number")]
         public int CostPerAppointment { get; set; }
 
+        public CreateDoctorDTO() : base()
+        {
+            Specialization = string.Empty;
+            CostPerAppointment = 0;
+        }
+
         public Doctor ToDoctor()
         {
-            return new Doctor(base.ToEmployee()
-            ,
-                 CostPerAppointment,
-                Specialization
-            );
+            return new Doctor(base.ToEmployee(), CostPerAppointment, Specialization);
         }
     }
 }

@@ -44,7 +44,6 @@ namespace AH.Application.DTOs.Create
             DepartmentID = -1;
             Salary = 0;
             HireDate = DateTime.MinValue;
-
             WorkingDays = 0;
             ShiftStart = TimeOnly.MinValue;
             ShiftEnd = TimeOnly.MinValue;

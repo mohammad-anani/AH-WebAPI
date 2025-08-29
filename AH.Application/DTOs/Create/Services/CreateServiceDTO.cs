@@ -38,25 +38,17 @@ namespace AH.Application.DTOs.Create
         {
             PatientID = -1;
             ScheduledDate = DateTime.MinValue;
-            ActualStartingDate = null;
             Reason = string.Empty;
-            Result = null;
-            ResultDate = null;
-            Status = string.Empty;
             Notes = null;
             BillAmount = 0;
             CreatedByReceptionistID = -1;
         }
 
-        public CreateServiceDTO(int patientID, DateTime scheduledDate, DateTime? actualStartingDate, string reason, string? result, DateTime? resultDate, string status, string? notes, int billAmount, int createdByReceptionistID)
+        public CreateServiceDTO(int patientID, DateTime scheduledDate, string reason, string? notes, int billAmount, int createdByReceptionistID)
         {
             PatientID = patientID;
             ScheduledDate = scheduledDate;
-            ActualStartingDate = actualStartingDate;
             Reason = reason;
-            Result = result;
-            ResultDate = resultDate;
-            Status = status;
             Notes = notes;
             BillAmount = billAmount;
             CreatedByReceptionistID = createdByReceptionistID;
@@ -67,11 +59,11 @@ namespace AH.Application.DTOs.Create
             return new Service(
                 new Patient(PatientID),
                 ScheduledDate,
-                ActualStartingDate,
+                null,
                 Reason,
-                Result,
-                ResultDate,
-                Status,
+                null,
+                null, "",
+
                 Notes,
                 new Bill(-1, BillAmount, 0),
                 new Receptionist(CreatedByReceptionistID)

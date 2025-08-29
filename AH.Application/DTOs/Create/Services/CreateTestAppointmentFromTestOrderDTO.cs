@@ -1,5 +1,7 @@
-﻿using System;
+﻿using AH.Application.DTOs.Validation;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,10 +10,28 @@ namespace AH.Application.DTOs.Create
 {
     public class CreateTestAppointmentFromTestOrderDTO
     {
+        [Required(ErrorMessage = "Test order ID is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Test order ID must be a positive number")]
         public int TestOrderID { get; set; }
+
+        [Required(ErrorMessage = "Scheduled date is required")]
+        [FutureDateWithinYear]
         public DateTime ScheduledDate { get; set; }
+
+        [StringLength(int.MaxValue, MinimumLength = 0, ErrorMessage = "Notes can be empty or any length")]
         public string? Notes { get; set; }
+
+        [Required(ErrorMessage = "Created by receptionist ID is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Created by receptionist ID must be a positive number")]
         public int CreatedByReceptionistID { get; set; }
+
+        public CreateTestAppointmentFromTestOrderDTO()
+        {
+            TestOrderID = -1;
+            ScheduledDate = DateTime.MinValue;
+            Notes = null;
+            CreatedByReceptionistID = -1;
+        }
 
         public CreateTestAppointmentFromTestOrderDTO(int testOrderID, DateTime scheduledDate, string? notes, int createdByReceptionistID)
         {

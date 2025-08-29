@@ -21,10 +21,6 @@ namespace AH.Application.DTOs.Update
         [Range(100, 99999, ErrorMessage = "Salary must be between 100 and 99,999")]
         public int Salary { get; set; }
 
-        [Required(ErrorMessage = "Hire date is required")]
-        [HireDateValidation]
-        public DateTime HireDate { get; set; }
-
         [Required(ErrorMessage = "Working days is required")]
         [Range(1, 127, ErrorMessage = "Working days must be between 1 and 127")]
         public int WorkingDays { get; set; }

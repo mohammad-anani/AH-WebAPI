@@ -12,6 +12,7 @@ namespace AH.Application.DTOs.Create
     {
         [Required(ErrorMessage = "Test order ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Test order ID must be a positive number")]
+        public int TestOrderID { get; set; }
 
         [Required(ErrorMessage = "Test type ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Test type ID must be a positive number")]
