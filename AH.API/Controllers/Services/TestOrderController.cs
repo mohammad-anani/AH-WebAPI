@@ -1,4 +1,5 @@
 using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Update;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.IServices;
@@ -21,63 +22,32 @@ namespace AH.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] TestOrderFilterDTO filterDTO)
         {
-            try
-            {
-                var result = await _testOrderService.GetAllAsync(filterDTO);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _testOrderService.GetAllAsync(filterDTO);
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            try
-            {
-                var result = await _testOrderService.GetByIDAsync(id);
-                if (result == null)
-                    return NotFound();
+            var result = await _testOrderService.GetByIDAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CreateTestOrderDTO createTestOrderDTO)
         {
-            try
-            {
-                var result = await _testOrderService.AddAsync(createTestOrderDTO);
-                return CreatedAtAction(nameof(GetById), new { id = result }, result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _testOrderService.AddAsync(createTestOrderDTO);
+
+            return StatusCode(result.StatusCode, result.Message);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var result = await _testOrderService.DeleteAsync(id);
-                if (!result)
-                    return NotFound();
+            var result = await _testOrderService.DeleteAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
     }
 }

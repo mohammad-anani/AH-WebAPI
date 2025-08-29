@@ -19,7 +19,7 @@ namespace AH.API.Controllers
         public async Task<IActionResult> GetAllByOperationId([FromQuery] OperationDoctorFilterDTO filterDTO)
         {
             var result = await _operationDoctorService.GetAllByOperationIDAsync(filterDTO);
-            return StatusCode(result.StatusCode, new { items = result.Data.items, count = result.Data.count });
+            return StatusCode(result.StatusCode, result.Data);
         }
     }
 }

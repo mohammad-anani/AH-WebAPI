@@ -23,7 +23,7 @@ namespace AH.API.Controllers
         public async Task<IActionResult> GetAll([FromQuery] OperationFilterDTO filterDTO)
         {
             var result = await _operationService.GetAllAsync(filterDTO);
-            return StatusCode(result.StatusCode, new { items = result.Data.items, count = result.Data.count });
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpGet("{id}")]

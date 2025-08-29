@@ -1,4 +1,5 @@
 using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Update;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.IServices;
@@ -22,80 +23,43 @@ namespace AH.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] TestAppointmentFilterDTO filterDTO)
         {
-            try
-            {
-                var result = await _testAppointmentService.GetAllAsync(filterDTO);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _testAppointmentService.GetAllAsync(filterDTO);
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            try
-            {
-                var result = await _testAppointmentService.GetByIDAsync(id);
-                if (result == null)
-                    return NotFound();
+            var result = await _testAppointmentService.GetByIDAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CreateTestAppointmentDTO createTestAppointmentDTO)
         {
-            try
-            {
-                var result = await _testAppointmentService.AddAsync(createTestAppointmentDTO);
-                return CreatedAtAction(nameof(GetById), new { id = result }, result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _testAppointmentService.AddAsync(createTestAppointmentDTO);
+
+            return StatusCode(result.StatusCode, result.Message);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] TestAppointment testAppointment)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateTestAppointmentDTO updateTestAppointmentDTO)
         {
-            try
-            {
-                var result = await _testAppointmentService.UpdateAsync(testAppointment);
-                if (!result)
-                    return NotFound();
+            if (id != updateTestAppointmentDTO.ID)
+                return BadRequest("ID mismatch between route and body.");
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _testAppointmentService.UpdateAsync(updateTestAppointmentDTO);
+
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var result = await _testAppointmentService.DeleteAsync(id);
-                if (!result)
-                    return NotFound();
+            var result = await _testAppointmentService.DeleteAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
     }
 }

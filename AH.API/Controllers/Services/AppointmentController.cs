@@ -23,21 +23,21 @@ namespace AH.API.Controllers
         public async Task<IActionResult> GetAll([FromQuery] AppointmentFilterDTO filterDTO)
         {
             var result = await _appointmentService.GetAllAsync(filterDTO);
-            return StatusCode(result.StatusCode, new { items = result.Data.items, count = result.Data.count });
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpGet("doctor/{doctorId}")]
         public async Task<IActionResult> GetAllByDoctorId(int doctorId)
         {
             var result = await _appointmentService.GetAllByDoctorIDAsync(doctorId);
-            return StatusCode(result.StatusCode, new { items = result.Data.items, count = result.Data.count });
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpGet("patient/{patientId}")]
         public async Task<IActionResult> GetAllByPatientId(int patientId)
         {
             var result = await _appointmentService.GetAllByPatientIDAsync(patientId);
-            return StatusCode(result.StatusCode, new { items = result.Data.items, count = result.Data.count });
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpGet("{id}")]

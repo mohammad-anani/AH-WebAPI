@@ -24,7 +24,7 @@ namespace AH.API.Controllers
         public async Task<IActionResult> GetAll([FromQuery] ReceptionistFilterDTO filterDTO)
         {
             var result = await _receptionistService.GetAllAsync(filterDTO);
-            return StatusCode(result.StatusCode, new { items = result.Data.items, count = result.Data.count });
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpGet("{id}")]

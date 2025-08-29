@@ -23,7 +23,7 @@ namespace AH.API.Controllers
         public async Task<IActionResult> GetAllByBillId([FromQuery] PaymentFilterDTO filterDTO)
         {
             var result = await _paymentService.GetAllByBillIDAsync(filterDTO);
-            return StatusCode(result.StatusCode, new { items = result.Data.items, count = result.Data.count });
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpGet("{id}")]
