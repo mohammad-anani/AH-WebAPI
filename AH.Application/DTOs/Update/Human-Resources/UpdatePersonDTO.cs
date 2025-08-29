@@ -1,4 +1,4 @@
-using AH.Application.DTOs.Update.Validation;
+using AH.Application.DTOs.Validation;
 using AH.Domain.Entities;
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,4 @@
-using AH.Application.DTOs.Update.Validation;
+using AH.Application.DTOs.Validation;
 using AH.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,9 +11,7 @@ namespace AH.Application.DTOs.Update
 {
     public class UpdatePrescriptionDTO
     {
-        [Required(ErrorMessage = "Appointment ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Appointment ID must be a positive number")]
-        public int AppointmentID { get; set; }
+        public int ID { get; set; }
 
         [Required(ErrorMessage = "Diagnosis is required")]
         [StringLength(256, MinimumLength = 10, ErrorMessage = "Diagnosis must be between 10 and 256 characters")]

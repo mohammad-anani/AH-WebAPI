@@ -10,6 +10,8 @@ namespace AH.Application.DTOs.Update
 {
     public class UpdateDoctorDTO : UpdateEmployeeDTO
     {
+        public int ID { get; set; }
+
         [Required(ErrorMessage = "Specialization is required")]
         [StringLength(100, MinimumLength = 5, ErrorMessage = "Specialization must be between 5 and 100 characters")]
         public string Specialization { get; set; }

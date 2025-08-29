@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace AH.Application.DTOs.Create.Validation
+namespace AH.Application.DTOs.Validation
 {
     public class FutureDateWithinYearAttribute : ValidationAttribute
     {

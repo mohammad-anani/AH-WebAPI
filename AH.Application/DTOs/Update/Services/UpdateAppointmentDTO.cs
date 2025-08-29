@@ -10,11 +10,7 @@ namespace AH.Application.DTOs.Update
 {
     public class UpdateAppointmentDTO : UpdateServiceDTO
     {
-        public int? PreviousAppointmentID { get; set; }
-
-        [Required(ErrorMessage = "Doctor ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Doctor ID must be a positive number")]
-        public int DoctorID { get; set; }
+        public int ID { get; set; }
 
         public UpdateAppointmentDTO() : base()
         {
@@ -31,8 +27,8 @@ namespace AH.Application.DTOs.Update
 
         public Appointment ToAppointment()
         {
-            PreviousAppointment? previousAppointment = PreviousAppointmentID.HasValue 
-                ? new PreviousAppointment(PreviousAppointmentID.Value) 
+            PreviousAppointment? previousAppointment = PreviousAppointmentID.HasValue
+                ? new PreviousAppointment(PreviousAppointmentID.Value)
                 : null;
 
             return new Appointment(

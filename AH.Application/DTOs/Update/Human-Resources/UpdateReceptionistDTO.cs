@@ -9,6 +9,8 @@ namespace AH.Application.DTOs.Update
 {
     public class UpdateReceptionistDTO : UpdateEmployeeDTO
     {
+        public int ID { get; set; }
+
         public Receptionist ToReceptionist()
         {
             return new Receptionist(base.ToEmployee());

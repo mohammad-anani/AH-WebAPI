@@ -1,4 +1,4 @@
-using AH.Application.DTOs.Update.Validation;
+using AH.Application.DTOs.Validation;
 using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
 using AH.Domain.Entities.Audit;
@@ -25,8 +25,6 @@ namespace AH.Application.DTOs.Update
         [HireDateValidation]
         public DateTime HireDate { get; set; }
 
-        public DateTime? LeaveDate { get; set; }
-
         [Required(ErrorMessage = "Working days is required")]
         [Range(1, 127, ErrorMessage = "Working days must be between 1 and 127")]
         public int WorkingDays { get; set; }
@@ -36,10 +34,6 @@ namespace AH.Application.DTOs.Update
 
         [Required(ErrorMessage = "Shift end time is required")]
         public TimeOnly ShiftEnd { get; set; }
-
-        [Required(ErrorMessage = "Created by admin ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Created by admin ID must be a positive number")]
-        public int CreatedByAdminID { get; set; }
 
         public UpdateEmployeeDTO() : base()
         {

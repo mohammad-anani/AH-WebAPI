@@ -10,8 +10,6 @@ namespace AH.Application.DTOs.Create
 {
     public class CreateAppointmentDTO : CreateServiceDTO
     {
-        public int? PreviousAppointmentID { get; set; }
-
         [Required(ErrorMessage = "Doctor ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Doctor ID must be a positive number")]
         public int DoctorID { get; set; }
@@ -31,8 +29,8 @@ namespace AH.Application.DTOs.Create
 
         public Appointment ToAppointment()
         {
-            PreviousAppointment? previousAppointment = PreviousAppointmentID.HasValue 
-                ? new PreviousAppointment(PreviousAppointmentID.Value) 
+            PreviousAppointment? previousAppointment = PreviousAppointmentID.HasValue
+                ? new PreviousAppointment(PreviousAppointmentID.Value)
                 : null;
 
             return new Appointment(

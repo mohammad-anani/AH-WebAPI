@@ -11,6 +11,8 @@ namespace AH.Application.DTOs.Update
 {
     public class UpdateTestTypeDTO
     {
+        public int ID { get; set; }
+
         [Required(ErrorMessage = "Test type name is required")]
         [StringLength(50, MinimumLength = 10, ErrorMessage = "Test type name must be between 10 and 50 characters")]
         public string Name { get; set; }
@@ -22,10 +24,6 @@ namespace AH.Application.DTOs.Update
         [Required(ErrorMessage = "Cost is required")]
         [Range(10, 999, ErrorMessage = "Cost must be between 10 and 999")]
         public int Cost { get; set; }
-
-        [Required(ErrorMessage = "Created by admin ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Created by admin ID must be a positive number")]
-        public int CreatedByAdminID { get; set; }
 
         public UpdateTestTypeDTO()
         {

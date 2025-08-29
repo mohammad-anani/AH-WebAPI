@@ -9,6 +9,8 @@ namespace AH.Application.DTOs.Update
 {
     public class UpdateAdminDTO : UpdateEmployeeDTO
     {
+        public int ID { get; set; }
+
         public Admin ToAdmin()
         {
             return new Admin(base.ToEmployee());

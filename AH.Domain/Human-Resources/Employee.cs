@@ -52,13 +52,13 @@ namespace AH.Domain.Entities
             CreatedAt = createdAt;
         }
 
-        public Employee(Person person, Department department, int salary, DateTime hireDate, DateTime? leaveDate, int workingDays, TimeOnly shiftStart, TimeOnly shiftEnd, AdminAudit? createdByAdmin)
+        public Employee(Person person, Department department, int salary, DateTime hireDate, int workingDays, TimeOnly shiftStart, TimeOnly shiftEnd, AdminAudit? createdByAdmin)
         {
             Person = person;
             Department = department;
             Salary = salary;
             HireDate = hireDate;
-            LeaveDate = leaveDate;
+            LeaveDate = null;
             WorkingDays = workingDays;
             ShiftStart = shiftStart;
             ShiftEnd = shiftEnd;

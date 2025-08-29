@@ -13,6 +13,8 @@ namespace AH.Application.DTOs.Update
 {
     public class UpdateOperationDTO : UpdateServiceDTO
     {
+        public int ID { get; set; }
+
         [Required(ErrorMessage = "Operation name is required")]
         [Range(10, 100, ErrorMessage = "Operation name must be between 10 and 100")]
         public int OperationName { get; set; }

@@ -1,4 +1,4 @@
-﻿using AH.Application.DTOs.Create.Validation;
+﻿using AH.Application.DTOs.Validation;
 using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
 using AH.Domain.Entities.Audit;
@@ -25,8 +25,6 @@ namespace AH.Application.DTOs.Create
         [HireDateValidation]
         public DateTime HireDate { get; set; }
 
-        public DateTime? LeaveDate { get; set; }
-
         [Required(ErrorMessage = "Working days is required")]
         [Range(1, 127, ErrorMessage = "Working days must be between 1 and 127")]
         public int WorkingDays { get; set; }
@@ -46,7 +44,7 @@ namespace AH.Application.DTOs.Create
             DepartmentID = -1;
             Salary = 0;
             HireDate = DateTime.MinValue;
-            LeaveDate = null;
+
             WorkingDays = 0;
             ShiftStart = TimeOnly.MinValue;
             ShiftEnd = TimeOnly.MinValue;
@@ -56,7 +54,7 @@ namespace AH.Application.DTOs.Create
         public Employee ToEmployee()
         {
             return new Employee(base.ToPerson(), new Department(DepartmentID),
-                Salary, HireDate, LeaveDate, WorkingDays, ShiftStart, ShiftEnd, new AdminAudit(CreatedByAdminID));
+                Salary, HireDate, WorkingDays, ShiftStart, ShiftEnd, new AdminAudit(CreatedByAdminID));
         }
     }
 }

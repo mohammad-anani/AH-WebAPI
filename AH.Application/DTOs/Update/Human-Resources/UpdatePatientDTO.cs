@@ -10,9 +10,7 @@ namespace AH.Application.DTOs.Update
 {
     public class UpdatePatientDTO : UpdatePersonDTO
     {
-        [Required(ErrorMessage = "Created by receptionist ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Created by receptionist ID must be a positive number")]
-        public int CreatedByReceptionistID { get; set; }
+        public int ID { get; set; }
 
         public Patient ToPatient()
         {

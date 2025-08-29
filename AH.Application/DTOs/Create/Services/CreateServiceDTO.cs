@@ -1,4 +1,4 @@
-using AH.Application.DTOs.Create.Validation;
+using AH.Application.DTOs.Validation;
 using AH.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -19,20 +19,9 @@ namespace AH.Application.DTOs.Create
         [FutureDateWithinYear]
         public DateTime ScheduledDate { get; set; }
 
-        public DateTime? ActualStartingDate { get; set; }
-
         [Required(ErrorMessage = "Reason is required")]
         [StringLength(int.MaxValue, MinimumLength = 10, ErrorMessage = "Reason must be at least 10 characters")]
         public string Reason { get; set; }
-
-        [StringLength(int.MaxValue, MinimumLength = 10, ErrorMessage = "Result must be at least 10 characters")]
-        public string? Result { get; set; }
-
-        public DateTime? ResultDate { get; set; }
-
-        [Required(ErrorMessage = "Status is required")]
-        [Range(1, 6, ErrorMessage = "Status must be between 1 and 6")]
-        public string Status { get; set; }
 
         [StringLength(int.MaxValue, MinimumLength = 0, ErrorMessage = "Notes can be empty or any length")]
         public string? Notes { get; set; }

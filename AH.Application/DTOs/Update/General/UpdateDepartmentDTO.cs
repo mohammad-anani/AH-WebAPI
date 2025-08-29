@@ -11,6 +11,8 @@ namespace AH.Application.DTOs.Update
 {
     public class UpdateDepartmentDTO
     {
+        public int ID { get; set; }
+
         [Required(ErrorMessage = "Department name is required")]
         [StringLength(20, MinimumLength = 5, ErrorMessage = "Department name must be between 5 and 20 characters")]
         public string Name { get; set; }
@@ -18,10 +20,6 @@ namespace AH.Application.DTOs.Update
         [Required(ErrorMessage = "Phone is required")]
         [RegularExpression("^[0-9]{8}$", ErrorMessage = "Phone must be exactly 8 digits")]
         public string Phone { get; set; }
-
-        [Required(ErrorMessage = "Created by admin ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Created by admin ID must be a positive number")]
-        public int CreatedByAdminID { get; set; }
 
         public UpdateDepartmentDTO()
         {
