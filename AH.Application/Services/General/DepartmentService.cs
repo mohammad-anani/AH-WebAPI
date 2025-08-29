@@ -44,10 +44,10 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="id">The unique identifier of the department</param>
         /// <returns>ServiceResult containing department DTO with complete information or null if not found</returns>
-        public async Task<ServiceResult<DepartmentDTO?>> GetByIDAsync(int id)
+        public async Task<ServiceResult<DepartmentDTO>> GetByIDAsync(int id)
         {
             var response = await _departmentRepository.GetByIDAsync(id);
-            return ServiceResult<DepartmentDTO?>.Create(response.Item, response.Exception);
+            return ServiceResult<DepartmentDTO>.Create(response.Item, response.Exception);
         }
 
         /// <summary>

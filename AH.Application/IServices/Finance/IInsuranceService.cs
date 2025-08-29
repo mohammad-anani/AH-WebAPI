@@ -26,7 +26,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="id">The unique identifier of the insurance record</param>
         /// <returns>ServiceResult containing insurance DTO with complete information or null if not found</returns>
-        Task<ServiceResult<InsuranceDTO?>> GetByIDAsync(int id);
+        Task<ServiceResult<InsuranceDTO>> GetByIDAsync(int id);
 
         /// <summary>
         /// Renews an existing insurance policy with updated coverage and expiration date.

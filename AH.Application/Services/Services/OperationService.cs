@@ -36,13 +36,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllAsync(OperationFilterDTO filterDTO)
         {
             var response = await _operationRepository.GetAllAsync(filterDTO);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to retrieve operations.", response.Exception);
-            }
-
-            return ServiceResult<(IEnumerable<OperationRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
+            return ServiceResult<(IEnumerable<OperationRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
         /// <summary>
@@ -54,13 +48,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllByDoctorIDAsync(int doctorID)
         {
             var response = await _operationRepository.GetAllByDoctorIDAsync(doctorID);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to retrieve operations by doctor ID.", response.Exception);
-            }
-
-            return ServiceResult<(IEnumerable<OperationRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
+            return ServiceResult<(IEnumerable<OperationRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
         /// <summary>
@@ -72,13 +60,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllByPatientIDAsync(int patientID)
         {
             var response = await _operationRepository.GetAllByPatientIDAsync(patientID);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to retrieve operations by patient ID.", response.Exception);
-            }
-
-            return ServiceResult<(IEnumerable<OperationRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
+            return ServiceResult<(IEnumerable<OperationRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
         /// <summary>
@@ -87,16 +69,10 @@ namespace AH.Application.Services
         /// <param name="id">The unique identifier of the operation</param>
         /// <returns>Operation DTO with complete information or null if not found</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<OperationDTO?> GetByIDAsync(int id)
+        public async Task<ServiceResult<OperationDTO>> GetByIDAsync(int id)
         {
             var response = await _operationRepository.GetByIDAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to retrieve operation with ID {id}.", response.Exception);
-            }
-
-            return response.Item;
+            return ServiceResult<OperationDTO>.Create(response.Item, response.Exception);
         }
 
         /// <summary>
@@ -109,13 +85,7 @@ namespace AH.Application.Services
         {
             var addUpdateOperationDTO = createOperationDTO.ToAddUpdateOperationDTO();
             var response = await _operationRepository.AddAsync(addUpdateOperationDTO);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to create operation.", response.Exception);
-            }
-
-            return response.ID;
+            return ServiceResult<int>.Create(response.ID, response.Exception);
         }
 
         /// <summary>
@@ -127,13 +97,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> UpdateAsync(AddUpdateOperationDTO operationDTO)
         {
             var response = await _operationRepository.UpdateAsync(operationDTO);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to update operation.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
@@ -145,13 +109,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> DeleteAsync(int id)
         {
             var response = await _operationRepository.DeleteAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to delete operation with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
@@ -164,13 +122,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> StartAsync(int id, string? notes)
         {
             var response = await _operationRepository.StartAsync(id, notes);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to start operation with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
@@ -183,13 +135,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> CancelAsync(int id, string? notes)
         {
             var response = await _operationRepository.CancelAsync(id, notes);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to cancel operation with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
@@ -203,13 +149,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> CompleteAsync(int id, string? notes, string result)
         {
             var response = await _operationRepository.CompleteAsync(id, notes, result);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to complete operation with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
@@ -223,13 +163,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
         {
             var response = await _operationRepository.RescheduleAsync(id, notes, newScheduledDate);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to reschedule operation with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
     }
 }

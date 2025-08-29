@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AH.API.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
     public class ReceptionistController : ControllerBase
@@ -49,7 +48,7 @@ namespace AH.API.Controllers
             if (id != updateReceptionistDTO.ID)
                 return BadRequest("ID mismatch between route and body.");
 
-            var result = await _receptionistService.UpdateAsync(updateReceptionistDTO);
+            var result = await _receptionistService.UpdateAsync(updateReceptionistDTO.ToReceptionist());
 
             return StatusCode(result.StatusCode, result.Data);
         }

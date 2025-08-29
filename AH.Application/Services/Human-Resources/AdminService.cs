@@ -3,6 +3,7 @@ using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
+using AH.Application.DTOs.Update;
 using AH.Application.IRepositories;
 using AH.Application.IServices;
 using AH.Domain.Entities;
@@ -36,13 +37,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<(IEnumerable<AdminRowDTO> items, int count)>> GetAllAsync(AdminFilterDTO filterDTO)
         {
             var response = await _adminRepository.GetAllAsync(filterDTO);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to retrieve admins.", response.Exception);
-            }
-
-            return ServiceResult<(IEnumerable<AdminRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
+            return ServiceResult<(IEnumerable<AdminRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
         /// <summary>
@@ -51,16 +46,10 @@ namespace AH.Application.Services
         /// <param name="id">The unique identifier of the admin</param>
         /// <returns>Admin DTO with complete information or null if not found</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<AdminDTO?> GetByIDAsync(int id)
+        public async Task<ServiceResult<AdminDTO>> GetByIDAsync(int id)
         {
             var response = await _adminRepository.GetByIDAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to retrieve admin with ID {id}.", response.Exception);
-            }
-
-            return response.Item;
+            return ServiceResult<AdminDTO>.Create(response.Item, response.Exception);
         }
 
         /// <summary>
@@ -73,13 +62,7 @@ namespace AH.Application.Services
         {
             var admin = createAdminDTO.ToAdmin();
             var response = await _adminRepository.AddAsync(admin);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to create admin.", response.Exception);
-            }
-
-            return response.ID;
+            return ServiceResult<int>.Create(response.ID, response.Exception);
         }
 
         /// <summary>
@@ -88,16 +71,10 @@ namespace AH.Application.Services
         /// <param name="admin">The admin entity with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<ServiceResult<bool>> UpdateAsync(Admin admin)
+        public async Task<ServiceResult<bool>> UpdateAsync(UpdateAdminDTO admin)
         {
-            var response = await _adminRepository.UpdateAsync(admin);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to update admin with ID {admin.ID}.", response.Exception);
-            }
-
-            return response.Success;
+            var response = await _adminRepository.UpdateAsync(admin.ToAdmin());
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
@@ -109,13 +86,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> DeleteAsync(int id)
         {
             var response = await _adminRepository.DeleteAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to delete admin with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
@@ -128,13 +99,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> LeaveAsync(int id)
         {
             var response = await _adminRepository.LeaveAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to process leave for admin with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
     }
 }

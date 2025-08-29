@@ -40,7 +40,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="id">The unique identifier of the appointment</param>
         /// <returns>ServiceResult containing appointment DTO with complete information or null if not found</returns>
-        Task<ServiceResult<AppointmentDTO?>> GetByIDAsync(int id);
+        Task<ServiceResult<AppointmentDTO>> GetByIDAsync(int id);
 
         /// <summary>
         /// Creates a new appointment in the system.

@@ -32,17 +32,10 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="filterDTO">Filter criteria for receptionist search</param>
         /// <returns>Response containing receptionist row DTOs and count</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
         public async Task<ServiceResult<(IEnumerable<ReceptionistRowDTO> items, int count)>> GetAllAsync(ReceptionistFilterDTO filterDTO)
         {
             var response = await _receptionistRepository.GetAllAsync(filterDTO);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to retrieve receptionists.", response.Exception);
-            }
-
-            return ServiceResult<(IEnumerable<ReceptionistRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
+            return ServiceResult<(IEnumerable<ReceptionistRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
         /// <summary>
@@ -50,17 +43,10 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="id">The unique identifier of the receptionist</param>
         /// <returns>Receptionist DTO with complete information or null if not found</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<ReceptionistDTO?> GetByIDAsync(int id)
+        public async Task<ServiceResult<ReceptionistDTO>> GetByIDAsync(int id)
         {
             var response = await _receptionistRepository.GetByIDAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to retrieve receptionist with ID {id}.", response.Exception);
-            }
-
-            return response.Item;
+            return ServiceResult<ReceptionistDTO>.Create(response.Item, response.Exception);
         }
 
         /// <summary>
@@ -68,18 +54,11 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="createReceptionistDTO">The receptionist create DTO containing creation information</param>
         /// <returns>The ID of the newly created receptionist</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
         public async Task<ServiceResult<int>> AddAsync(CreateReceptionistDTO createReceptionistDTO)
         {
             var receptionist = createReceptionistDTO.ToReceptionist();
             var response = await _receptionistRepository.AddAsync(receptionist);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to create receptionist.", response.Exception);
-            }
-
-            return response.ID;
+            return ServiceResult<int>.Create(response.ID, response.Exception);
         }
 
         /// <summary>
@@ -87,17 +66,10 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="receptionist">The receptionist entity with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
         public async Task<ServiceResult<bool>> UpdateAsync(Receptionist receptionist)
         {
             var response = await _receptionistRepository.UpdateAsync(receptionist);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to update receptionist with ID {receptionist.ID}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
@@ -105,17 +77,10 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="id">The unique identifier of the receptionist to delete</param>
         /// <returns>True if deletion was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
         public async Task<ServiceResult<bool>> DeleteAsync(int id)
         {
             var response = await _receptionistRepository.DeleteAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to delete receptionist with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
@@ -124,17 +89,10 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="id">The unique identifier of the receptionist who is leaving</param>
         /// <returns>True if leave processing was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
         public async Task<ServiceResult<bool>> LeaveAsync(int id)
         {
             var response = await _receptionistRepository.LeaveAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to process leave for receptionist with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
     }
 }

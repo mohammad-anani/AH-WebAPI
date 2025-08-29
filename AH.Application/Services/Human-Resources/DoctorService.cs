@@ -44,10 +44,10 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="id">The unique identifier of the doctor</param>
         /// <returns>ServiceResult containing doctor DTO with complete information or null if not found</returns>
-        public async Task<ServiceResult<DoctorDTO?>> GetByIDAsync(int id)
+        public async Task<ServiceResult<DoctorDTO>> GetByIDAsync(int id)
         {
             var response = await _doctorRepository.GetByIDAsync(id);
-            return ServiceResult<DoctorDTO?>.Create(response.Item, response.Exception);
+            return ServiceResult<DoctorDTO>.Create(response.Item, response.Exception);
         }
 
         /// <summary>
@@ -85,16 +85,15 @@ namespace AH.Application.Services
             return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
+        /// <summary>
+        /// Marks a doctor as on leave in the system.
+        /// </summary>
+        /// <param name="id">The unique identifier of the doctor on leave</param>
+        /// <returns>ServiceResult containing true if leave was successful, false otherwise</returns>
         public async Task<ServiceResult<bool>> LeaveAsync(int id)
         {
             var response = await _doctorRepository.LeaveAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to leave doctor with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
     }
 }

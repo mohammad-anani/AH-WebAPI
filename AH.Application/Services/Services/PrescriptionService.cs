@@ -44,10 +44,10 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="id">The unique identifier of the prescription</param>
         /// <returns>ServiceResult containing prescription DTO with complete information or null if not found</returns>
-        public async Task<ServiceResult<PrescriptionDTO?>> GetByIDAsync(int id)
+        public async Task<ServiceResult<PrescriptionDTO>> GetByIDAsync(int id)
         {
             var response = await _prescriptionRepository.GetByIDAsync(id);
-            return ServiceResult<PrescriptionDTO?>.Create(response.Item, response.Exception);
+            return ServiceResult<PrescriptionDTO>.Create(response.Item, response.Exception);
         }
 
         /// <summary>

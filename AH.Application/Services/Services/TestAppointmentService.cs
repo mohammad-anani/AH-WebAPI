@@ -36,13 +36,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<(IEnumerable<TestAppointmentRowDTO> items, int count)>> GetAllAsync(TestAppointmentFilterDTO filterDTO)
         {
             var response = await _testAppointmentRepository.GetAllAsync(filterDTO);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to retrieve test appointments.", response.Exception);
-            }
-
-            return ServiceResult<(IEnumerable<TestAppointmentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
+            return ServiceResult<(IEnumerable<TestAppointmentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
         /// <summary>
@@ -54,13 +48,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<(IEnumerable<TestAppointmentRowDTO> items, int count)>> GetAllByPatientIDAsync(TestAppointmentFilterDTO filterDTO)
         {
             var response = await _testAppointmentRepository.GetAllByPatientIDAsync(filterDTO);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to retrieve test appointments by patient ID.", response.Exception);
-            }
-
-            return ServiceResult<(IEnumerable<TestAppointmentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
+            return ServiceResult<(IEnumerable<TestAppointmentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
         /// <summary>
@@ -69,16 +57,10 @@ namespace AH.Application.Services
         /// <param name="id">The unique identifier of the test appointment</param>
         /// <returns>TestAppointment DTO with complete information or null if not found</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<TestAppointmentDTO?> GetByIDAsync(int id)
+        public async Task<ServiceResult<TestAppointmentDTO>> GetByIDAsync(int id)
         {
             var response = await _testAppointmentRepository.GetByIDAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to retrieve test appointment with ID {id}.", response.Exception);
-            }
-
-            return response.Item;
+            return ServiceResult<TestAppointmentDTO>.Create(response.Item, response.Exception);
         }
 
         /// <summary>
@@ -91,13 +73,7 @@ namespace AH.Application.Services
         {
             var testAppointment = createTestAppointmentDTO.ToTestAppointment();
             var response = await _testAppointmentRepository.AddAsync(testAppointment);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to create test appointment.", response.Exception);
-            }
-
-            return response.ID;
+            return ServiceResult<int>.Create(response.ID, response.Exception);
         }
 
         /// <summary>
@@ -109,13 +85,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<int>> AddFromTestOrderAsync(CreateTestAppointmentFromTestOrderDTO createDTO)
         {
             var response = await _testAppointmentRepository.AddFromTestOrderAsync(createDTO);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to create test appointment from test order.", response.Exception);
-            }
-
-            return response.ID;
+            return ServiceResult<int>.Create(response.ID, response.Exception);
         }
 
         /// <summary>
@@ -127,13 +97,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> UpdateAsync(TestAppointment testAppointment)
         {
             var response = await _testAppointmentRepository.UpdateAsync(testAppointment);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to update test appointment with ID {testAppointment.ID}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
@@ -145,13 +109,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> DeleteAsync(int id)
         {
             var response = await _testAppointmentRepository.DeleteAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to delete test appointment with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
@@ -164,13 +122,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> StartAsync(int id, string? notes)
         {
             var response = await _testAppointmentRepository.StartAsync(id, notes);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to start test appointment with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
@@ -183,13 +135,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> CancelAsync(int id, string? notes)
         {
             var response = await _testAppointmentRepository.CancelAsync(id, notes);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to cancel test appointment with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
@@ -203,13 +149,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> CompleteAsync(int id, string? notes, string result)
         {
             var response = await _testAppointmentRepository.CompleteAsync(id, notes, result);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to complete test appointment with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
@@ -223,13 +163,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
         {
             var response = await _testAppointmentRepository.RescheduleAsync(id, notes, newScheduledDate);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to reschedule test appointment with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
     }
 }

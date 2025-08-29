@@ -44,10 +44,10 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="id">The unique identifier of the test type</param>
         /// <returns>ServiceResult containing test type DTO with complete information or null if not found</returns>
-        public async Task<ServiceResult<TestTypeDTO?>> GetByIDAsync(int id)
+        public async Task<ServiceResult<TestTypeDTO>> GetByIDAsync(int id)
         {
             var response = await _testTypeRepository.GetByIDAsync(id);
-            return ServiceResult<TestTypeDTO?>.Create(response.Item, response.Exception);
+            return ServiceResult<TestTypeDTO>.Create(response.Item, response.Exception);
         }
 
         /// <summary>

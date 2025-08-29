@@ -48,7 +48,7 @@ namespace AH.API.Controllers
             if (id != updateOperationDTO.ID)
                 return BadRequest("ID mismatch between route and body.");
 
-            var result = await _operationService.UpdateAsync(updateOperationDTO);
+            var result = await _operationService.UpdateAsync(updateOperationDTO.ToAddUpdateOperationDTO());
 
             return StatusCode(result.StatusCode, result.Data);
         }

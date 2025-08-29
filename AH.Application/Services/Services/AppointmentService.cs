@@ -66,10 +66,10 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="id">The unique identifier of the appointment</param>
         /// <returns>ServiceResult containing appointment DTO with complete information or null if not found</returns>
-        public async Task<ServiceResult<AppointmentDTO?>> GetByIDAsync(int id)
+        public async Task<ServiceResult<AppointmentDTO>> GetByIDAsync(int id)
         {
             var response = await _appointmentRepository.GetByIDAsync(id);
-            return ServiceResult<AppointmentDTO?>.Create(response.Item, response.Exception);
+            return ServiceResult<AppointmentDTO>.Create(response.Item, response.Exception);
         }
 
         /// <summary>
@@ -127,13 +127,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> StartAsync(int id, string? notes)
         {
             var response = await _appointmentRepository.StartAsync(id, notes);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to start appointment with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
@@ -145,13 +139,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> CancelAsync(int id, string? notes)
         {
             var response = await _appointmentRepository.CancelAsync(id, notes);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to cancel appointment with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
@@ -164,13 +152,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> CompleteAsync(int id, string? notes, string result)
         {
             var response = await _appointmentRepository.CompleteAsync(id, notes, result);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to complete appointment with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
@@ -183,13 +165,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
         {
             var response = await _appointmentRepository.RescheduleAsync(id, notes, newScheduledDate);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to reschedule appointment with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
     }
 }

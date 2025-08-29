@@ -36,12 +36,6 @@ namespace AH.Application.Services
         public async Task<ServiceResult<(IEnumerable<PaymentRowDTO> items, int count)>> GetAllByBillIDAsync(PaymentFilterDTO filterDTO)
         {
             var response = await _paymentRepository.GetAllByBillIDAsync(filterDTO);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to retrieve payments by bill ID.", response.Exception);
-            }
-
             return ServiceResult<(IEnumerable<PaymentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
         }
 
@@ -51,16 +45,10 @@ namespace AH.Application.Services
         /// <param name="id">The unique identifier of the payment</param>
         /// <returns>Payment DTO with complete information or null if not found</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<PaymentDTO?> GetByIDAsync(int id)
+        public async Task<ServiceResult<PaymentDTO>> GetByIDAsync(int id)
         {
             var response = await _paymentRepository.GetByIDAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to retrieve payment with ID {id}.", response.Exception);
-            }
-
-            return response.Item;
+            return ServiceResult<PaymentDTO>.Create(response.Item, response.Exception);
         }
 
         /// <summary>
@@ -73,13 +61,7 @@ namespace AH.Application.Services
         {
             var payment = createPaymentDTO.ToPayment();
             var response = await _paymentRepository.AddAsync(payment);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to create payment.", response.Exception);
-            }
-
-            return response.ID;
+            return ServiceResult<int>.Create(response.ID, response.Exception);
         }
 
         /// <summary>
@@ -91,13 +73,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> DeleteAsync(int id)
         {
             var response = await _paymentRepository.DeleteAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to delete payment with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
     }
 }

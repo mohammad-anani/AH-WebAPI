@@ -26,7 +26,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="id">The unique identifier of the department</param>
         /// <returns>ServiceResult containing department DTO with complete information or null if not found</returns>
-        Task<ServiceResult<DepartmentDTO?>> GetByIDAsync(int id);
+        Task<ServiceResult<DepartmentDTO>> GetByIDAsync(int id);
 
         /// <summary>
         /// Creates a new department in the system.

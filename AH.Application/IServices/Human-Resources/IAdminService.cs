@@ -3,6 +3,7 @@ using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
+using AH.Application.DTOs.Update;
 using AH.Application.Services;
 using AH.Domain.Entities;
 
@@ -26,7 +27,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="id">The unique identifier of the admin</param>
         /// <returns>Admin DTO with complete information or null if not found</returns>
-        Task<AdminDTO?> GetByIDAsync(int id);
+        Task<ServiceResult<AdminDTO>> GetByIDAsync(int id);
 
         /// <summary>
         /// Creates a new admin in the system.
@@ -40,7 +41,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="admin">The admin entity with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
-        Task<ServiceResult<bool>> UpdateAsync(Admin admin);
+        Task<ServiceResult<bool>> UpdateAsync(UpdateAdminDTO admin);
 
         /// <summary>
         /// Deletes an admin from the system.

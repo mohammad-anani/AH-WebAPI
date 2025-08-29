@@ -44,10 +44,10 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="id">The unique identifier of the insurance record</param>
         /// <returns>ServiceResult containing insurance DTO with complete information or null if not found</returns>
-        public async Task<ServiceResult<InsuranceDTO?>> GetByIDAsync(int id)
+        public async Task<ServiceResult<InsuranceDTO>> GetByIDAsync(int id)
         {
             var response = await _insuranceRepository.GetByIDAsync(id);
-            return ServiceResult<InsuranceDTO?>.Create(response.Item, response.Exception);
+            return ServiceResult<InsuranceDTO>.Create(response.Item, response.Exception);
         }
 
         /// <summary>

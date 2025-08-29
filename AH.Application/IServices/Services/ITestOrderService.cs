@@ -25,7 +25,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="id">The unique identifier of the test order</param>
         /// <returns>TestOrder DTO with complete information or null if not found</returns>
-        Task<TestOrderDTO?> GetByIDAsync(int id);
+        Task<ServiceResult<TestOrderDTO>> GetByIDAsync(int id);
 
         /// <summary>
         /// Creates a new test order in the system.

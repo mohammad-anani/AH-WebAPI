@@ -34,7 +34,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="id">The unique identifier of the patient</param>
         /// <returns>ServiceResult containing patient DTO with complete information or null if not found</returns>
-        Task<ServiceResult<PatientDTO?>> GetByIDAsync(int id);
+        Task<ServiceResult<PatientDTO>> GetByIDAsync(int id);
 
         /// <summary>
         /// Creates a new patient in the system.

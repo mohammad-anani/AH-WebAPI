@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AH.API.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
     public class TestAppointmentController : ControllerBase
@@ -49,7 +48,7 @@ namespace AH.API.Controllers
             if (id != updateTestAppointmentDTO.ID)
                 return BadRequest("ID mismatch between route and body.");
 
-            var result = await _testAppointmentService.UpdateAsync(updateTestAppointmentDTO);
+            var result = await _testAppointmentService.UpdateAsync(updateTestAppointmentDTO.ToTestAppointment());
 
             return StatusCode(result.StatusCode, result.Data);
         }

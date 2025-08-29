@@ -25,7 +25,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="id">The unique identifier of the payment</param>
         /// <returns>Payment DTO with complete information or null if not found</returns>
-        Task<PaymentDTO?> GetByIDAsync(int id);
+        Task<ServiceResult<PaymentDTO>> GetByIDAsync(int id);
 
         /// <summary>
         /// Creates a new payment in the system.

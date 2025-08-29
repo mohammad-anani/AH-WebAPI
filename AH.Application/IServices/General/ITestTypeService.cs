@@ -26,7 +26,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="id">The unique identifier of the test type</param>
         /// <returns>ServiceResult containing test type DTO with complete information or null if not found</returns>
-        Task<ServiceResult<TestTypeDTO?>> GetByIDAsync(int id);
+        Task<ServiceResult<TestTypeDTO>> GetByIDAsync(int id);
 
         /// <summary>
         /// Creates a new test type in the system.

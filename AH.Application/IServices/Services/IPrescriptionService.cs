@@ -26,7 +26,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="id">The unique identifier of the prescription</param>
         /// <returns>ServiceResult containing prescription DTO with complete information or null if not found</returns>
-        Task<ServiceResult<PrescriptionDTO?>> GetByIDAsync(int id);
+        Task<ServiceResult<PrescriptionDTO>> GetByIDAsync(int id);
 
         /// <summary>
         /// Creates a new prescription in the system.

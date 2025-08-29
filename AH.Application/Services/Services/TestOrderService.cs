@@ -36,13 +36,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<(IEnumerable<TestOrderRowDTO> items, int count)>> GetAllAsync(TestOrderFilterDTO filterDTO)
         {
             var response = await _testOrderRepository.GetAllAsync(filterDTO);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to retrieve test orders.", response.Exception);
-            }
-
-            return ServiceResult<(IEnumerable<TestOrderRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
+            return ServiceResult<(IEnumerable<TestOrderRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
         /// <summary>
@@ -51,16 +45,10 @@ namespace AH.Application.Services
         /// <param name="id">The unique identifier of the test order</param>
         /// <returns>TestOrder DTO with complete information or null if not found</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<TestOrderDTO?> GetByIDAsync(int id)
+        public async Task<ServiceResult<TestOrderDTO>> GetByIDAsync(int id)
         {
             var response = await _testOrderRepository.GetByIDAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to retrieve test order with ID {id}.", response.Exception);
-            }
-
-            return response.Item;
+            return ServiceResult<TestOrderDTO>.Create(response.Item, response.Exception);
         }
 
         /// <summary>
@@ -73,13 +61,7 @@ namespace AH.Application.Services
         {
             var testOrder = createTestOrderDTO.ToTestOrder();
             var response = await _testOrderRepository.AddAsync(testOrder);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to create test order.", response.Exception);
-            }
-
-            return response.ID;
+            return ServiceResult<int>.Create(response.ID, response.Exception);
         }
 
         /// <summary>
@@ -91,13 +73,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<bool>> DeleteAsync(int id)
         {
             var response = await _testOrderRepository.DeleteAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to delete test order with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
     }
 }

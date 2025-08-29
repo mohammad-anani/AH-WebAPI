@@ -32,7 +32,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="id">The unique identifier of the test appointment</param>
         /// <returns>TestAppointment DTO with complete information or null if not found</returns>
-        Task<TestAppointmentDTO?> GetByIDAsync(int id);
+        Task<ServiceResult<TestAppointmentDTO>> GetByIDAsync(int id);
 
         /// <summary>
         /// Creates a new test appointment in the system.

@@ -25,7 +25,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="id">The unique identifier of the receptionist</param>
         /// <returns>Receptionist DTO with complete information or null if not found</returns>
-        Task<ReceptionistDTO?> GetByIDAsync(int id);
+        Task<ServiceResult<ReceptionistDTO>> GetByIDAsync(int id);
 
         /// <summary>
         /// Creates a new receptionist in the system.
