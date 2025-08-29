@@ -19,7 +19,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="filterDTO">Filter criteria for admin search</param>
         /// <returns>Response containing admin row DTOs and count</returns>
-        Task<GetAllResponseDataDTO<AdminRowDTO>> GetAllAsync(AdminFilterDTO filterDTO);
+        Task<ServiceResult<(IEnumerable<AdminRowDTO> items, int count)>> GetAllAsync(AdminFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a specific admin by their unique identifier.
@@ -33,20 +33,20 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="createAdminDTO">The admin create DTO containing creation information</param>
         /// <returns>The ID of the newly created admin</returns>
-        Task<int> AddAsync(CreateAdminDTO createAdminDTO);
+        Task<ServiceResult<int>> AddAsync(CreateAdminDTO createAdminDTO);
 
         /// <summary>
         /// Updates an existing admin's information.
         /// </summary>
         /// <param name="admin">The admin entity with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
-        Task<bool> UpdateAsync(Admin admin);
+        Task<ServiceResult<bool>> UpdateAsync(Admin admin);
 
         /// <summary>
         /// Deletes an admin from the system.
         /// </summary>
         /// <param name="id">The unique identifier of the admin to delete</param>
         /// <returns>True if deletion was successful, false otherwise</returns>
-        Task<bool> DeleteAsync(int id);
+        Task<ServiceResult<bool>> DeleteAsync(int id);
     }
 }

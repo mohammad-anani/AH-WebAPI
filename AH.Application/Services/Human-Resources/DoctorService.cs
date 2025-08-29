@@ -85,7 +85,7 @@ namespace AH.Application.Services
             return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
-        public async Task<bool> LeaveAsync(int id)
+        public async Task<ServiceResult<bool>> LeaveAsync(int id)
         {
             var response = await _doctorRepository.LeaveAsync(id);
 

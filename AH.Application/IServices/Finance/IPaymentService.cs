@@ -18,7 +18,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="filterDTO">Filter criteria for payment search including bill ID</param>
         /// <returns>Response containing payment row DTOs and count</returns>
-        Task<GetAllResponseDataDTO<PaymentRowDTO>> GetAllByBillIDAsync(PaymentFilterDTO filterDTO);
+        Task<ServiceResult<(IEnumerable<PaymentRowDTO> items, int count)>> GetAllByBillIDAsync(PaymentFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a specific payment by its unique identifier.
@@ -32,13 +32,13 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="createPaymentDTO">The payment create DTO containing creation information</param>
         /// <returns>The ID of the newly created payment</returns>
-        Task<int> AddAsync(CreatePaymentDTO createPaymentDTO);
+        Task<ServiceResult<int>> AddAsync(CreatePaymentDTO createPaymentDTO);
 
         /// <summary>
         /// Deletes a payment from the system.
         /// </summary>
         /// <param name="id">The unique identifier of the payment to delete</param>
         /// <returns>True if deletion was successful, false otherwise</returns>
-        Task<bool> DeleteAsync(int id);
+        Task<ServiceResult<bool>> DeleteAsync(int id);
     }
 }

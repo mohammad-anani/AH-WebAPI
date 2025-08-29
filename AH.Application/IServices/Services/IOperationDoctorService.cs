@@ -17,6 +17,6 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="filterDTO">Filter criteria for operation doctor search including operation ID</param>
         /// <returns>Response containing operation doctor row DTOs and count</returns>
-        Task<GetAllResponseDataDTO<OperationDoctorRowDTO>> GetAllByOperationIDAsync(OperationDoctorFilterDTO filterDTO);
+        Task<ServiceResult<(IEnumerable<OperationDoctorRowDTO> items, int count)>> GetAllByOperationIDAsync(OperationDoctorFilterDTO filterDTO);
     }
 }

@@ -33,7 +33,7 @@ namespace AH.Application.Services
         /// <param name="filterDTO">Filter criteria for operation search</param>
         /// <returns>Response containing operation row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<GetAllResponseDataDTO<OperationRowDTO>> GetAllAsync(OperationFilterDTO filterDTO)
+        public async Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllAsync(OperationFilterDTO filterDTO)
         {
             var response = await _operationRepository.GetAllAsync(filterDTO);
 
@@ -42,7 +42,7 @@ namespace AH.Application.Services
                 throw new InvalidOperationException("Failed to retrieve operations.", response.Exception);
             }
 
-            return new GetAllResponseDataDTO<OperationRowDTO>(response);
+            return ServiceResult<(IEnumerable<OperationRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace AH.Application.Services
         /// <param name="doctorID">The unique identifier of the doctor</param>
         /// <returns>Response containing operation row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<GetAllResponseDataDTO<OperationRowDTO>> GetAllByDoctorIDAsync(int doctorID)
+        public async Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllByDoctorIDAsync(int doctorID)
         {
             var response = await _operationRepository.GetAllByDoctorIDAsync(doctorID);
 
@@ -60,7 +60,7 @@ namespace AH.Application.Services
                 throw new InvalidOperationException("Failed to retrieve operations by doctor ID.", response.Exception);
             }
 
-            return new GetAllResponseDataDTO<OperationRowDTO>(response);
+            return ServiceResult<(IEnumerable<OperationRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace AH.Application.Services
         /// <param name="patientID">The unique identifier of the patient</param>
         /// <returns>Response containing operation row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<GetAllResponseDataDTO<OperationRowDTO>> GetAllByPatientIDAsync(int patientID)
+        public async Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllByPatientIDAsync(int patientID)
         {
             var response = await _operationRepository.GetAllByPatientIDAsync(patientID);
 
@@ -78,7 +78,7 @@ namespace AH.Application.Services
                 throw new InvalidOperationException("Failed to retrieve operations by patient ID.", response.Exception);
             }
 
-            return new GetAllResponseDataDTO<OperationRowDTO>(response);
+            return ServiceResult<(IEnumerable<OperationRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace AH.Application.Services
         /// <param name="createOperationDTO">The operation create DTO containing creation information</param>
         /// <returns>The ID of the newly created operation</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddAsync(CreateOperationDTO createOperationDTO)
+        public async Task<ServiceResult<int>> AddAsync(CreateOperationDTO createOperationDTO)
         {
             var addUpdateOperationDTO = createOperationDTO.ToAddUpdateOperationDTO();
             var response = await _operationRepository.AddAsync(addUpdateOperationDTO);
@@ -124,7 +124,7 @@ namespace AH.Application.Services
         /// <param name="operationDTO">The operation DTO with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> UpdateAsync(AddUpdateOperationDTO operationDTO)
+        public async Task<ServiceResult<bool>> UpdateAsync(AddUpdateOperationDTO operationDTO)
         {
             var response = await _operationRepository.UpdateAsync(operationDTO);
 
@@ -142,7 +142,7 @@ namespace AH.Application.Services
         /// <param name="id">The unique identifier of the operation to delete</param>
         /// <returns>True if deletion was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<ServiceResult<bool>> DeleteAsync(int id)
         {
             var response = await _operationRepository.DeleteAsync(id);
 
@@ -161,7 +161,7 @@ namespace AH.Application.Services
         /// <param name="notes">Optional notes for the start operation</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> StartAsync(int id, string? notes)
+        public async Task<ServiceResult<bool>> StartAsync(int id, string? notes)
         {
             var response = await _operationRepository.StartAsync(id, notes);
 
@@ -180,7 +180,7 @@ namespace AH.Application.Services
         /// <param name="notes">Optional notes explaining the cancellation reason</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> CancelAsync(int id, string? notes)
+        public async Task<ServiceResult<bool>> CancelAsync(int id, string? notes)
         {
             var response = await _operationRepository.CancelAsync(id, notes);
 
@@ -200,7 +200,7 @@ namespace AH.Application.Services
         /// <param name="result">The result or outcome of the operation</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> CompleteAsync(int id, string? notes, string result)
+        public async Task<ServiceResult<bool>> CompleteAsync(int id, string? notes, string result)
         {
             var response = await _operationRepository.CompleteAsync(id, notes, result);
 
@@ -220,7 +220,7 @@ namespace AH.Application.Services
         /// <param name="newScheduledDate">The new scheduled date and time</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
+        public async Task<ServiceResult<bool>> RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
         {
             var response = await _operationRepository.RescheduleAsync(id, notes, newScheduledDate);
 

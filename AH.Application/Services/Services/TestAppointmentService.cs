@@ -33,7 +33,7 @@ namespace AH.Application.Services
         /// <param name="filterDTO">Filter criteria for test appointment search</param>
         /// <returns>Response containing test appointment row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<GetAllResponseDataDTO<TestAppointmentRowDTO>> GetAllAsync(TestAppointmentFilterDTO filterDTO)
+        public async Task<ServiceResult<(IEnumerable<TestAppointmentRowDTO> items, int count)>> GetAllAsync(TestAppointmentFilterDTO filterDTO)
         {
             var response = await _testAppointmentRepository.GetAllAsync(filterDTO);
 
@@ -42,7 +42,7 @@ namespace AH.Application.Services
                 throw new InvalidOperationException("Failed to retrieve test appointments.", response.Exception);
             }
 
-            return new GetAllResponseDataDTO<TestAppointmentRowDTO>(response);
+            return ServiceResult<(IEnumerable<TestAppointmentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace AH.Application.Services
         /// <param name="filterDTO">Filter criteria for test appointment search including patient ID</param>
         /// <returns>Response containing test appointment row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<GetAllResponseDataDTO<TestAppointmentRowDTO>> GetAllByPatientIDAsync(TestAppointmentFilterDTO filterDTO)
+        public async Task<ServiceResult<(IEnumerable<TestAppointmentRowDTO> items, int count)>> GetAllByPatientIDAsync(TestAppointmentFilterDTO filterDTO)
         {
             var response = await _testAppointmentRepository.GetAllByPatientIDAsync(filterDTO);
 
@@ -60,7 +60,7 @@ namespace AH.Application.Services
                 throw new InvalidOperationException("Failed to retrieve test appointments by patient ID.", response.Exception);
             }
 
-            return new GetAllResponseDataDTO<TestAppointmentRowDTO>(response);
+            return ServiceResult<(IEnumerable<TestAppointmentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace AH.Application.Services
         /// <param name="createTestAppointmentDTO">The test appointment create DTO containing creation information</param>
         /// <returns>The ID of the newly created test appointment</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddAsync(CreateTestAppointmentDTO createTestAppointmentDTO)
+        public async Task<ServiceResult<int>> AddAsync(CreateTestAppointmentDTO createTestAppointmentDTO)
         {
             var testAppointment = createTestAppointmentDTO.ToTestAppointment();
             var response = await _testAppointmentRepository.AddAsync(testAppointment);
@@ -106,7 +106,7 @@ namespace AH.Application.Services
         /// <param name="createDTO">The DTO containing test order information and appointment details</param>
         /// <returns>The ID of the newly created test appointment</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddFromTestOrderAsync(CreateTestAppointmentFromTestOrderDTO createDTO)
+        public async Task<ServiceResult<int>> AddFromTestOrderAsync(CreateTestAppointmentFromTestOrderDTO createDTO)
         {
             var response = await _testAppointmentRepository.AddFromTestOrderAsync(createDTO);
 
@@ -124,7 +124,7 @@ namespace AH.Application.Services
         /// <param name="testAppointment">The test appointment entity with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> UpdateAsync(TestAppointment testAppointment)
+        public async Task<ServiceResult<bool>> UpdateAsync(TestAppointment testAppointment)
         {
             var response = await _testAppointmentRepository.UpdateAsync(testAppointment);
 
@@ -142,7 +142,7 @@ namespace AH.Application.Services
         /// <param name="id">The unique identifier of the test appointment to delete</param>
         /// <returns>True if deletion was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<ServiceResult<bool>> DeleteAsync(int id)
         {
             var response = await _testAppointmentRepository.DeleteAsync(id);
 
@@ -161,7 +161,7 @@ namespace AH.Application.Services
         /// <param name="notes">Optional notes for the start operation</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> StartAsync(int id, string? notes)
+        public async Task<ServiceResult<bool>> StartAsync(int id, string? notes)
         {
             var response = await _testAppointmentRepository.StartAsync(id, notes);
 
@@ -180,7 +180,7 @@ namespace AH.Application.Services
         /// <param name="notes">Optional notes explaining the cancellation reason</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> CancelAsync(int id, string? notes)
+        public async Task<ServiceResult<bool>> CancelAsync(int id, string? notes)
         {
             var response = await _testAppointmentRepository.CancelAsync(id, notes);
 
@@ -200,7 +200,7 @@ namespace AH.Application.Services
         /// <param name="result">The result or outcome of the test appointment</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> CompleteAsync(int id, string? notes, string result)
+        public async Task<ServiceResult<bool>> CompleteAsync(int id, string? notes, string result)
         {
             var response = await _testAppointmentRepository.CompleteAsync(id, notes, result);
 
@@ -220,7 +220,7 @@ namespace AH.Application.Services
         /// <param name="newScheduledDate">The new scheduled date and time</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
+        public async Task<ServiceResult<bool>> RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
         {
             var response = await _testAppointmentRepository.RescheduleAsync(id, notes, newScheduledDate);
 

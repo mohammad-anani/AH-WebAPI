@@ -124,7 +124,7 @@ namespace AH.Application.Services
         /// <param name="id">The unique identifier of the appointment to start</param>
         /// <param name="notes">Optional notes for the start operation</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
-        public async Task<bool> StartAsync(int id, string? notes)
+        public async Task<ServiceResult<bool>> StartAsync(int id, string? notes)
         {
             var response = await _appointmentRepository.StartAsync(id, notes);
 
@@ -142,7 +142,7 @@ namespace AH.Application.Services
         /// <param name="id">The unique identifier of the appointment to cancel</param>
         /// <param name="notes">Optional notes explaining the cancellation reason</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
-        public async Task<bool> CancelAsync(int id, string? notes)
+        public async Task<ServiceResult<bool>> CancelAsync(int id, string? notes)
         {
             var response = await _appointmentRepository.CancelAsync(id, notes);
 
@@ -161,7 +161,7 @@ namespace AH.Application.Services
         /// <param name="notes">Optional notes for the completion</param>
         /// <param name="result">The result or outcome of the appointment</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
-        public async Task<bool> CompleteAsync(int id, string? notes, string result)
+        public async Task<ServiceResult<bool>> CompleteAsync(int id, string? notes, string result)
         {
             var response = await _appointmentRepository.CompleteAsync(id, notes, result);
 
@@ -180,7 +180,7 @@ namespace AH.Application.Services
         /// <param name="notes">Optional notes explaining the reschedule reason</param>
         /// <param name="newScheduledDate">The new scheduled date and time</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
-        public async Task<bool> RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
+        public async Task<ServiceResult<bool>> RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
         {
             var response = await _appointmentRepository.RescheduleAsync(id, notes, newScheduledDate);
 

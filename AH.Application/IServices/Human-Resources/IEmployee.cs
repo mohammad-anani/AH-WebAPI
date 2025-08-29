@@ -8,6 +8,6 @@ namespace AH.Application.IServices
 {
     public interface IEmployee
     {
-        public Task<bool> LeaveAsync(int id);
+        public Task<ServiceResult<bool>> LeaveAsync(int id);
     }
 }

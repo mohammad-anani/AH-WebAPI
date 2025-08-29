@@ -33,7 +33,7 @@ namespace AH.Application.Services
         /// <param name="filterDTO">Filter criteria for test order search</param>
         /// <returns>Response containing test order row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<GetAllResponseDataDTO<TestOrderRowDTO>> GetAllAsync(TestOrderFilterDTO filterDTO)
+        public async Task<ServiceResult<(IEnumerable<TestOrderRowDTO> items, int count)>> GetAllAsync(TestOrderFilterDTO filterDTO)
         {
             var response = await _testOrderRepository.GetAllAsync(filterDTO);
 
@@ -42,7 +42,7 @@ namespace AH.Application.Services
                 throw new InvalidOperationException("Failed to retrieve test orders.", response.Exception);
             }
 
-            return new GetAllResponseDataDTO<TestOrderRowDTO>(response);
+            return ServiceResult<(IEnumerable<TestOrderRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace AH.Application.Services
         /// <param name="createTestOrderDTO">The test order create DTO containing creation information</param>
         /// <returns>The ID of the newly created test order</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddAsync(CreateTestOrderDTO createTestOrderDTO)
+        public async Task<ServiceResult<int>> AddAsync(CreateTestOrderDTO createTestOrderDTO)
         {
             var testOrder = createTestOrderDTO.ToTestOrder();
             var response = await _testOrderRepository.AddAsync(testOrder);
@@ -88,7 +88,7 @@ namespace AH.Application.Services
         /// <param name="id">The unique identifier of the test order to delete</param>
         /// <returns>True if deletion was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<ServiceResult<bool>> DeleteAsync(int id)
         {
             var response = await _testOrderRepository.DeleteAsync(id);
 

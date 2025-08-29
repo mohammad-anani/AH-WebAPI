@@ -33,7 +33,7 @@ namespace AH.Application.Services
         /// <param name="filterDTO">Filter criteria for payment search including bill ID</param>
         /// <returns>Response containing payment row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<GetAllResponseDataDTO<PaymentRowDTO>> GetAllByBillIDAsync(PaymentFilterDTO filterDTO)
+        public async Task<ServiceResult<(IEnumerable<PaymentRowDTO> items, int count)>> GetAllByBillIDAsync(PaymentFilterDTO filterDTO)
         {
             var response = await _paymentRepository.GetAllByBillIDAsync(filterDTO);
 
@@ -42,7 +42,7 @@ namespace AH.Application.Services
                 throw new InvalidOperationException("Failed to retrieve payments by bill ID.", response.Exception);
             }
 
-            return new GetAllResponseDataDTO<PaymentRowDTO>(response);
+            return ServiceResult<(IEnumerable<PaymentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace AH.Application.Services
         /// <param name="createPaymentDTO">The payment create DTO containing creation information</param>
         /// <returns>The ID of the newly created payment</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddAsync(CreatePaymentDTO createPaymentDTO)
+        public async Task<ServiceResult<int>> AddAsync(CreatePaymentDTO createPaymentDTO)
         {
             var payment = createPaymentDTO.ToPayment();
             var response = await _paymentRepository.AddAsync(payment);
@@ -88,7 +88,7 @@ namespace AH.Application.Services
         /// <param name="id">The unique identifier of the payment to delete</param>
         /// <returns>True if deletion was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<ServiceResult<bool>> DeleteAsync(int id)
         {
             var response = await _paymentRepository.DeleteAsync(id);
 

@@ -12,7 +12,7 @@ namespace AH.Application.IRepositories
 
         Task<GetByIDResponseDTO<DepartmentDTO>> GetByIDAsync(int id);
 
-        Task<CreateResponseDTO> AddAsync(Department department);
+        AddAsync(Department department);
 
         Task<SuccessResponseDTO> UpdateAsync(Department department);
 

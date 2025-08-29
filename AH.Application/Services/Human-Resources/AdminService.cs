@@ -33,7 +33,7 @@ namespace AH.Application.Services
         /// <param name="filterDTO">Filter criteria for admin search</param>
         /// <returns>Response containing admin row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<GetAllResponseDataDTO<AdminRowDTO>> GetAllAsync(AdminFilterDTO filterDTO)
+        public async Task<ServiceResult<(IEnumerable<AdminRowDTO> items, int count)>> GetAllAsync(AdminFilterDTO filterDTO)
         {
             var response = await _adminRepository.GetAllAsync(filterDTO);
 
@@ -42,7 +42,7 @@ namespace AH.Application.Services
                 throw new InvalidOperationException("Failed to retrieve admins.", response.Exception);
             }
 
-            return new GetAllResponseDataDTO<AdminRowDTO>(response);
+            return ServiceResult<(IEnumerable<AdminRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace AH.Application.Services
         /// <param name="createAdminDTO">The admin create DTO containing creation information</param>
         /// <returns>The ID of the newly created admin</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddAsync(CreateAdminDTO createAdminDTO)
+        public async Task<ServiceResult<int>> AddAsync(CreateAdminDTO createAdminDTO)
         {
             var admin = createAdminDTO.ToAdmin();
             var response = await _adminRepository.AddAsync(admin);
@@ -88,7 +88,7 @@ namespace AH.Application.Services
         /// <param name="admin">The admin entity with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> UpdateAsync(Admin admin)
+        public async Task<ServiceResult<bool>> UpdateAsync(Admin admin)
         {
             var response = await _adminRepository.UpdateAsync(admin);
 
@@ -106,7 +106,7 @@ namespace AH.Application.Services
         /// <param name="id">The unique identifier of the admin to delete</param>
         /// <returns>True if deletion was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<ServiceResult<bool>> DeleteAsync(int id)
         {
             var response = await _adminRepository.DeleteAsync(id);
 
@@ -125,7 +125,7 @@ namespace AH.Application.Services
         /// <param name="id">The unique identifier of the admin who is leaving</param>
         /// <returns>True if leave processing was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> LeaveAsync(int id)
+        public async Task<ServiceResult<bool>> LeaveAsync(int id)
         {
             var response = await _adminRepository.LeaveAsync(id);
 

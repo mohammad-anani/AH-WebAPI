@@ -18,21 +18,21 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="filterDTO">Filter criteria for operation search</param>
         /// <returns>Response containing operation row DTOs and count</returns>
-        Task<GetAllResponseDataDTO<OperationRowDTO>> GetAllAsync(OperationFilterDTO filterDTO);
+        Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllAsync(OperationFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a paginated list of operations for a specific doctor.
         /// </summary>
         /// <param name="doctorID">The unique identifier of the doctor</param>
         /// <returns>Response containing operation row DTOs and count</returns>
-        Task<GetAllResponseDataDTO<OperationRowDTO>> GetAllByDoctorIDAsync(int doctorID);
+        Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllByDoctorIDAsync(int doctorID);
 
         /// <summary>
         /// Retrieves a paginated list of operations for a specific patient.
         /// </summary>
         /// <param name="patientID">The unique identifier of the patient</param>
         /// <returns>Response containing operation row DTOs and count</returns>
-        Task<GetAllResponseDataDTO<OperationRowDTO>> GetAllByPatientIDAsync(int patientID);
+        Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllByPatientIDAsync(int patientID);
 
         /// <summary>
         /// Retrieves a specific operation by its unique identifier.
@@ -46,20 +46,20 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="createOperationDTO">The operation create DTO containing creation information</param>
         /// <returns>The ID of the newly created operation</returns>
-        Task<int> AddAsync(CreateOperationDTO createOperationDTO);
+        Task<ServiceResult<int>> AddAsync(CreateOperationDTO createOperationDTO);
 
         /// <summary>
         /// Updates an existing operation's information.
         /// </summary>
         /// <param name="operationDTO">The operation DTO with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
-        Task<bool> UpdateAsync(AddUpdateOperationDTO operationDTO);
+        Task<ServiceResult<bool>> UpdateAsync(AddUpdateOperationDTO operationDTO);
 
         /// <summary>
         /// Deletes an operation from the system.
         /// </summary>
         /// <param name="id">The unique identifier of the operation to delete</param>
         /// <returns>True if deletion was successful, false otherwise</returns>
-        Task<bool> DeleteAsync(int id);
+        Task<ServiceResult<bool>> DeleteAsync(int id);
     }
 }

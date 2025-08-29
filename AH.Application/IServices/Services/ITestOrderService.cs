@@ -18,7 +18,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="filterDTO">Filter criteria for test order search</param>
         /// <returns>Response containing test order row DTOs and count</returns>
-        Task<GetAllResponseDataDTO<TestOrderRowDTO>> GetAllAsync(TestOrderFilterDTO filterDTO);
+        Task<ServiceResult<(IEnumerable<TestOrderRowDTO> items, int count)>> GetAllAsync(TestOrderFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a specific test order by its unique identifier.
@@ -32,13 +32,13 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="createTestOrderDTO">The test order create DTO containing creation information</param>
         /// <returns>The ID of the newly created test order</returns>
-        Task<int> AddAsync(CreateTestOrderDTO createTestOrderDTO);
+        Task<ServiceResult<int>> AddAsync(CreateTestOrderDTO createTestOrderDTO);
 
         /// <summary>
         /// Deletes a test order from the system.
         /// </summary>
         /// <param name="id">The unique identifier of the test order to delete</param>
         /// <returns>True if deletion was successful, false otherwise</returns>
-        Task<bool> DeleteAsync(int id);
+        Task<ServiceResult<bool>> DeleteAsync(int id);
     }
 }

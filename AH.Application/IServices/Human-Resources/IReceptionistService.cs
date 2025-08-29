@@ -18,7 +18,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="filterDTO">Filter criteria for receptionist search</param>
         /// <returns>Response containing receptionist row DTOs and count</returns>
-        Task<GetAllResponseDataDTO<ReceptionistRowDTO>> GetAllAsync(ReceptionistFilterDTO filterDTO);
+        Task<ServiceResult<(IEnumerable<ReceptionistRowDTO> items, int count)>> GetAllAsync(ReceptionistFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a specific receptionist by their unique identifier.
@@ -32,20 +32,20 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="createReceptionistDTO">The receptionist create DTO containing creation information</param>
         /// <returns>The ID of the newly created receptionist</returns>
-        Task<int> AddAsync(CreateReceptionistDTO createReceptionistDTO);
+        Task<ServiceResult<int>> AddAsync(CreateReceptionistDTO createReceptionistDTO);
 
         /// <summary>
         /// Updates an existing receptionist's information.
         /// </summary>
         /// <param name="receptionist">The receptionist entity with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
-        Task<bool> UpdateAsync(Receptionist receptionist);
+        Task<ServiceResult<bool>> UpdateAsync(Receptionist receptionist);
 
         /// <summary>
         /// Deletes a receptionist from the system.
         /// </summary>
         /// <param name="id">The unique identifier of the receptionist to delete</param>
         /// <returns>True if deletion was successful, false otherwise</returns>
-        Task<bool> DeleteAsync(int id);
+        Task<ServiceResult<bool>> DeleteAsync(int id);
     }
 }
