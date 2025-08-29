@@ -41,9 +41,6 @@ namespace AH.Infrastructure.Repositories
         /// </remarks>
         public async Task<GetAllResponseDTO<AdminRowDTO>> GetAllAsync(AdminFilterDTO filterDTO)
         {
-            _logger.LogInformation("Retrieving admins with filters - Page: {Page}, Sort: {Sort}, Order: {Order}",
-                filterDTO.Page, filterDTO.Sort, filterDTO.Order);
-
             var result = await ReusableCRUD.GetAllAsync<AdminRowDTO, AdminFilterDTO>("Fetch_Admins", _logger, filterDTO, cmd =>
             {
                 EmployeeHelper.AddEmployeeFilterParameters(filterDTO, cmd);
@@ -51,15 +48,6 @@ namespace AH.Infrastructure.Repositories
                 new AdminRowDTO(converter.ConvertValue<int>("ID"),
                                 converter.ConvertValue<string>("FullName"))
             , null);
-
-            if (result.Exception == null)
-            {
-                _logger.LogInformation("Successfully retrieved {Count} admins", result.Count);
-            }
-            else
-            {
-                _logger.LogError(result.Exception, "Failed to retrieve admins");
-            }
 
             return result;
         }
@@ -75,22 +63,11 @@ namespace AH.Infrastructure.Repositories
         /// </remarks>
         public async Task<GetByIDResponseDTO<AdminDTO>> GetByIDAsync(int id)
         {
-            _logger.LogInformation("Retrieving admin with ID: {AdminId}", id);
-
             var result = await ReusableCRUD.GetByID<AdminDTO>("Fetch_AdminByID", _logger, id, null, (reader, converter) =>
             {
                 EmployeeDTO employee = EmployeeHelper.ReadEmployee(reader);
                 return new AdminDTO(converter.ConvertValue<int>("ID"), employee);
             });
-
-            if (result.Exception == null)
-            {
-                _logger.LogInformation("Successfully retrieved admin with ID: {AdminId}", id);
-            }
-            else
-            {
-                _logger.LogError(result.Exception, "Failed to retrieve admin with ID: {AdminId}", id);
-            }
 
             return result;
         }
@@ -107,22 +84,10 @@ namespace AH.Infrastructure.Repositories
         /// </remarks>
         public async Task<CreateResponseDTO> AddAsync(Admin admin)
         {
-            _logger.LogInformation("Creating new admin for employee in department: {DepartmentId}",
-                admin.Employee.Department?.ID);
-
             var result = await ReusableCRUD.AddAsync("Create_Admin", _logger, (cmd) =>
             {
                 EmployeeHelper.AddCreateEmployeeParameters(admin.Employee, cmd);
             });
-
-            if (result.Exception == null)
-            {
-                _logger.LogInformation("Successfully created admin with ID: {AdminId}", result.ID);
-            }
-            else
-            {
-                _logger.LogError(result.Exception, "Failed to create admin");
-            }
 
             return result;
         }
@@ -139,22 +104,10 @@ namespace AH.Infrastructure.Repositories
         /// </remarks>
         public async Task<SuccessResponseDTO> UpdateAsync(Admin admin)
         {
-            _logger.LogInformation("Updating admin with ID: {AdminId}", admin.ID);
-
             var result = await ReusableCRUD.UpdateAsync("Update_Admin", _logger, admin.ID, (cmd) =>
             {
                 EmployeeHelper.AddUpdateEmployeeParameters(admin.Employee, cmd);
             });
-
-            if (result.Exception == null)
-            {
-                _logger.LogInformation("Successfully updated admin with ID: {AdminId}, Success: {Success}",
-                    admin.ID, result.Success);
-            }
-            else
-            {
-                _logger.LogError(result.Exception, "Failed to update admin with ID: {AdminId}", admin.ID);
-            }
 
             return result;
         }
@@ -171,19 +124,7 @@ namespace AH.Infrastructure.Repositories
         /// </remarks>
         public async Task<DeleteResponseDTO> DeleteAsync(int id)
         {
-            _logger.LogWarning("Attempting to delete admin with ID: {AdminId}", id);
-
             var result = await ReusableCRUD.DeleteAsync("Delete_Admin", _logger, id);
-
-            if (result.Exception == null)
-            {
-                _logger.LogWarning("Admin deletion completed - ID: {AdminId}, Success: {Success}",
-                    id, result.Success);
-            }
-            else
-            {
-                _logger.LogError(result.Exception, "Failed to delete admin with ID: {AdminId}", id);
-            }
 
             return result;
         }
@@ -202,19 +143,7 @@ namespace AH.Infrastructure.Repositories
         /// </remarks>
         public async Task<SuccessResponseDTO> LeaveAsync(int ID)
         {
-            _logger.LogInformation("Processing leave request for admin with ID: {AdminId}", ID);
-
             var result = await ReusableCRUD.ExecuteByIDAsync("Leave_Admin", _logger, ID, null);
-
-            if (result.Exception == null)
-            {
-                _logger.LogInformation("Admin leave processed - ID: {AdminId}, Success: {Success}",
-                    ID, result.Success);
-            }
-            else
-            {
-                _logger.LogError(result.Exception, "Failed to process leave for admin with ID: {AdminId}", ID);
-            }
 
             return result;
         }

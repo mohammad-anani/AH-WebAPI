@@ -47,9 +47,6 @@ namespace AH.Infrastructure
             Func<SqlDataReader, ConvertingHelper, T> readAsync,
             Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>? extraParameters)
         {
-            logger.LogInformation("Executing {StoredProcedure} - Page: {Page}, Sort: {Sort}, Order: {Order}",
-                spName, filterDTO.Page, filterDTO.Sort, filterDTO.Order);
-
             int totalCount = -1;
             List<T> items = new List<T>();
             ConvertingHelper converter = new ConvertingHelper();
@@ -61,8 +58,6 @@ namespace AH.Infrastructure
                      if (extraParameters != null)
                      {
                          SqlParameterHelper.AddParametersFromDictionary(cmd, extraParameters);
-                         logger.LogDebug("Added {ParameterCount} extra parameters to {StoredProcedure}", 
-                             extraParameters.Count, spName);
                      }
 
                      addParams?.Invoke(cmd);
@@ -84,7 +79,7 @@ namespace AH.Infrastructure
             }
             else
             {
-                logger.LogInformation("Successfully executed {StoredProcedure} - Retrieved {Count} rows", 
+                logger.LogInformation("Successfully executed {StoredProcedure} - Retrieved {Count} rows",
                     spName, totalCount);
             }
 
@@ -113,8 +108,6 @@ namespace AH.Infrastructure
             Action<SqlCommand>? addParams,
             Func<SqlDataReader, ConvertingHelper, T> constructObject)
         {
-            logger.LogInformation("Executing {StoredProcedure} with ID: {ID}", spName, ID);
-
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
                 { "@ID", (ID, SqlDbType.Int, null, null) }
@@ -136,15 +129,6 @@ namespace AH.Infrastructure
                  null,
                  (reader, cmd) => { converter = new ConvertingHelper(reader); });
 
-            if (ex != null)
-            {
-                logger.LogError(ex, "Failed to execute {StoredProcedure} with ID: {ID}", spName, ID);
-            }
-            else
-            {
-                logger.LogInformation("Successfully executed {StoredProcedure} with ID: {ID}", spName, ID);
-            }
-
             return new GetByIDResponseDTO<T>(item, ex);
         }
 
@@ -163,8 +147,6 @@ namespace AH.Infrastructure
         /// </remarks>
         public static async Task<DeleteResponseDTO> DeleteAsync(string spName, ILogger logger, int ID)
         {
-            logger.LogWarning("Executing DELETE operation {StoredProcedure} with ID: {ID}", spName, ID);
-
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
                 { "@ID", (ID, SqlDbType.Int, null, null) }
@@ -180,16 +162,6 @@ namespace AH.Infrastructure
                  }, null);
 
             bool success = successParam.GetResult();
-
-            if (ex != null)
-            {
-                logger.LogError(ex, "Failed DELETE operation {StoredProcedure} with ID: {ID}", spName, ID);
-            }
-            else
-            {
-                logger.LogWarning("DELETE operation completed {StoredProcedure} - ID: {ID}, Success: {Success}", 
-                    spName, ID, success);
-            }
 
             return new DeleteResponseDTO(success, ex);
         }
@@ -211,8 +183,6 @@ namespace AH.Infrastructure
         public static async Task<SuccessResponseDTO> ExecuteByIDAsync(string spName, ILogger logger, int ID,
              Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>? extraParams)
         {
-            logger.LogInformation("Executing {StoredProcedure} with ID: {ID}", spName, ID);
-
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
                 { "@ID", (ID, SqlDbType.Int, null, null) }
@@ -229,22 +199,12 @@ namespace AH.Infrastructure
                      if (extraParams != null)
                      {
                          SqlParameterHelper.AddParametersFromDictionary(cmd, extraParams);
-                         logger.LogDebug("Added {ParameterCount} extra parameters to {StoredProcedure}", 
+                         logger.LogDebug("Added {ParameterCount} extra parameters to {StoredProcedure}",
                              extraParams.Count, spName);
                      }
                  }, null);
 
             bool success = successParam.GetResult();
-
-            if (ex != null)
-            {
-                logger.LogError(ex, "Failed to execute {StoredProcedure} with ID: {ID}", spName, ID);
-            }
-            else
-            {
-                logger.LogInformation("Successfully executed {StoredProcedure} - ID: {ID}, Success: {Success}", 
-                    spName, ID, success);
-            }
 
             return new SuccessResponseDTO(success, ex);
         }
@@ -267,8 +227,6 @@ namespace AH.Infrastructure
      ILogger logger,
      Action<SqlCommand>? addParams = null)
         {
-            logger.LogInformation("Executing CREATE operation {StoredProcedure}", spName);
-
             IdOutputHelper idOutputHelper = new IdOutputHelper();
 
             Exception? ex = await ADOHelper.ExecuteNonQueryAsync(
@@ -290,7 +248,7 @@ namespace AH.Infrastructure
             }
             else
             {
-                logger.LogInformation("CREATE operation successful {StoredProcedure} - New ID: {NewId}", 
+                logger.LogInformation("CREATE operation successful {StoredProcedure} - New ID: {NewId}",
                     spName, newId);
             }
 
@@ -316,8 +274,6 @@ namespace AH.Infrastructure
  ILogger logger, int id,
  Action<SqlCommand>? addParams = null)
         {
-            logger.LogInformation("Executing UPDATE operation {StoredProcedure} with ID: {ID}", spName, id);
-
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
                 { "@ID", (id, SqlDbType.Int, null, null) }
@@ -338,16 +294,6 @@ namespace AH.Infrastructure
             );
 
             var success = successOutputHelper.GetResult();
-
-            if (ex != null)
-            {
-                logger.LogError(ex, "Failed UPDATE operation {StoredProcedure} with ID: {ID}", spName, id);
-            }
-            else
-            {
-                logger.LogInformation("UPDATE operation completed {StoredProcedure} - ID: {ID}, Success: {Success}", 
-                    spName, id, success);
-            }
 
             return new SuccessResponseDTO(success, ex);
         }
