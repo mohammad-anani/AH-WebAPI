@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AH.Application.DTOs.Response
+﻿namespace AH.Application.DTOs.Response
 {
     public class CreateResponseDTO
     {

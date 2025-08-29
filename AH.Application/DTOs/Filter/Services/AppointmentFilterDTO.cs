@@ -36,7 +36,7 @@ namespace AH.Application.DTOs.Filter
             DateTime? createdAtFrom = null,
             DateTime? createdAtTo = null)
             : base(patientID, scheduledDateFrom, scheduledDateTo, actualStartingDateFrom, actualStartingDateTo,
-                   reason, result, resultDateFrom, resultDateTo, status, notes, amountFrom, amountTo, 
+                   reason, result, resultDateFrom, resultDateTo, status, notes, amountFrom, amountTo,
                    amountPaidFrom, amountPaidTo, createdByReceptionistID, createdAtFrom, createdAtTo)
         {
             PreviousAppointmentID = previousAppointmentID;

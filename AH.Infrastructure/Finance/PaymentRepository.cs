@@ -1,13 +1,13 @@
-using AH.Application.DTOs.Response;
+using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
 using AH.Application.IRepositories;
 using AH.Domain.Entities;
+using AH.Infrastructure.Finance;
 using AH.Infrastructure.Helpers;
 using Microsoft.Extensions.Logging;
 using System.Data;
-using AH.Application.DTOs.Entities;
-using AH.Infrastructure.Finance;
 
 namespace AH.Infrastructure.Repositories
 {
@@ -67,16 +67,15 @@ namespace AH.Infrastructure.Repositories
         {
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
-                ["BillID"]= (payment.Bill?.ID, SqlDbType.Int, null, null),
-                ["Amount"]= (payment.Amount, SqlDbType.Int, null, null),
-                ["Method"]= (Payment.GetMethod(payment.Method), SqlDbType.Int, null, null),
-                ["CreatedByReceptionistID"]= (payment.CreatedByReceptionist?.ID, SqlDbType.Int, null, null)
+                ["BillID"] = (payment.Bill?.ID, SqlDbType.Int, null, null),
+                ["Amount"] = (payment.Amount, SqlDbType.Int, null, null),
+                ["Method"] = (Payment.GetMethod(payment.Method), SqlDbType.Int, null, null),
+                ["CreatedByReceptionistID"] = (payment.CreatedByReceptionist?.ID, SqlDbType.Int, null, null)
             };
 
             return await ReusableCRUD.AddAsync("Create_Payment", _logger, (cmd) =>
             {
                 SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
-
             });
         }
 

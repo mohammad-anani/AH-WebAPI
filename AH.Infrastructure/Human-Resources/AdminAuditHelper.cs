@@ -1,13 +1,6 @@
 ﻿using AH.Application.DTOs.Row;
-using AH.Domain.Entities;
-using AH.Domain.Entities.Audit;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AH.Infrastructure.Helpers
 {

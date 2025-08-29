@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AH.Application.DTOs.Response
+﻿namespace AH.Application.DTOs.Response
 {
     public class ServiceResult<T>
     {

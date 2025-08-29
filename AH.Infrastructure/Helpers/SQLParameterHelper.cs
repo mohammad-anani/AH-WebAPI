@@ -24,11 +24,11 @@ namespace AH.Infrastructure.Helpers
         /// - Null values are automatically converted to DBNull.Value
         /// - Parameter direction defaults to Input if not specified
         /// - Size is optional and only applied when specified
-        /// 
+        ///
         /// Parameter naming:
         /// - Automatically adds "@" prefix if not present in the parameter name
         /// - Parameter names should match stored procedure parameter names
-        /// 
+        ///
         /// Type safety:
         /// - Uses strongly-typed SqlDbType for parameter definition
         /// - Handles size constraints for variable-length types (NVarChar, VarChar, etc.)

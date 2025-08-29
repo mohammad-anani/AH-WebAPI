@@ -1,11 +1,8 @@
 using AH.Application.DTOs.Create;
-using AH.Application.DTOs.Update;
-using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
+using AH.Application.DTOs.Update;
 using AH.Application.IServices;
-using AH.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Cryptography;
 
 namespace AH.API.Controllers
 {

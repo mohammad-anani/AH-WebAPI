@@ -1,9 +1,9 @@
-using AH.Application.DTOs.Response;
+using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
+using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
-using AH.Application.DTOs.Entities;
-using AH.Application.DTOs.Create;
 
 namespace AH.Application.IRepositories
 {
@@ -17,7 +17,7 @@ namespace AH.Application.IRepositories
 
         Task<CreateResponseDTO> AddAsync(TestAppointment testAppointment);
 
-        Task<CreateResponseDTO> AddFromTestOrderAsync( CreateTestAppointmentFromTestOrderDTO app);
+        Task<CreateResponseDTO> AddFromTestOrderAsync(CreateTestAppointmentFromTestOrderDTO app);
 
         Task<SuccessResponseDTO> UpdateAsync(TestAppointment testAppointment);
 

@@ -4,8 +4,6 @@ using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
 using AH.Application.DTOs.Update;
-using AH.Application.Services;
-using AH.Domain.Entities;
 
 namespace AH.Application.IServices
 {

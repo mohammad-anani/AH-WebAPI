@@ -1,10 +1,5 @@
 ﻿using AH.Application.DTOs.Validation;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AH.Application.DTOs.Create
 {

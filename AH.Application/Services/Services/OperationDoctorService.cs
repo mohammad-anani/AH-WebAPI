@@ -39,7 +39,7 @@ namespace AH.Application.Services
                 throw new InvalidOperationException("Failed to retrieve operation doctors by operation ID.", response.Exception);
             }
 
-            return ServiceResult<(IEnumerable<OperationDoctorRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);;
+            return ServiceResult<(IEnumerable<OperationDoctorRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
         }
     }
 }

@@ -9,7 +9,6 @@ using AH.Infrastructure.Helpers;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using System.Data;
-using static Azure.Core.HttpHeader;
 
 namespace AH.Infrastructure.Repositories
 {

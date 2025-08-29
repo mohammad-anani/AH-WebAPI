@@ -6,8 +6,6 @@ using AH.Application.IRepositories;
 using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Data;
 
 namespace AH.Infrastructure.Repositories
 {

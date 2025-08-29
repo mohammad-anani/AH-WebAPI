@@ -1,18 +1,9 @@
-﻿using AH.Application.DTOs.Filter;
-using AH.Application.DTOs.Filter.Helpers;
+﻿using AH.Application.DTOs.Filter.Helpers;
 using AH.Application.DTOs.Response;
 using AH.Infrastructure.Helpers;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlTypes;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using static Azure.Core.HttpHeader;
 
 namespace AH.Infrastructure
 {

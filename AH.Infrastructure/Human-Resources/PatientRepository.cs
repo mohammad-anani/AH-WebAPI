@@ -7,7 +7,6 @@ using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Data;
 
 namespace AH.Infrastructure.Repositories
