@@ -46,6 +46,11 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
        .SingleInstance();
 });
 
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidationFilter>();
+});
+
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration) // load from appsettings.json
     .Enrich.FromLogContext()
