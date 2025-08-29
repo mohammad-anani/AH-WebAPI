@@ -5,6 +5,7 @@ using AH.Application.DTOs.Filter;
 using AH.Application.IServices;
 using AH.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography;
 
 namespace AH.API.Controllers
 {
@@ -22,83 +23,43 @@ namespace AH.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] InsuranceFilterDTO filterDTO)
         {
-            try
-            {
-                var result = await _insuranceService.GetAllByPatientIDAsync(filterDTO);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _insuranceService.GetAllByPatientIDAsync(filterDTO);
+            return StatusCode(result.StatusCode, new { items = result.Data.items, count = result.Data.count });
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            try
-            {
-                var result = await _insuranceService.GetByIDAsync(id);
-                if (result == null)
-                    return NotFound();
+            var result = await _insuranceService.GetByIDAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CreateInsuranceDTO createInsuranceDTO)
         {
-            try
-            {
-                var result = await _insuranceService.AddAsync(createInsuranceDTO);
-                return CreatedAtAction(nameof(GetById), new { id = result }, result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _insuranceService.AddAsync(createInsuranceDTO);
+
+            return StatusCode(result.StatusCode, result.Message);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateInsuranceDTO updateInsuranceDTO)
         {
-            try
-            {
-                if (id != updateInsuranceDTO.ID)
-                    return BadRequest("ID mismatch between route and body.");
+            if (id != updateInsuranceDTO.ID)
+                return BadRequest("ID mismatch between route and body.");
 
-                var result = await _insuranceService.UpdateAsync(updateInsuranceDTO);
-                if (!result)
-                    return NotFound();
+            var result = await _insuranceService.UpdateAsync(updateInsuranceDTO);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var result = await _insuranceService.DeleteAsync(id);
-                if (!result)
-                    return NotFound();
+            var result = await _insuranceService.DeleteAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
     }
 }

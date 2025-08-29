@@ -18,15 +18,8 @@ namespace AH.API.Controllers
         [HttpGet("operation/{operationId}")]
         public async Task<IActionResult> GetAllByOperationId([FromQuery] OperationDoctorFilterDTO filterDTO)
         {
-            try
-            {
-                var result = await _operationDoctorService.GetAllByOperationIDAsync(filterDTO);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _operationDoctorService.GetAllByOperationIDAsync(filterDTO);
+            return StatusCode(result.StatusCode, new { items = result.Data.items, count = result.Data.count });
         }
     }
 }

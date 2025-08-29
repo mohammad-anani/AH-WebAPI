@@ -32,36 +32,22 @@ namespace AH.Application.Services
         /// Retrieves a paginated list of insurance records for a specific patient based on filter criteria.
         /// </summary>
         /// <param name="filterDTO">Filter criteria for insurance search including patient ID</param>
-        /// <returns>Response containing insurance row DTOs and count</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<GetAllResponseDataDTO<InsuranceRowDTO>> GetAllByPatientIDAsync(InsuranceFilterDTO filterDTO)
+        /// <returns>ServiceResult containing insurance row DTOs and count as tuple</returns>
+        public async Task<ServiceResult<(IEnumerable<InsuranceRowDTO> items, int count)>> GetAllByPatientIDAsync(InsuranceFilterDTO filterDTO)
         {
             var response = await _insuranceRepository.GetAllByPatientIDAsync(filterDTO);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to retrieve insurance records by patient ID.", response.Exception);
-            }
-
-            return new GetAllResponseDataDTO<InsuranceRowDTO>(response);
+            return ServiceResult<(IEnumerable<InsuranceRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
         /// <summary>
         /// Retrieves a specific insurance record by its unique identifier.
         /// </summary>
         /// <param name="id">The unique identifier of the insurance record</param>
-        /// <returns>Insurance DTO with complete information or null if not found</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<InsuranceDTO?> GetByIDAsync(int id)
+        /// <returns>ServiceResult containing insurance DTO with complete information or null if not found</returns>
+        public async Task<ServiceResult<InsuranceDTO?>> GetByIDAsync(int id)
         {
             var response = await _insuranceRepository.GetByIDAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to retrieve insurance record with ID {id}.", response.Exception);
-            }
-
-            return response.Item;
+            return ServiceResult<InsuranceDTO?>.Create(response.Item, response.Exception);
         }
 
         /// <summary>
@@ -70,74 +56,46 @@ namespace AH.Application.Services
         /// <param name="ID">The unique identifier of the insurance record to renew</param>
         /// <param name="coverage">The new coverage amount</param>
         /// <param name="expirationDate">The new expiration date</param>
-        /// <returns>True if renewal was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> RenewAsync(int ID, decimal coverage, DateOnly expirationDate)
+        /// <returns>ServiceResult containing true if renewal was successful, false otherwise</returns>
+        public async Task<ServiceResult<bool>> RenewAsync(int ID, decimal coverage, DateOnly expirationDate)
         {
             var response = await _insuranceRepository.Renew(ID, coverage, expirationDate);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to renew insurance record with ID {ID}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
         /// Creates a new insurance record in the system.
         /// </summary>
         /// <param name="createInsuranceDTO">The insurance create DTO containing creation information</param>
-        /// <returns>The ID of the newly created insurance record</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddAsync(CreateInsuranceDTO createInsuranceDTO)
+        /// <returns>ServiceResult containing the ID of the newly created insurance record</returns>
+        public async Task<ServiceResult<int>> AddAsync(CreateInsuranceDTO createInsuranceDTO)
         {
             var insurance = createInsuranceDTO.ToInsurance();
             var response = await _insuranceRepository.AddAsync(insurance);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to create insurance record.", response.Exception);
-            }
-
-            return response.ID;
+            return ServiceResult<int>.Create(response.ID, response.Exception);
         }
 
         /// <summary>
         /// Updates an existing insurance record's information.
         /// </summary>
         /// <param name="updateInsuranceDTO">The insurance update DTO with updated information</param>
-        /// <returns>True if update was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> UpdateAsync(UpdateInsuranceDTO updateInsuranceDTO)
+        /// <returns>ServiceResult containing true if update was successful, false otherwise</returns>
+        public async Task<ServiceResult<bool>> UpdateAsync(UpdateInsuranceDTO updateInsuranceDTO)
         {
             var insurance = updateInsuranceDTO.ToInsurance();
             var response = await _insuranceRepository.UpdateAsync(insurance);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to update insurance record with ID {updateInsuranceDTO.ID}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
         /// Deletes an insurance record from the system.
         /// </summary>
         /// <param name="id">The unique identifier of the insurance record to delete</param>
-        /// <returns>True if deletion was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> DeleteAsync(int id)
+        /// <returns>ServiceResult containing true if deletion was successful, false otherwise</returns>
+        public async Task<ServiceResult<bool>> DeleteAsync(int id)
         {
             var response = await _insuranceRepository.DeleteAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to delete insurance record with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
     }
 }

@@ -32,146 +32,90 @@ namespace AH.Application.Services
         /// Retrieves a paginated list of appointments based on filter criteria.
         /// </summary>
         /// <param name="filterDTO">Filter criteria for appointment search</param>
-        /// <returns>Response containing appointment row DTOs and count</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<GetAllResponseDataDTO<AppointmentRowDTO>> GetAllAsync(AppointmentFilterDTO filterDTO)
+        /// <returns>ServiceResult containing appointment row DTOs and count as tuple</returns>
+        public async Task<ServiceResult<(IEnumerable<AppointmentRowDTO> items, int count)>> GetAllAsync(AppointmentFilterDTO filterDTO)
         {
             var response = await _appointmentRepository.GetAllAsync(filterDTO);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to retrieve appointments.", response.Exception);
-            }
-
-            return new GetAllResponseDataDTO<AppointmentRowDTO>(response);
+            return ServiceResult<(IEnumerable<AppointmentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
         /// <summary>
         /// Retrieves a paginated list of appointments for a specific doctor.
         /// </summary>
         /// <param name="doctorID">The unique identifier of the doctor</param>
-        /// <returns>Response containing appointment row DTOs and count</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<GetAllResponseDataDTO<AppointmentRowDTO>> GetAllByDoctorIDAsync(int doctorID)
+        /// <returns>ServiceResult containing appointment row DTOs and count as tuple</returns>
+        public async Task<ServiceResult<(IEnumerable<AppointmentRowDTO> items, int count)>> GetAllByDoctorIDAsync(int doctorID)
         {
             var response = await _appointmentRepository.GetAllByDoctorIDAsync(doctorID);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to retrieve appointments by doctor ID.", response.Exception);
-            }
-
-            return new GetAllResponseDataDTO<AppointmentRowDTO>(response);
+            return ServiceResult<(IEnumerable<AppointmentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
         /// <summary>
         /// Retrieves a paginated list of appointments for a specific patient.
         /// </summary>
         /// <param name="patientID">The unique identifier of the patient</param>
-        /// <returns>Response containing appointment row DTOs and count</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<GetAllResponseDataDTO<AppointmentRowDTO>> GetAllByPatientIDAsync(int patientID)
+        /// <returns>ServiceResult containing appointment row DTOs and count as tuple</returns>
+        public async Task<ServiceResult<(IEnumerable<AppointmentRowDTO> items, int count)>> GetAllByPatientIDAsync(int patientID)
         {
             var response = await _appointmentRepository.GetAllByPatientIDAsync(patientID);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to retrieve appointments by patient ID.", response.Exception);
-            }
-
-            return new GetAllResponseDataDTO<AppointmentRowDTO>(response);
+            return ServiceResult<(IEnumerable<AppointmentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
         /// <summary>
         /// Retrieves a specific appointment by its unique identifier.
         /// </summary>
         /// <param name="id">The unique identifier of the appointment</param>
-        /// <returns>Appointment DTO with complete information or null if not found</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<AppointmentDTO?> GetByIDAsync(int id)
+        /// <returns>ServiceResult containing appointment DTO with complete information or null if not found</returns>
+        public async Task<ServiceResult<AppointmentDTO?>> GetByIDAsync(int id)
         {
             var response = await _appointmentRepository.GetByIDAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to retrieve appointment with ID {id}.", response.Exception);
-            }
-
-            return response.Item;
+            return ServiceResult<AppointmentDTO?>.Create(response.Item, response.Exception);
         }
 
         /// <summary>
         /// Creates a new appointment in the system.
         /// </summary>
         /// <param name="createAppointmentDTO">The appointment create DTO containing creation information</param>
-        /// <returns>The ID of the newly created appointment</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddAsync(CreateAppointmentDTO createAppointmentDTO)
+        /// <returns>ServiceResult containing the ID of the newly created appointment</returns>
+        public async Task<ServiceResult<int>> AddAsync(CreateAppointmentDTO createAppointmentDTO)
         {
             var appointment = createAppointmentDTO.ToAppointment();
             var response = await _appointmentRepository.AddAsync(appointment);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to create appointment.", response.Exception);
-            }
-
-            return response.ID;
+            return ServiceResult<int>.Create(response.ID, response.Exception);
         }
 
         /// <summary>
         /// Creates a new appointment from a previous appointment.
         /// </summary>
         /// <param name="createDTO">The DTO containing previous appointment information and new appointment details</param>
-        /// <returns>The ID of the newly created appointment</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddFromPreviousAppointmentAsync(CreateAppointmentFromPreviousDTO createDTO)
+        /// <returns>ServiceResult containing the ID of the newly created appointment</returns>
+        public async Task<ServiceResult<int>> AddFromPreviousAppointmentAsync(CreateAppointmentFromPreviousDTO createDTO)
         {
             var response = await _appointmentRepository.AddFromPreviousAppointmentAsync(createDTO);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to create appointment from previous appointment.", response.Exception);
-            }
-
-            return response.ID;
+            return ServiceResult<int>.Create(response.ID, response.Exception);
         }
 
         /// <summary>
         /// Updates an existing appointment's information.
         /// </summary>
         /// <param name="updateAppointmentDTO">The appointment update DTO with updated information</param>
-        /// <returns>True if update was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> UpdateAsync(UpdateAppointmentDTO updateAppointmentDTO)
+        /// <returns>ServiceResult containing true if update was successful, false otherwise</returns>
+        public async Task<ServiceResult<bool>> UpdateAsync(UpdateAppointmentDTO updateAppointmentDTO)
         {
             var appointment = updateAppointmentDTO.ToAppointment();
             var response = await _appointmentRepository.UpdateAsync(appointment);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to update appointment with ID {updateAppointmentDTO.ID}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
         /// Deletes an appointment from the system.
         /// </summary>
         /// <param name="id">The unique identifier of the appointment to delete</param>
-        /// <returns>True if deletion was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> DeleteAsync(int id)
+        /// <returns>ServiceResult containing true if deletion was successful, false otherwise</returns>
+        public async Task<ServiceResult<bool>> DeleteAsync(int id)
         {
             var response = await _appointmentRepository.DeleteAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to delete appointment with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
@@ -180,7 +124,6 @@ namespace AH.Application.Services
         /// <param name="id">The unique identifier of the appointment to start</param>
         /// <param name="notes">Optional notes for the start operation</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
         public async Task<bool> StartAsync(int id, string? notes)
         {
             var response = await _appointmentRepository.StartAsync(id, notes);
@@ -199,7 +142,6 @@ namespace AH.Application.Services
         /// <param name="id">The unique identifier of the appointment to cancel</param>
         /// <param name="notes">Optional notes explaining the cancellation reason</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
         public async Task<bool> CancelAsync(int id, string? notes)
         {
             var response = await _appointmentRepository.CancelAsync(id, notes);
@@ -219,7 +161,6 @@ namespace AH.Application.Services
         /// <param name="notes">Optional notes for the completion</param>
         /// <param name="result">The result or outcome of the appointment</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
         public async Task<bool> CompleteAsync(int id, string? notes, string result)
         {
             var response = await _appointmentRepository.CompleteAsync(id, notes, result);
@@ -239,7 +180,6 @@ namespace AH.Application.Services
         /// <param name="notes">Optional notes explaining the reschedule reason</param>
         /// <param name="newScheduledDate">The new scheduled date and time</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
         public async Task<bool> RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
         {
             var response = await _appointmentRepository.RescheduleAsync(id, notes, newScheduledDate);

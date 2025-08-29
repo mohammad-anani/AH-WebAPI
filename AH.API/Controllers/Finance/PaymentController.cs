@@ -1,4 +1,5 @@
 using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Update;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.IServices;
@@ -21,63 +22,32 @@ namespace AH.API.Controllers
         [HttpGet("bill/{billId}")]
         public async Task<IActionResult> GetAllByBillId([FromQuery] PaymentFilterDTO filterDTO)
         {
-            try
-            {
-                var result = await _paymentService.GetAllByBillIDAsync(filterDTO);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _paymentService.GetAllByBillIDAsync(filterDTO);
+            return StatusCode(result.StatusCode, new { items = result.Data.items, count = result.Data.count });
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            try
-            {
-                var result = await _paymentService.GetByIDAsync(id);
-                if (result == null)
-                    return NotFound();
+            var result = await _paymentService.GetByIDAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CreatePaymentDTO createPaymentDTO)
         {
-            try
-            {
-                var result = await _paymentService.AddAsync(createPaymentDTO);
-                return CreatedAtAction(nameof(GetById), new { id = result }, result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _paymentService.AddAsync(createPaymentDTO);
+
+            return StatusCode(result.StatusCode, result.Message);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var result = await _paymentService.DeleteAsync(id);
-                if (!result)
-                    return NotFound();
+            var result = await _paymentService.DeleteAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
     }
 }

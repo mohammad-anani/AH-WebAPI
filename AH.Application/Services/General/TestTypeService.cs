@@ -32,92 +32,57 @@ namespace AH.Application.Services
         /// Retrieves a paginated list of test types based on filter criteria.
         /// </summary>
         /// <param name="filterDTO">Filter criteria for test type search</param>
-        /// <returns>Response containing test type row DTOs and count</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<GetAllResponseDataDTO<TestTypeRowDTO>> GetAllAsync(TestTypeFilterDTO filterDTO)
+        /// <returns>ServiceResult containing test type row DTOs and count as tuple</returns>
+        public async Task<ServiceResult<(IEnumerable<TestTypeRowDTO> items, int count)>> GetAllAsync(TestTypeFilterDTO filterDTO)
         {
             var response = await _testTypeRepository.GetAllAsync(filterDTO);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to retrieve test types.", response.Exception);
-            }
-
-            return new GetAllResponseDataDTO<TestTypeRowDTO>(response);
+            return ServiceResult<(IEnumerable<TestTypeRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
         /// <summary>
         /// Retrieves a specific test type by its unique identifier.
         /// </summary>
         /// <param name="id">The unique identifier of the test type</param>
-        /// <returns>TestType DTO with complete information or null if not found</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<TestTypeDTO?> GetByIDAsync(int id)
+        /// <returns>ServiceResult containing test type DTO with complete information or null if not found</returns>
+        public async Task<ServiceResult<TestTypeDTO?>> GetByIDAsync(int id)
         {
             var response = await _testTypeRepository.GetByIDAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to retrieve test type with ID {id}.", response.Exception);
-            }
-
-            return response.Item;
+            return ServiceResult<TestTypeDTO?>.Create(response.Item, response.Exception);
         }
 
         /// <summary>
         /// Creates a new test type in the system.
         /// </summary>
         /// <param name="createTestTypeDTO">The test type create DTO containing creation information</param>
-        /// <returns>The ID of the newly created test type</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddAsync(CreateTestTypeDTO createTestTypeDTO)
+        /// <returns>ServiceResult containing the ID of the newly created test type</returns>
+        public async Task<ServiceResult<int>> AddAsync(CreateTestTypeDTO createTestTypeDTO)
         {
             var testType = createTestTypeDTO.ToTestType();
             var response = await _testTypeRepository.AddAsync(testType);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to create test type.", response.Exception);
-            }
-
-            return response.ID;
+            return ServiceResult<int>.Create(response.ID, response.Exception);
         }
 
         /// <summary>
         /// Updates an existing test type's information.
         /// </summary>
         /// <param name="updateTestTypeDTO">The test type update DTO with updated information</param>
-        /// <returns>True if update was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> UpdateAsync(UpdateTestTypeDTO updateTestTypeDTO)
+        /// <returns>ServiceResult containing true if update was successful, false otherwise</returns>
+        public async Task<ServiceResult<bool>> UpdateAsync(UpdateTestTypeDTO updateTestTypeDTO)
         {
             var testType = updateTestTypeDTO.ToTestType();
             var response = await _testTypeRepository.UpdateAsync(testType);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to update test type with ID {updateTestTypeDTO.ID}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
         /// Deletes a test type from the system.
         /// </summary>
         /// <param name="id">The unique identifier of the test type to delete</param>
-        /// <returns>True if deletion was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> DeleteAsync(int id)
+        /// <returns>ServiceResult containing true if deletion was successful, false otherwise</returns>
+        public async Task<ServiceResult<bool>> DeleteAsync(int id)
         {
             var response = await _testTypeRepository.DeleteAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to delete test type with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
     }
 }

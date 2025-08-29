@@ -22,80 +22,43 @@ namespace AH.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] TestTypeFilterDTO filterDTO)
         {
-            try
-            {
-                var result = await _testTypeService.GetAllAsync(filterDTO);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _testTypeService.GetAllAsync(filterDTO);
+            return StatusCode(result.StatusCode, new { items = result.Data.items, count = result.Data.count });
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            try
-            {
-                var result = await _testTypeService.GetByIDAsync(id);
-                if (result == null)
-                    return NotFound();
+            var result = await _testTypeService.GetByIDAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CreateTestTypeDTO createTestTypeDTO)
         {
-            try
-            {
-                var result = await _testTypeService.AddAsync(createTestTypeDTO);
-                return CreatedAtAction(nameof(GetById), new { id = result }, result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _testTypeService.AddAsync(createTestTypeDTO);
+
+            return StatusCode(result.StatusCode, result.Message);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateTestTypeDTO testType)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateTestTypeDTO updateTestTypeDTO)
         {
-            try
-            {
-                var result = await _testTypeService.UpdateAsync(testType);
-                if (!result)
-                    return NotFound();
+            if (id != updateTestTypeDTO.ID)
+                return BadRequest("ID mismatch between route and body.");
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _testTypeService.UpdateAsync(updateTestTypeDTO);
+
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var result = await _testTypeService.DeleteAsync(id);
-                if (!result)
-                    return NotFound();
+            var result = await _testTypeService.DeleteAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
     }
 }

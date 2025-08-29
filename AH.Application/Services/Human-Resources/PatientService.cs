@@ -32,18 +32,11 @@ namespace AH.Application.Services
         /// Retrieves a paginated list of patients based on filter criteria.
         /// </summary>
         /// <param name="filterDTO">Filter criteria for patient search</param>
-        /// <returns>Response containing patient row DTOs and count</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<GetAllResponseDataDTO<PatientRowDTO>> GetAllAsync(PatientFilterDTO filterDTO)
+        /// <returns>ServiceResult containing patient row DTOs and count as tuple</returns>
+        public async Task<ServiceResult<(IEnumerable<PatientRowDTO> items, int count)>> GetAllAsync(PatientFilterDTO filterDTO)
         {
             var response = await _patientRepository.GetAllAsync(filterDTO);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to retrieve patients.", response.Exception);
-            }
-
-            return new GetAllResponseDataDTO<PatientRowDTO>(response);
+            return ServiceResult<(IEnumerable<PatientRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
         /// <summary>
@@ -51,92 +44,57 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="doctorID">The unique identifier of the doctor</param>
         /// <param name="filterDTO">Filter criteria for patient search</param>
-        /// <returns>Response containing patient row DTOs and count</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<GetAllResponseDataDTO<PatientRowDTO>> GetAllForDoctorAsync(int doctorID, PatientFilterDTO filterDTO)
+        /// <returns>ServiceResult containing patient row DTOs and count as tuple</returns>
+        public async Task<ServiceResult<(IEnumerable<PatientRowDTO> items, int count)>> GetAllForDoctorAsync(int doctorID, PatientFilterDTO filterDTO)
         {
             var response = await _patientRepository.GetAllForDoctorAsync(doctorID, filterDTO);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to retrieve patients for doctor with ID {doctorID}.", response.Exception);
-            }
-
-            return new GetAllResponseDataDTO<PatientRowDTO>(response);
+            return ServiceResult<(IEnumerable<PatientRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
         /// <summary>
         /// Retrieves a specific patient by their unique identifier.
         /// </summary>
         /// <param name="id">The unique identifier of the patient</param>
-        /// <returns>Patient DTO with complete information or null if not found</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<PatientDTO?> GetByIDAsync(int id)
+        /// <returns>ServiceResult containing patient DTO with complete information or null if not found</returns>
+        public async Task<ServiceResult<PatientDTO?>> GetByIDAsync(int id)
         {
             var response = await _patientRepository.GetByIDAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to retrieve patient with ID {id}.", response.Exception);
-            }
-
-            return response.Item;
+            return ServiceResult<PatientDTO?>.Create(response.Item, response.Exception);
         }
 
         /// <summary>
         /// Creates a new patient in the system.
         /// </summary>
         /// <param name="createPatientDTO">The patient create DTO containing creation information</param>
-        /// <returns>The ID of the newly created patient</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddAsync(CreatePatientDTO createPatientDTO)
+        /// <returns>ServiceResult containing the ID of the newly created patient</returns>
+        public async Task<ServiceResult<int>> AddAsync(CreatePatientDTO createPatientDTO)
         {
             var patient = createPatientDTO.ToPatient();
             var response = await _patientRepository.AddAsync(patient);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to create patient.", response.Exception);
-            }
-
-            return response.ID;
+            return ServiceResult<int>.Create(response.ID, response.Exception);
         }
 
         /// <summary>
         /// Updates an existing patient's information.
         /// </summary>
         /// <param name="updatePatientDTO">The patient update DTO with updated information</param>
-        /// <returns>True if update was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> UpdateAsync(UpdatePatientDTO updatePatientDTO)
+        /// <returns>ServiceResult containing true if update was successful, false otherwise</returns>
+        public async Task<ServiceResult<bool>> UpdateAsync(UpdatePatientDTO updatePatientDTO)
         {
             var patient = updatePatientDTO.ToPatient();
             var response = await _patientRepository.UpdateAsync(patient);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to update patient with ID {updatePatientDTO.ID}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
         /// Deletes a patient from the system.
         /// </summary>
         /// <param name="id">The unique identifier of the patient to delete</param>
-        /// <returns>True if deletion was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> DeleteAsync(int id)
+        /// <returns>ServiceResult containing true if deletion was successful, false otherwise</returns>
+        public async Task<ServiceResult<bool>> DeleteAsync(int id)
         {
             var response = await _patientRepository.DeleteAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to delete patient with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
     }
 }

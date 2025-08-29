@@ -1,4 +1,5 @@
 using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Update;
 using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.IServices;
@@ -21,80 +22,43 @@ namespace AH.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] OperationFilterDTO filterDTO)
         {
-            try
-            {
-                var result = await _operationService.GetAllAsync(filterDTO);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _operationService.GetAllAsync(filterDTO);
+            return StatusCode(result.StatusCode, new { items = result.Data.items, count = result.Data.count });
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            try
-            {
-                var result = await _operationService.GetByIDAsync(id);
-                if (result == null)
-                    return NotFound();
+            var result = await _operationService.GetByIDAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CreateOperationDTO createOperationDTO)
         {
-            try
-            {
-                var result = await _operationService.AddAsync(createOperationDTO);
-                return CreatedAtAction(nameof(GetById), new { id = result }, result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _operationService.AddAsync(createOperationDTO);
+
+            return StatusCode(result.StatusCode, result.Message);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] AddUpdateOperationDTO operation)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateOperationDTO updateOperationDTO)
         {
-            try
-            {
-                var result = await _operationService.UpdateAsync(operation);
-                if (!result)
-                    return NotFound();
+            if (id != updateOperationDTO.ID)
+                return BadRequest("ID mismatch between route and body.");
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _operationService.UpdateAsync(updateOperationDTO);
+
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var result = await _operationService.DeleteAsync(id);
-                if (!result)
-                    return NotFound();
+            var result = await _operationService.DeleteAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
     }
 }

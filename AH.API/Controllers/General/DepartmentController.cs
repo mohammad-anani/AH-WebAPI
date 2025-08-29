@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AH.API.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
     public class DepartmentController : ControllerBase
@@ -23,83 +22,43 @@ namespace AH.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] DepartmentFilterDTO filterDTO)
         {
-            try
-            {
-                var result = await _departmentService.GetAllAsync(filterDTO);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _departmentService.GetAllAsync(filterDTO);
+            return StatusCode(result.StatusCode, new { items = result.Data.items, count = result.Data.count });
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            try
-            {
-                var result = await _departmentService.GetByIDAsync(id);
-                if (result == null)
-                    return NotFound();
+            var result = await _departmentService.GetByIDAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CreateDepartmentDTO createDepartmentDTO)
         {
-            try
-            {
-                var result = await _departmentService.AddAsync(createDepartmentDTO);
-                return CreatedAtAction(nameof(GetById), new { id = result }, result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _departmentService.AddAsync(createDepartmentDTO);
+
+            return StatusCode(result.StatusCode, result.Message);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateDepartmentDTO updateDepartmentDTO)
         {
-            try
-            {
-                if (id != updateDepartmentDTO.ID)
-                    return BadRequest("ID mismatch between route and body.");
+            if (id != updateDepartmentDTO.ID)
+                return BadRequest("ID mismatch between route and body.");
 
-                var result = await _departmentService.UpdateAsync(updateDepartmentDTO);
-                if (!result)
-                    return NotFound();
+            var result = await _departmentService.UpdateAsync(updateDepartmentDTO);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var result = await _departmentService.DeleteAsync(id);
-                if (!result)
-                    return NotFound();
+            var result = await _departmentService.DeleteAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
     }
 }

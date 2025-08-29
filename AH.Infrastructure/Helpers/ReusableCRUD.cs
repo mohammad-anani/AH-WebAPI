@@ -116,6 +116,8 @@ namespace AH.Infrastructure
             T item = default!;
             ConvertingHelper converter = new ConvertingHelper();
 
+            bool notFound = true;
+
             Exception? ex = await ADOHelper.ExecuteReaderAsync(
                  spName, logger, cmd =>
                  {
@@ -127,7 +129,16 @@ namespace AH.Infrastructure
                      item = constructObject(reader, converter);
                  },
                  null,
-                 (reader, cmd) => { converter = new ConvertingHelper(reader); });
+                 (reader, cmd) =>
+                 {
+                     converter = new ConvertingHelper(reader);
+                     notFound = false;
+                 });
+
+            if (notFound)
+            {
+                ex = new KeyNotFoundException($"Record for ID = {ID} was not found");
+            }
 
             return new GetByIDResponseDTO<T>(item, ex);
         }
@@ -162,6 +173,11 @@ namespace AH.Infrastructure
                  }, null);
 
             bool success = successParam.GetResult();
+
+            if (ex != null && (ex.Message.Contains("does not exist") || ex.Message.Contains("not found") || ex.Message.Contains("Invalid") && ex.Message.Contains("ID")))
+            {
+                ex = new KeyNotFoundException($"Record for ID = {ID} was not found");
+            }
 
             return new DeleteResponseDTO(success, ex);
         }
@@ -203,6 +219,11 @@ namespace AH.Infrastructure
                              extraParams.Count, spName);
                      }
                  }, null);
+
+            if (ex != null && (ex.Message.Contains("does not exist") || ex.Message.Contains("not found") || ex.Message.Contains("Invalid") && ex.Message.Contains("ID")))
+            {
+                ex = new KeyNotFoundException($"Record for ID = {ID} was not found");
+            }
 
             bool success = successParam.GetResult();
 
@@ -294,6 +315,11 @@ namespace AH.Infrastructure
             );
 
             var success = successOutputHelper.GetResult();
+
+            if (ex != null && (ex.Message.Contains("does not exist") || ex.Message.Contains("not found") || ex.Message.Contains("Invalid") && ex.Message.Contains("ID")))
+            {
+                ex = new KeyNotFoundException($"Record for ID = {id} was not found");
+            }
 
             return new SuccessResponseDTO(success, ex);
         }

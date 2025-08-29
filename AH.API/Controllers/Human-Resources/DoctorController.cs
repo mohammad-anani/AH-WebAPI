@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AH.API.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
     public class DoctorController : ControllerBase
@@ -23,100 +22,51 @@ namespace AH.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] DoctorFilterDTO filterDTO)
         {
-            try
-            {
-                var result = await _doctorService.GetAllAsync(filterDTO);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _doctorService.GetAllAsync(filterDTO);
+            return StatusCode(result.StatusCode, new { items = result.Data.items, count = result.Data.count });
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            try
-            {
-                var result = await _doctorService.GetByIDAsync(id);
-                if (result == null)
-                    return NotFound();
+            var result = await _doctorService.GetByIDAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CreateDoctorDTO createDoctorDTO)
         {
-            try
-            {
-                var result = await _doctorService.AddAsync(createDoctorDTO);
-                return CreatedAtAction(nameof(GetById), new { id = result }, result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _doctorService.AddAsync(createDoctorDTO);
+
+            return StatusCode(result.StatusCode, result.Message);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateDoctorDTO updateDoctorDTO)
         {
-            try
-            {
-                if (id != updateDoctorDTO.ID)
-                    return BadRequest("ID mismatch between route and body.");
+            if (id != updateDoctorDTO.ID)
+                return BadRequest("ID mismatch between route and body.");
 
-                var result = await _doctorService.UpdateAsync(updateDoctorDTO);
-                if (!result)
-                    return NotFound();
+            var result = await _doctorService.UpdateAsync(updateDoctorDTO);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var result = await _doctorService.DeleteAsync(id);
-                if (!result)
-                    return NotFound();
+            var result = await _doctorService.DeleteAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpPost("{id}/leave")]
         public async Task<IActionResult> Leave(int id)
         {
-            try
-            {
-                var result = await _doctorService.LeaveAsync(id);
-                if (!result)
-                    return NotFound();
+            var result = await _doctorService.LeaveAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
     }
 }

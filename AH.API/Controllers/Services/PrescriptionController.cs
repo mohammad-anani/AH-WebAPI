@@ -22,83 +22,43 @@ namespace AH.API.Controllers
         [HttpGet("appointment/{appointmentId}")]
         public async Task<IActionResult> GetAllByAppointmentId([FromQuery] PrescriptionFilterDTO filterDTO)
         {
-            try
-            {
-                var result = await _prescriptionService.GetAllByAppointmentIDAsync(filterDTO);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _prescriptionService.GetAllByAppointmentIDAsync(filterDTO);
+            return StatusCode(result.StatusCode, new { items = result.Data.items, count = result.Data.count });
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            try
-            {
-                var result = await _prescriptionService.GetByIDAsync(id);
-                if (result == null)
-                    return NotFound();
+            var result = await _prescriptionService.GetByIDAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CreatePrescriptionDTO createPrescriptionDTO)
         {
-            try
-            {
-                var result = await _prescriptionService.AddAsync(createPrescriptionDTO);
-                return CreatedAtAction(nameof(GetById), new { id = result }, result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _prescriptionService.AddAsync(createPrescriptionDTO);
+
+            return StatusCode(result.StatusCode, result.Message);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdatePrescriptionDTO updatePrescriptionDTO)
         {
-            try
-            {
-                if (id != updatePrescriptionDTO.ID)
-                    return BadRequest("ID mismatch between route and body.");
+            if (id != updatePrescriptionDTO.ID)
+                return BadRequest("ID mismatch between route and body.");
 
-                var result = await _prescriptionService.UpdateAsync(updatePrescriptionDTO);
-                if (!result)
-                    return NotFound();
+            var result = await _prescriptionService.UpdateAsync(updatePrescriptionDTO);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var result = await _prescriptionService.DeleteAsync(id);
-                if (!result)
-                    return NotFound();
+            var result = await _prescriptionService.DeleteAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
     }
 }

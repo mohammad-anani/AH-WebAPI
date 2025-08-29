@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AH.API.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
     public class AppointmentController : ControllerBase
@@ -23,111 +22,57 @@ namespace AH.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] AppointmentFilterDTO filterDTO)
         {
-            try
-            {
-                var result = await _appointmentService.GetAllAsync(filterDTO);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _appointmentService.GetAllAsync(filterDTO);
+            return StatusCode(result.StatusCode, new { items = result.Data.items, count = result.Data.count });
         }
 
         [HttpGet("doctor/{doctorId}")]
         public async Task<IActionResult> GetAllByDoctorId(int doctorId)
         {
-            try
-            {
-                var result = await _appointmentService.GetAllByDoctorIDAsync(doctorId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _appointmentService.GetAllByDoctorIDAsync(doctorId);
+            return StatusCode(result.StatusCode, new { items = result.Data.items, count = result.Data.count });
         }
 
         [HttpGet("patient/{patientId}")]
         public async Task<IActionResult> GetAllByPatientId(int patientId)
         {
-            try
-            {
-                var result = await _appointmentService.GetAllByPatientIDAsync(patientId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _appointmentService.GetAllByPatientIDAsync(patientId);
+            return StatusCode(result.StatusCode, new { items = result.Data.items, count = result.Data.count });
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            try
-            {
-                var result = await _appointmentService.GetByIDAsync(id);
-                if (result == null)
-                    return NotFound();
+            var result = await _appointmentService.GetByIDAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CreateAppointmentDTO createAppointmentDTO)
         {
-            try
-            {
-                var result = await _appointmentService.AddAsync(createAppointmentDTO);
-                return CreatedAtAction(nameof(GetById), new { id = result }, result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _appointmentService.AddAsync(createAppointmentDTO);
+
+            return StatusCode(result.StatusCode, result.Message);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateAppointmentDTO updateAppointmentDTO)
         {
-            try
-            {
-                if (id != updateAppointmentDTO.ID)
-                    return BadRequest("ID mismatch between route and body.");
+            if (id != updateAppointmentDTO.ID)
+                return BadRequest("ID mismatch between route and body.");
 
-                var result = await _appointmentService.UpdateAsync(updateAppointmentDTO);
-                if (!result)
-                    return NotFound();
+            var result = await _appointmentService.UpdateAsync(updateAppointmentDTO);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var result = await _appointmentService.DeleteAsync(id);
-                if (!result)
-                    return NotFound();
+            var result = await _appointmentService.DeleteAsync(id);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return StatusCode(result.StatusCode, result.Data);
         }
     }
 }

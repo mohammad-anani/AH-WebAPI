@@ -32,92 +32,57 @@ namespace AH.Application.Services
         /// Retrieves a paginated list of prescriptions for a specific appointment.
         /// </summary>
         /// <param name="filterDTO">Filter criteria for prescription search including appointment ID</param>
-        /// <returns>Response containing prescription row DTOs and count</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<GetAllResponseDataDTO<PrescriptionRowDTO>> GetAllByAppointmentIDAsync(PrescriptionFilterDTO filterDTO)
+        /// <returns>ServiceResult containing prescription row DTOs and count as tuple</returns>
+        public async Task<ServiceResult<(IEnumerable<PrescriptionRowDTO> items, int count)>> GetAllByAppointmentIDAsync(PrescriptionFilterDTO filterDTO)
         {
             var response = await _prescriptionRepository.GetAllByAppointmentIDAsync(filterDTO);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to retrieve prescriptions by appointment ID.", response.Exception);
-            }
-
-            return new GetAllResponseDataDTO<PrescriptionRowDTO>(response);
+            return ServiceResult<(IEnumerable<PrescriptionRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
         /// <summary>
         /// Retrieves a specific prescription by its unique identifier.
         /// </summary>
         /// <param name="id">The unique identifier of the prescription</param>
-        /// <returns>Prescription DTO with complete information or null if not found</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<PrescriptionDTO?> GetByIDAsync(int id)
+        /// <returns>ServiceResult containing prescription DTO with complete information or null if not found</returns>
+        public async Task<ServiceResult<PrescriptionDTO?>> GetByIDAsync(int id)
         {
             var response = await _prescriptionRepository.GetByIDAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to retrieve prescription with ID {id}.", response.Exception);
-            }
-
-            return response.Item;
+            return ServiceResult<PrescriptionDTO?>.Create(response.Item, response.Exception);
         }
 
         /// <summary>
         /// Creates a new prescription in the system.
         /// </summary>
         /// <param name="createPrescriptionDTO">The prescription create DTO containing creation information</param>
-        /// <returns>The ID of the newly created prescription</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddAsync(CreatePrescriptionDTO createPrescriptionDTO)
+        /// <returns>ServiceResult containing the ID of the newly created prescription</returns>
+        public async Task<ServiceResult<int>> AddAsync(CreatePrescriptionDTO createPrescriptionDTO)
         {
             var prescription = createPrescriptionDTO.ToPrescription();
             var response = await _prescriptionRepository.AddAsync(prescription);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to create prescription.", response.Exception);
-            }
-
-            return response.ID;
+            return ServiceResult<int>.Create(response.ID, response.Exception);
         }
 
         /// <summary>
         /// Updates an existing prescription's information.
         /// </summary>
         /// <param name="updatePrescriptionDTO">The prescription update DTO with updated information</param>
-        /// <returns>True if update was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> UpdateAsync(UpdatePrescriptionDTO updatePrescriptionDTO)
+        /// <returns>ServiceResult containing true if update was successful, false otherwise</returns>
+        public async Task<ServiceResult<bool>> UpdateAsync(UpdatePrescriptionDTO updatePrescriptionDTO)
         {
             var prescription = updatePrescriptionDTO.ToPrescription();
             var response = await _prescriptionRepository.UpdateAsync(prescription);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to update prescription with ID {updatePrescriptionDTO.ID}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
         /// Deletes a prescription from the system.
         /// </summary>
         /// <param name="id">The unique identifier of the prescription to delete</param>
-        /// <returns>True if deletion was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> DeleteAsync(int id)
+        /// <returns>ServiceResult containing true if deletion was successful, false otherwise</returns>
+        public async Task<ServiceResult<bool>> DeleteAsync(int id)
         {
             var response = await _prescriptionRepository.DeleteAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to delete prescription with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
     }
 }

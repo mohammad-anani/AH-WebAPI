@@ -32,92 +32,57 @@ namespace AH.Application.Services
         /// Retrieves a paginated list of departments based on filter criteria.
         /// </summary>
         /// <param name="filterDTO">Filter criteria for department search</param>
-        /// <returns>Enumerable of department row DTOs</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<GetAllResponseDataDTO<DepartmentRowDTO>> GetAllAsync(DepartmentFilterDTO filterDTO)
+        /// <returns>ServiceResult containing department row DTOs and count as tuple</returns>
+        public async Task<ServiceResult<(IEnumerable<DepartmentRowDTO> items, int count)>> GetAllAsync(DepartmentFilterDTO filterDTO)
         {
             var response = await _departmentRepository.GetAllAsync(filterDTO);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to retrieve departments.", response.Exception);
-            }
-
-            return new GetAllResponseDataDTO<DepartmentRowDTO>(response);
+            return ServiceResult<(IEnumerable<DepartmentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
         /// <summary>
         /// Retrieves a specific department by its unique identifier.
         /// </summary>
         /// <param name="id">The unique identifier of the department</param>
-        /// <returns>Department DTO with complete information or null if not found</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<DepartmentDTO?> GetByIDAsync(int id)
+        /// <returns>ServiceResult containing department DTO with complete information or null if not found</returns>
+        public async Task<ServiceResult<DepartmentDTO?>> GetByIDAsync(int id)
         {
             var response = await _departmentRepository.GetByIDAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to retrieve department with ID {id}.", response.Exception);
-            }
-
-            return response.Item;
+            return ServiceResult<DepartmentDTO?>.Create(response.Item, response.Exception);
         }
 
         /// <summary>
         /// Creates a new department in the system.
         /// </summary>
         /// <param name="createDepartmentDTO">The department create DTO containing creation information</param>
-        /// <returns>The ID of the newly created department</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<int> AddAsync(CreateDepartmentDTO createDepartmentDTO)
+        /// <returns>ServiceResult containing the ID of the newly created department</returns>
+        public async Task<ServiceResult<int>> AddAsync(CreateDepartmentDTO createDepartmentDTO)
         {
             var department = createDepartmentDTO.ToDepartment();
             var response = await _departmentRepository.AddAsync(department);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException("Failed to create department.", response.Exception);
-            }
-
-            return response.ID;
+            return ServiceResult<int>.Create(response.ID, response.Exception);
         }
 
         /// <summary>
         /// Updates an existing department's information.
         /// </summary>
         /// <param name="updateDepartmentDTO">The department update DTO with updated information</param>
-        /// <returns>True if update was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> UpdateAsync(UpdateDepartmentDTO updateDepartmentDTO)
+        /// <returns>ServiceResult containing true if update was successful, false otherwise</returns>
+        public async Task<ServiceResult<bool>> UpdateAsync(UpdateDepartmentDTO updateDepartmentDTO)
         {
             var department = updateDepartmentDTO.ToDepartment();
             var response = await _departmentRepository.UpdateAsync(department);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to update department with ID {updateDepartmentDTO.ID}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
         /// <summary>
         /// Deletes a department from the system.
         /// </summary>
         /// <param name="id">The unique identifier of the department to delete</param>
-        /// <returns>True if deletion was successful, false otherwise</returns>
-        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<bool> DeleteAsync(int id)
+        /// <returns>ServiceResult containing true if deletion was successful, false otherwise</returns>
+        public async Task<ServiceResult<bool>> DeleteAsync(int id)
         {
             var response = await _departmentRepository.DeleteAsync(id);
-
-            if (response.Exception != null)
-            {
-                throw new InvalidOperationException($"Failed to delete department with ID {id}.", response.Exception);
-            }
-
-            return response.Success;
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
     }
 }
