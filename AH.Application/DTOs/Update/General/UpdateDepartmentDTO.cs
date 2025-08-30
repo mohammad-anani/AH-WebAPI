@@ -1,5 +1,6 @@
 using AH.Domain.Entities;
 using AH.Domain.Entities.Audit;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.Application.DTOs.Update
@@ -8,6 +9,7 @@ namespace AH.Application.DTOs.Update
     {
         [Required(ErrorMessage = "Department ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Department ID must be a positive number")]
+        [BindNever]
         public int ID { get; set; }
 
         [Required(ErrorMessage = "Department name is required")]

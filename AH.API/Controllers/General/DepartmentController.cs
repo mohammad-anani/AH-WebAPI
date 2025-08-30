@@ -60,9 +60,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateDepartmentDTO updateDepartmentDTO)
         {
-            if (id != updateDepartmentDTO.ID)
-                return BadRequest("ID mismatch between route and body.");
-
+            updateDepartmentDTO.ID = id;
             var result = await _departmentService.UpdateAsync(updateDepartmentDTO);
 
             return StatusCode(result.StatusCode, result.Data);

@@ -1,11 +1,13 @@
 using AH.Domain.Entities;
 using AH.Domain.Entities.Audit;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.Application.DTOs.Update
 {
     public class UpdateEmployeeDTO : UpdatePersonDTO
     {
+        [BindNever]
         [Required(ErrorMessage = "Employee ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Employee ID must be a positive number")]
         public int ID { get; set; }

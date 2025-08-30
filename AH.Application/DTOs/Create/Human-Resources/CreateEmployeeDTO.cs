@@ -1,6 +1,7 @@
 ﻿using AH.Application.DTOs.Validation;
 using AH.Domain.Entities;
 using AH.Domain.Entities.Audit;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.Application.DTOs.Create
@@ -29,8 +30,7 @@ namespace AH.Application.DTOs.Create
         [Required(ErrorMessage = "Shift end time is required")]
         public TimeOnly ShiftEnd { get; set; }
 
-        [Required(ErrorMessage = "Created by admin ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Created by admin ID must be a positive number")]
+        [BindNever]
         public int CreatedByAdminID { get; set; }
 
         public CreateEmployeeDTO() : base()

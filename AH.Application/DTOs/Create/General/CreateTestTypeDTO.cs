@@ -1,5 +1,6 @@
 using AH.Domain.Entities;
 using AH.Domain.Entities.Audit;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.Application.DTOs.Create
@@ -18,8 +19,7 @@ namespace AH.Application.DTOs.Create
         [Range(10, 999, ErrorMessage = "Cost must be between 10 and 999")]
         public int Cost { get; set; }
 
-        [Required(ErrorMessage = "Created by admin ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Created by admin ID must be a positive number")]
+        [BindNever]
         public int CreatedByAdminID { get; set; }
 
         public CreateTestTypeDTO()

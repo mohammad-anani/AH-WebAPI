@@ -1,5 +1,6 @@
 using AH.Domain.Entities;
 using AH.Domain.Entities.Audit;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.Application.DTOs.Create
@@ -14,6 +15,7 @@ namespace AH.Application.DTOs.Create
         [RegularExpression("^[0-9]{8}$", ErrorMessage = "Phone must be exactly 8 digits")]
         public string Phone { get; set; }
 
+        [BindNever]
         [Required(ErrorMessage = "Created by admin ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Created by admin ID must be a positive number")]
         public int CreatedByAdminID { get; set; }

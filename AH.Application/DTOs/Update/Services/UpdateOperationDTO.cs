@@ -1,6 +1,7 @@
 using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Entities.Services;
 using AH.Domain.Entities;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 
@@ -8,6 +9,7 @@ namespace AH.Application.DTOs.Update
 {
     public class UpdateOperationDTO : UpdateServiceDTO
     {
+        [BindNever]
         [Required(ErrorMessage = "Operation ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Operation ID must be a positive number")]
         public int ID { get; set; }
@@ -76,11 +78,11 @@ namespace AH.Application.DTOs.Update
             table.Columns.Add("DoctorID", typeof(int));
             table.Columns.Add("Role", typeof(string));
 
-            OperationDoctors.ForEach(operationDoctor =>
+            OperationDoctors.ForEach(OperationDoctors =>
             {
                 var row = table.NewRow();
-                row["DoctorID"] = operationDoctor.DoctorID;
-                row["Role"] = operationDoctor.Role;
+                row["DoctorID"] = OperationDoctors.DoctorID;
+                row["Role"] = OperationDoctors.Role;
                 table.Rows.Add(row);
             });
 

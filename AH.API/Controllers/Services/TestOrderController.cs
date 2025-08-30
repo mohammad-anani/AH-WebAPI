@@ -2,6 +2,7 @@ using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Filter;
 using AH.Application.IServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace AH.API.Controllers
 {
@@ -20,6 +21,10 @@ namespace AH.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById(int id)
         {
             var result = await _testOrderService.GetByIDAsync(id);
@@ -28,6 +33,10 @@ namespace AH.API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Add([FromBody] CreateTestOrderDTO createTestOrderDTO)
         {
             var result = await _testOrderService.AddAsync(createTestOrderDTO);
@@ -35,15 +44,25 @@ namespace AH.API.Controllers
             return StatusCode(result.StatusCode, result.Message);
         }
 
-        [HttpPost("{id}/reserve")]
-        public async Task<IActionResult> Reserve([FromBody] CreateTestAppointmentFromTestOrderDTO createTestAppointmentDTO)
+        [HttpPatch("{id}/reserve")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Reserve(int id, [FromBody] CreateTestAppointmentFromTestOrderDTO createTestAppointmentDTO)
         {
+            // Route ID authoritative
+            createTestAppointmentDTO.TestOrderID = id;
             var result = await _testAppointmentService.AddFromTestOrderAsync(createTestAppointmentDTO);
 
             return StatusCode(result.StatusCode, result.Message);
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _testOrderService.DeleteAsync(id);

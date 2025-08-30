@@ -1,4 +1,5 @@
 ﻿using AH.Application.DTOs.Validation;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.Application.DTOs.Create
@@ -7,6 +8,7 @@ namespace AH.Application.DTOs.Create
     {
         [Required(ErrorMessage = "Test order ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Test order ID must be a positive number")]
+        [BindNever]
         public int TestOrderID { get; set; }
 
         [Required(ErrorMessage = "Scheduled date is required")]
@@ -16,8 +18,7 @@ namespace AH.Application.DTOs.Create
         [StringLength(int.MaxValue, MinimumLength = 0, ErrorMessage = "Notes can be empty or any length")]
         public string? Notes { get; set; }
 
-        [Required(ErrorMessage = "Created by receptionist ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Created by receptionist ID must be a positive number")]
+        [BindNever]
         public int CreatedByReceptionistID { get; set; }
 
         public CreateTestAppointmentFromTestOrderDTO()

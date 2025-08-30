@@ -1,4 +1,5 @@
 using AH.Domain.Entities;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.Application.DTOs.Create
@@ -17,6 +18,7 @@ namespace AH.Application.DTOs.Create
         [Range(1, 3, ErrorMessage = "Method must be 1 (Card), 2 (Cash), or 3 (Insurance)")]
         public int Method { get; set; }
 
+        [BindNever]
         [Required(ErrorMessage = "Created by receptionist ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Created by receptionist ID must be a positive number")]
         public int CreatedByReceptionistID { get; set; }

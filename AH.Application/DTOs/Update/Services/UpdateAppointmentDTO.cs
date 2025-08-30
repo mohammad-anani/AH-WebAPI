@@ -1,10 +1,12 @@
 using AH.Domain.Entities;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.Application.DTOs.Update
 {
     public class UpdateAppointmentDTO : UpdateServiceDTO
     {
+        [BindNever]
         [Required(ErrorMessage = "Appointment ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Appointment ID must be a positive number")]
         public int ID { get; set; }

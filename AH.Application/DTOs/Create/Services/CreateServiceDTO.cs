@@ -1,5 +1,6 @@
 using AH.Application.DTOs.Validation;
 using AH.Domain.Entities;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.Application.DTOs.Create
@@ -25,6 +26,7 @@ namespace AH.Application.DTOs.Create
         [Range(10, 99999, ErrorMessage = "Bill amount must be between 10 and 99,999")]
         public int BillAmount { get; set; }
 
+        [BindNever]
         [Required(ErrorMessage = "Created by receptionist ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Created by receptionist ID must be a positive number")]
         public int CreatedByReceptionistID { get; set; }

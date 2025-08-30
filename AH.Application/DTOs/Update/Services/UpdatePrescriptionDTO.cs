@@ -1,11 +1,13 @@
 using AH.Application.DTOs.Validation;
 using AH.Domain.Entities;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.Application.DTOs.Update
 {
     public class UpdatePrescriptionDTO
     {
+        [BindNever]
         [Required(ErrorMessage = "Prescription ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Prescription ID must be a positive number")]
         public int ID { get; set; }
