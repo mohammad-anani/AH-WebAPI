@@ -18,7 +18,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="filterDTO">Filter criteria for prescription search including appointment ID</param>
         /// <returns>ServiceResult containing prescription row DTOs and count as tuple</returns>
-        Task<ServiceResult<(IEnumerable<PrescriptionRowDTO> items, int count)>> GetAllByAppointmentIDAsync(PrescriptionFilterDTO filterDTO);
+        Task<ServiceResult<GetAllResponseDataDTO<PrescriptionRowDTO>>> GetAllByAppointmentIDAsync(PrescriptionFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a specific prescription by its unique identifier.

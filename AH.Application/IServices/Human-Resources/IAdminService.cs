@@ -18,7 +18,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="filterDTO">Filter criteria for admin search</param>
         /// <returns>Response containing admin row DTOs and count</returns>
-        Task<ServiceResult<(IEnumerable<AdminRowDTO> items, int count)>> GetAllAsync(AdminFilterDTO filterDTO);
+        Task<ServiceResult<GetAllResponseDataDTO<AdminRowDTO>>> GetAllAsync(AdminFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a specific admin by their unique identifier.

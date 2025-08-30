@@ -3,6 +3,7 @@ using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Update;
 using AH.Application.IServices;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace AH.API.Controllers
 {
@@ -25,7 +26,7 @@ namespace AH.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute, Range(1, int.MaxValue)] int id)
         {
             var result = await _receptionistService.GetByIDAsync(id);
 
@@ -41,7 +42,7 @@ namespace AH.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateReceptionistDTO updateReceptionistDTO)
+        public async Task<IActionResult> Update([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] UpdateReceptionistDTO updateReceptionistDTO)
         {
             updateReceptionistDTO.ID = id;
 
@@ -51,7 +52,7 @@ namespace AH.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute, Range(1, int.MaxValue)] int id)
         {
             var result = await _receptionistService.DeleteAsync(id);
 
@@ -59,7 +60,7 @@ namespace AH.API.Controllers
         }
 
         [HttpPatch("{id}/leave")]
-        public async Task<IActionResult> Leave([FromRoute] int id)
+        public async Task<IActionResult> Leave([FromRoute, Range(1, int.MaxValue)] int id)
         {
             var result = await _receptionistService.LeaveAsync(id);
 

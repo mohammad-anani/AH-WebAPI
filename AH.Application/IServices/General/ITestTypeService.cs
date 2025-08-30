@@ -17,8 +17,8 @@ namespace AH.Application.IServices
         /// Retrieves a paginated list of test types based on filter criteria.
         /// </summary>
         /// <param name="filterDTO">Filter criteria for test type search</param>
-        /// <returns>ServiceResult containing test type row DTOs and count as tuple</returns>
-        Task<ServiceResult<(IEnumerable<TestTypeRowDTO> items, int count)>> GetAllAsync(TestTypeFilterDTO filterDTO);
+        /// <returns>ServiceResult containing test type row DTOs and count</returns>
+        Task<ServiceResult<GetAllResponseDataDTO<TestTypeRowDTO>>> GetAllAsync(TestTypeFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a specific test type by its unique identifier.

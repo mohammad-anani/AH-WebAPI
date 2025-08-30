@@ -32,10 +32,10 @@ namespace AH.Application.Services
         /// <param name="filterDTO">Filter criteria for test order search</param>
         /// <returns>Response containing test order row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<ServiceResult<(IEnumerable<TestOrderRowDTO> items, int count)>> GetAllAsync(TestOrderFilterDTO filterDTO)
+        public async Task<ServiceResult<GetAllResponseDataDTO<TestOrderRowDTO>>> GetAllAsync(TestOrderFilterDTO filterDTO)
         {
             var response = await _testOrderRepository.GetAllAsync(filterDTO);
-            return ServiceResult<(IEnumerable<TestOrderRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
+            var data = new GetAllResponseDataDTO<TestOrderRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<TestOrderRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>

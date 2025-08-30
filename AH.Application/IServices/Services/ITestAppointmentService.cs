@@ -18,14 +18,14 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="filterDTO">Filter criteria for test appointment search</param>
         /// <returns>Response containing test appointment row DTOs and count</returns>
-        Task<ServiceResult<(IEnumerable<TestAppointmentRowDTO> items, int count)>> GetAllAsync(TestAppointmentFilterDTO filterDTO);
+        Task<ServiceResult<GetAllResponseDataDTO<TestAppointmentRowDTO>>> GetAllAsync(TestAppointmentFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a paginated list of test appointments for a specific patient.
         /// </summary>
         /// <param name="filterDTO">Filter criteria for test appointment search including patient ID</param>
         /// <returns>Response containing test appointment row DTOs and count</returns>
-        Task<ServiceResult<(IEnumerable<TestAppointmentRowDTO> items, int count)>> GetAllByPatientIDAsync(TestAppointmentFilterDTO filterDTO);
+        Task<ServiceResult<GetAllResponseDataDTO<TestAppointmentRowDTO>>> GetAllByPatientIDAsync(TestAppointmentFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a specific test appointment by its unique identifier.

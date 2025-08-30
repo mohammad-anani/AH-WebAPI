@@ -6,7 +6,7 @@
 
         public Person Person { get; set; }
 
-        public Department Department { get; set; }
+        public DepartmentAudit Department { get; set; }
 
         public int Salary { get; set; }
 
@@ -36,7 +36,7 @@
             CreatedAt = DateTime.MinValue;
         }
 
-        public EmployeeAudit(int id, Person person, Department department, int salary, DateTime hireDate, DateTime? leaveDate, int workingDays, DateTime shiftStart, DateTime shiftEnd, DateTime createdAt)
+        public EmployeeAudit(int id, Person person, DepartmentAudit department, int salary, DateTime hireDate, DateTime? leaveDate, int workingDays, DateTime shiftStart, DateTime shiftEnd, DateTime createdAt)
         {
             ID = id;
             Person = person;
@@ -50,7 +50,7 @@
             CreatedAt = createdAt;
         }
 
-        public EmployeeAudit(Person person, Department department, int salary, DateTime hireDate, DateTime? leaveDate, int workingDays, DateTime shiftStart, DateTime shiftEnd)
+        public EmployeeAudit(Person person, DepartmentAudit department, int salary, DateTime hireDate, DateTime? leaveDate, int workingDays, DateTime shiftStart, DateTime shiftEnd)
         {
             ID = -1;
             Person = person;

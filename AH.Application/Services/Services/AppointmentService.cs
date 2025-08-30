@@ -32,10 +32,10 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="filterDTO">Filter criteria for appointment search</param>
         /// <returns>ServiceResult containing appointment row DTOs and count as tuple</returns>
-        public async Task<ServiceResult<(IEnumerable<AppointmentRowDTO> items, int count)>> GetAllAsync(AppointmentFilterDTO filterDTO)
+        public async Task<ServiceResult<GetAllResponseDataDTO<AppointmentRowDTO>>> GetAllAsync(AppointmentFilterDTO filterDTO)
         {
             var response = await _appointmentRepository.GetAllAsync(filterDTO);
-            return ServiceResult<(IEnumerable<AppointmentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
+            var data = new GetAllResponseDataDTO<AppointmentRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<AppointmentRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>
@@ -43,10 +43,10 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="doctorID">The unique identifier of the doctor</param>
         /// <returns>ServiceResult containing appointment row DTOs and count as tuple</returns>
-        public async Task<ServiceResult<(IEnumerable<AppointmentRowDTO> items, int count)>> GetAllByDoctorIDAsync(AppointmentFilterDTO filterDTO)
+        public async Task<ServiceResult<GetAllResponseDataDTO<AppointmentRowDTO>>> GetAllByDoctorIDAsync(AppointmentFilterDTO filterDTO)
         {
             var response = await _appointmentRepository.GetAllByDoctorIDAsync(filterDTO);
-            return ServiceResult<(IEnumerable<AppointmentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
+            var data = new GetAllResponseDataDTO<AppointmentRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<AppointmentRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>
@@ -54,10 +54,10 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="patientID">The unique identifier of the patient</param>
         /// <returns>ServiceResult containing appointment row DTOs and count as tuple</returns>
-        public async Task<ServiceResult<(IEnumerable<AppointmentRowDTO> items, int count)>> GetAllByPatientIDAsync(AppointmentFilterDTO filterDTO)
+        public async Task<ServiceResult<GetAllResponseDataDTO<AppointmentRowDTO>>> GetAllByPatientIDAsync(AppointmentFilterDTO filterDTO)
         {
             var response = await _appointmentRepository.GetAllByPatientIDAsync(filterDTO);
-            return ServiceResult<(IEnumerable<AppointmentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
+            var data = new GetAllResponseDataDTO<AppointmentRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<AppointmentRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>

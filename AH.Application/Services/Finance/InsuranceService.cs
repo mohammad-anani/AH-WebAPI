@@ -34,10 +34,10 @@ namespace AH.Application.Services
         /// <param name="filterDTO">Filter criteria for insurance search including patient ID</param>
         /// <param name="cancellationToken">Token to observe while waiting for the task to complete.</param>
         /// <returns>ServiceResult containing insurance row DTOs and count as tuple</returns>
-        public async Task<ServiceResult<(IEnumerable<InsuranceRowDTO> items, int count)>> GetAllByPatientIDAsync(InsuranceFilterDTO filterDTO, CancellationToken cancellationToken = default)
+        public async Task<ServiceResult<GetAllResponseDataDTO<InsuranceRowDTO>>> GetAllByPatientIDAsync(InsuranceFilterDTO filterDTO, CancellationToken cancellationToken = default)
         {
             var response = await _insuranceRepository.GetAllByPatientIDAsync(filterDTO, cancellationToken);
-            return ServiceResult<(IEnumerable<InsuranceRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
+            var data = new GetAllResponseDataDTO<InsuranceRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<InsuranceRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>

@@ -33,10 +33,10 @@ namespace AH.Application.Services
         /// <param name="filterDTO">Filter criteria for test appointment search</param>
         /// <returns>Response containing test appointment row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<ServiceResult<(IEnumerable<TestAppointmentRowDTO> items, int count)>> GetAllAsync(TestAppointmentFilterDTO filterDTO)
+        public async Task<ServiceResult<GetAllResponseDataDTO<TestAppointmentRowDTO>>> GetAllAsync(TestAppointmentFilterDTO filterDTO)
         {
             var response = await _testAppointmentRepository.GetAllAsync(filterDTO);
-            return ServiceResult<(IEnumerable<TestAppointmentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
+            var data = new GetAllResponseDataDTO<TestAppointmentRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<TestAppointmentRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>
@@ -45,10 +45,10 @@ namespace AH.Application.Services
         /// <param name="filterDTO">Filter criteria for test appointment search including patient ID</param>
         /// <returns>Response containing test appointment row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<ServiceResult<(IEnumerable<TestAppointmentRowDTO> items, int count)>> GetAllByPatientIDAsync(TestAppointmentFilterDTO filterDTO)
+        public async Task<ServiceResult<GetAllResponseDataDTO<TestAppointmentRowDTO>>> GetAllByPatientIDAsync(TestAppointmentFilterDTO filterDTO)
         {
             var response = await _testAppointmentRepository.GetAllByPatientIDAsync(filterDTO);
-            return ServiceResult<(IEnumerable<TestAppointmentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
+            var data = new GetAllResponseDataDTO<TestAppointmentRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<TestAppointmentRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>

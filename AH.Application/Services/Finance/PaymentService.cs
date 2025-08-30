@@ -32,10 +32,10 @@ namespace AH.Application.Services
         /// <param name="filterDTO">Filter criteria for payment search including bill ID</param>
         /// <returns>Response containing payment row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<ServiceResult<(IEnumerable<PaymentRowDTO> items, int count)>> GetAllByBillIDAsync(PaymentFilterDTO filterDTO)
+        public async Task<ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>> GetAllByBillIDAsync(PaymentFilterDTO filterDTO)
         {
             var response = await _paymentRepository.GetAllByBillIDAsync(filterDTO);
-            return ServiceResult<(IEnumerable<PaymentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
+            var data = new GetAllResponseDataDTO<PaymentRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>.Create(data, response.Exception); ;
         }
 
         /// <summary>

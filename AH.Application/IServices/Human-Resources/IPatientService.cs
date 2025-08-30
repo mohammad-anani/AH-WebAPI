@@ -18,7 +18,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="filterDTO">Filter criteria for patient search</param>
         /// <returns>ServiceResult containing patient row DTOs and count as tuple</returns>
-        Task<ServiceResult<(IEnumerable<PatientRowDTO> items, int count)>> GetAllAsync(PatientFilterDTO filterDTO);
+        Task<ServiceResult<GetAllResponseDataDTO<PatientRowDTO>>> GetAllAsync(PatientFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a paginated list of patients for a specific doctor based on filter criteria.
@@ -26,7 +26,7 @@ namespace AH.Application.IServices
         /// <param name="doctorID">The unique identifier of the doctor</param>
         /// <param name="filterDTO">Filter criteria for patient search</param>
         /// <returns>ServiceResult containing patient row DTOs and count as tuple</returns>
-        Task<ServiceResult<(IEnumerable<PatientRowDTO> items, int count)>> GetAllForDoctorAsync(int doctorID, PatientFilterDTO filterDTO);
+        Task<ServiceResult<GetAllResponseDataDTO<PatientRowDTO>>> GetAllForDoctorAsync(int doctorID, PatientFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a specific patient by their unique identifier.

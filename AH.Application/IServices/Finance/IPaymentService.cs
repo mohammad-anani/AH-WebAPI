@@ -17,7 +17,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="filterDTO">Filter criteria for payment search including bill ID</param>
         /// <returns>Response containing payment row DTOs and count</returns>
-        Task<ServiceResult<(IEnumerable<PaymentRowDTO> items, int count)>> GetAllByBillIDAsync(PaymentFilterDTO filterDTO);
+        Task<ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>> GetAllByBillIDAsync(PaymentFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a specific payment by its unique identifier.

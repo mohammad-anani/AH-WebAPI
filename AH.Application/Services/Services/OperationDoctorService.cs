@@ -30,7 +30,7 @@ namespace AH.Application.Services
         /// <param name="filterDTO">Filter criteria for operation doctor search including operation ID</param>
         /// <returns>Response containing operation doctor row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<ServiceResult<(IEnumerable<OperationDoctorRowDTO> items, int count)>> GetAllByOperationIDAsync(OperationDoctorFilterDTO filterDTO)
+        public async Task<ServiceResult<GetAllResponseDataDTO<OperationDoctorRowDTO>>> GetAllByOperationIDAsync(OperationDoctorFilterDTO filterDTO)
         {
             var response = await _operationDoctorRepository.GetAllByOperationIDAsync(filterDTO);
 
@@ -39,7 +39,7 @@ namespace AH.Application.Services
                 throw new InvalidOperationException("Failed to retrieve operation doctors by operation ID.", response.Exception);
             }
 
-            return ServiceResult<(IEnumerable<OperationDoctorRowDTO>, int)>.Create((response.Items, response.Count), response.Exception); ;
+            var data = new GetAllResponseDataDTO<OperationDoctorRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<OperationDoctorRowDTO>>.Create(data, response.Exception); ;
         }
     }
 }

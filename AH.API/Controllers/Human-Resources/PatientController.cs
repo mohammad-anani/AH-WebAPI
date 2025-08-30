@@ -5,6 +5,7 @@ using AH.Application.IServices;
 using AH.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace AH.API.Controllers
 {
@@ -45,7 +46,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetInsurances([FromRoute] int id, [FromQuery] InsuranceFilterDTO filterDTO, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetInsurances([FromRoute, Range(1, int.MaxValue)] int id, [FromQuery] InsuranceFilterDTO filterDTO, CancellationToken cancellationToken)
         {
             filterDTO.PatientID = id;
             var result = await _insuranceService.GetAllByPatientIDAsync(filterDTO, cancellationToken);
@@ -56,7 +57,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAppointments([FromRoute] int id, AppointmentFilterDTO filterDTO)
+        public async Task<IActionResult> GetAppointments([FromRoute, Range(1, int.MaxValue)] int id, AppointmentFilterDTO filterDTO)
         {
             filterDTO.PatientID = id;
             var result = await _appointmentService.GetAllByPatientIDAsync(filterDTO);
@@ -67,7 +68,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetOperations([FromRoute] int id, OperationFilterDTO filterDTO)
+        public async Task<IActionResult> GetOperations([FromRoute, Range(1, int.MaxValue)] int id, OperationFilterDTO filterDTO)
         {
             filterDTO.PatientID = id;
             var result = await _operationService.GetAllByPatientIDAsync(filterDTO);
@@ -78,7 +79,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetTestAppointments([FromRoute] int id, TestAppointmentFilterDTO filterDTO)
+        public async Task<IActionResult> GetTestAppointments([FromRoute, Range(1, int.MaxValue)] int id, TestAppointmentFilterDTO filterDTO)
         {
             filterDTO.PatientID = id;
             var result = await _testAppointmentService.GetAllByPatientIDAsync(filterDTO);
@@ -90,7 +91,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute, Range(1, int.MaxValue)] int id)
         {
             var result = await _patientService.GetByIDAsync(id);
 
@@ -115,7 +116,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdatePatientDTO updatePatientDTO)
+        public async Task<IActionResult> Update([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] UpdatePatientDTO updatePatientDTO)
         {
             updatePatientDTO.ID = id;
 
@@ -129,7 +130,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute, Range(1, int.MaxValue)] int id)
         {
             var result = await _patientService.DeleteAsync(id);
 

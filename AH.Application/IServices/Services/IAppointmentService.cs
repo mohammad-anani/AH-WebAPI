@@ -18,21 +18,21 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="filterDTO">Filter criteria for appointment search</param>
         /// <returns>ServiceResult containing appointment row DTOs and count as tuple</returns>
-        Task<ServiceResult<(IEnumerable<AppointmentRowDTO> items, int count)>> GetAllAsync(AppointmentFilterDTO filterDTO);
+        Task<ServiceResult<GetAllResponseDataDTO<AppointmentRowDTO>>> GetAllAsync(AppointmentFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a paginated list of appointments for a specific doctor.
         /// </summary>
         /// <param name="doctorID">The unique identifier of the doctor</param>
         /// <returns>ServiceResult containing appointment row DTOs and count as tuple</returns>
-        Task<ServiceResult<(IEnumerable<AppointmentRowDTO> items, int count)>> GetAllByDoctorIDAsync(AppointmentFilterDTO filterDTO);
+        Task<ServiceResult<GetAllResponseDataDTO<AppointmentRowDTO>>> GetAllByDoctorIDAsync(AppointmentFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a paginated list of appointments for a specific patient.
         /// </summary>
         /// <param name="patientID">The unique identifier of the patient</param>
         /// <returns>ServiceResult containing appointment row DTOs and count as tuple</returns>
-        Task<ServiceResult<(IEnumerable<AppointmentRowDTO> items, int count)>> GetAllByPatientIDAsync(AppointmentFilterDTO filterDTO);
+        Task<ServiceResult<GetAllResponseDataDTO<AppointmentRowDTO>>> GetAllByPatientIDAsync(AppointmentFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a specific appointment by its unique identifier.

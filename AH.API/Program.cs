@@ -4,6 +4,7 @@ using Serilog;
 using System.Reflection;
 using AH.API.Routing;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Newtonsoft.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +53,16 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
        .As<IConfiguration>()
        .SingleInstance();
 });
+
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        // Keep PascalCase (property names as in C#)
+        options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
+
+        // Optional: format JSON nicely
+        options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+    });
 
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration) // load from appsettings.json

@@ -32,10 +32,10 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="filterDTO">Filter criteria for patient search</param>
         /// <returns>ServiceResult containing patient row DTOs and count as tuple</returns>
-        public async Task<ServiceResult<(IEnumerable<PatientRowDTO> items, int count)>> GetAllAsync(PatientFilterDTO filterDTO)
+        public async Task<ServiceResult<GetAllResponseDataDTO<PatientRowDTO>>> GetAllAsync(PatientFilterDTO filterDTO)
         {
             var response = await _patientRepository.GetAllAsync(filterDTO);
-            return ServiceResult<(IEnumerable<PatientRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
+            var data = new GetAllResponseDataDTO<PatientRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<PatientRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>
@@ -44,10 +44,10 @@ namespace AH.Application.Services
         /// <param name="doctorID">The unique identifier of the doctor</param>
         /// <param name="filterDTO">Filter criteria for patient search</param>
         /// <returns>ServiceResult containing patient row DTOs and count as tuple</returns>
-        public async Task<ServiceResult<(IEnumerable<PatientRowDTO> items, int count)>> GetAllForDoctorAsync(int doctorID, PatientFilterDTO filterDTO)
+        public async Task<ServiceResult<GetAllResponseDataDTO<PatientRowDTO>>> GetAllForDoctorAsync(int doctorID, PatientFilterDTO filterDTO)
         {
             var response = await _patientRepository.GetAllForDoctorAsync(doctorID, filterDTO);
-            return ServiceResult<(IEnumerable<PatientRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
+            var data = new GetAllResponseDataDTO<PatientRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<PatientRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>

@@ -32,10 +32,11 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="filterDTO">Filter criteria for test type search</param>
         /// <returns>ServiceResult containing test type row DTOs and count as tuple</returns>
-        public async Task<ServiceResult<(IEnumerable<TestTypeRowDTO> items, int count)>> GetAllAsync(TestTypeFilterDTO filterDTO)
+        public async Task<ServiceResult<GetAllResponseDataDTO<TestTypeRowDTO>>> GetAllAsync(TestTypeFilterDTO filterDTO)
         {
             var response = await _testTypeRepository.GetAllAsync(filterDTO);
-            return ServiceResult<(IEnumerable<TestTypeRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
+            var data = new GetAllResponseDataDTO<TestTypeRowDTO>(response);
+            return ServiceResult<GetAllResponseDataDTO<TestTypeRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>

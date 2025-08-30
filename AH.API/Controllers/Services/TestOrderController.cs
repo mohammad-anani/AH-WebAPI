@@ -3,6 +3,7 @@ using AH.Application.DTOs.Filter;
 using AH.Application.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace AH.API.Controllers
 {
@@ -25,7 +26,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetById([FromRoute]int id)
+        public async Task<IActionResult> GetById([FromRoute, Range(1, int.MaxValue)]int id)
         {
             var result = await _testOrderService.GetByIDAsync(id);
 
@@ -49,7 +50,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Reserve([FromRoute]int id, [FromBody] CreateTestAppointmentFromTestOrderDTO createTestAppointmentDTO)
+        public async Task<IActionResult> Reserve([FromRoute, Range(1, int.MaxValue)]int id, [FromBody] CreateTestAppointmentFromTestOrderDTO createTestAppointmentDTO)
         {
             // Route ID authoritative
             createTestAppointmentDTO.TestOrderID = id;
@@ -63,7 +64,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Delete([FromRoute]int id)
+        public async Task<IActionResult> Delete([FromRoute, Range(1, int.MaxValue)]int id)
         {
             var result = await _testOrderService.DeleteAsync(id);
 

@@ -18,21 +18,21 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="filterDTO">Filter criteria for operation search</param>
         /// <returns>Response containing operation row DTOs and count</returns>
-        Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllAsync(OperationFilterDTO filterDTO);
+        Task<ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>> GetAllAsync(OperationFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a paginated list of operations for a specific doctor.
         /// </summary>
         /// <param name="doctorID">The unique identifier of the doctor</param>
         /// <returns>Response containing operation row DTOs and count</returns>
-        Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllByDoctorIDAsync(int doctorID, OperationFilterDTO filterDTO);
+        Task<ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>> GetAllByDoctorIDAsync(int doctorID, OperationFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a paginated list of operations for a specific patient.
         /// </summary>
         /// <param name="patientID">The unique identifier of the patient</param>
         /// <returns>Response containing operation row DTOs and count</returns>
-        Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllByPatientIDAsync(OperationFilterDTO filterDTO);
+        Task<ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>> GetAllByPatientIDAsync(OperationFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a specific operation by its unique identifier.

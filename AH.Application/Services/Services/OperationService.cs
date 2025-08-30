@@ -33,10 +33,10 @@ namespace AH.Application.Services
         /// <param name="filterDTO">Filter criteria for operation search</param>
         /// <returns>Response containing operation row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllAsync(OperationFilterDTO filterDTO)
+        public async Task<ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>> GetAllAsync(OperationFilterDTO filterDTO)
         {
             var response = await _operationRepository.GetAllAsync(filterDTO);
-            return ServiceResult<(IEnumerable<OperationRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
+            var data = new GetAllResponseDataDTO<OperationRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>
@@ -45,10 +45,10 @@ namespace AH.Application.Services
         /// <param name="doctorID">The unique identifier of the doctor</param>
         /// <returns>Response containing operation row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllByDoctorIDAsync(int doctorID,OperationFilterDTO filterDTO)
+        public async Task<ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>> GetAllByDoctorIDAsync(int doctorID,OperationFilterDTO filterDTO)
         {
             var response = await _operationRepository.GetAllByDoctorIDAsync(doctorID,filterDTO);
-            return ServiceResult<(IEnumerable<OperationRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
+            var data = new GetAllResponseDataDTO<OperationRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>
@@ -57,10 +57,10 @@ namespace AH.Application.Services
         /// <param name="patientID">The unique identifier of the patient</param>
         /// <returns>Response containing operation row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllByPatientIDAsync(OperationFilterDTO filterDTO)
+        public async Task<ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>> GetAllByPatientIDAsync(OperationFilterDTO filterDTO)
         {
             var response = await _operationRepository.GetAllByPatientIDAsync(filterDTO);
-            return ServiceResult<(IEnumerable<OperationRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
+            var data = new GetAllResponseDataDTO<OperationRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>

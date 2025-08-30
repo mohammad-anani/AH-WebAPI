@@ -33,10 +33,11 @@ namespace AH.Application.Services
         /// <param name="filterDTO">Filter criteria for admin search</param>
         /// <returns>Response containing admin row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<ServiceResult<(IEnumerable<AdminRowDTO> items, int count)>> GetAllAsync(AdminFilterDTO filterDTO)
+        public async Task<ServiceResult<GetAllResponseDataDTO<AdminRowDTO>>> GetAllAsync(AdminFilterDTO filterDTO)
         {
             var response = await _adminRepository.GetAllAsync(filterDTO);
-            return ServiceResult<(IEnumerable<AdminRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
+            var data = new GetAllResponseDataDTO<AdminRowDTO>(response);
+            return ServiceResult<GetAllResponseDataDTO<AdminRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>

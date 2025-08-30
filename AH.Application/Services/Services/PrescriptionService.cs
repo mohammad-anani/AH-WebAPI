@@ -32,10 +32,10 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="filterDTO">Filter criteria for prescription search including appointment ID</param>
         /// <returns>ServiceResult containing prescription row DTOs and count as tuple</returns>
-        public async Task<ServiceResult<(IEnumerable<PrescriptionRowDTO> items, int count)>> GetAllByAppointmentIDAsync(PrescriptionFilterDTO filterDTO)
+        public async Task<ServiceResult<GetAllResponseDataDTO<PrescriptionRowDTO>>> GetAllByAppointmentIDAsync(PrescriptionFilterDTO filterDTO)
         {
             var response = await _prescriptionRepository.GetAllByAppointmentIDAsync(filterDTO);
-            return ServiceResult<(IEnumerable<PrescriptionRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
+            var data = new GetAllResponseDataDTO<PrescriptionRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<PrescriptionRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>

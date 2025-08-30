@@ -32,10 +32,11 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="filterDTO">Filter criteria for department search</param>
         /// <returns>ServiceResult containing department row DTOs and count as tuple</returns>
-        public async Task<ServiceResult<(IEnumerable<DepartmentRowDTO> items, int count)>> GetAllAsync(DepartmentFilterDTO filterDTO)
+        public async Task<ServiceResult<GetAllResponseDataDTO<DepartmentRowDTO>>> GetAllAsync(DepartmentFilterDTO filterDTO)
         {
             var response = await _departmentRepository.GetAllAsync(filterDTO);
-            return ServiceResult<(IEnumerable<DepartmentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
+            var data = new GetAllResponseDataDTO<DepartmentRowDTO>(response);
+            return ServiceResult<GetAllResponseDataDTO<DepartmentRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>

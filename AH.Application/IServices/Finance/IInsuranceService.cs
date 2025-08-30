@@ -20,7 +20,7 @@ namespace AH.Application.IServices
         /// <param name="filterDTO">Filter criteria for insurance search including patient ID</param>
         /// <param name="cancellationToken">Token to observe while waiting for the task to complete.</param>
         /// <returns>ServiceResult containing insurance row DTOs and count as tuple</returns>
-        Task<ServiceResult<(IEnumerable<InsuranceRowDTO> items, int count)>> GetAllByPatientIDAsync(InsuranceFilterDTO filterDTO, CancellationToken cancellationToken = default);
+        Task<ServiceResult<GetAllResponseDataDTO<InsuranceRowDTO>>> GetAllByPatientIDAsync(InsuranceFilterDTO filterDTO, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Retrieves a specific insurance record by its unique identifier.

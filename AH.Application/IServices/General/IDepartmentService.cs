@@ -17,8 +17,8 @@ namespace AH.Application.IServices
         /// Retrieves a paginated list of departments based on filter criteria.
         /// </summary>
         /// <param name="filterDTO">Filter criteria for department search</param>
-        /// <returns>ServiceResult containing department row DTOs and count as tuple</returns>
-        Task<ServiceResult<(IEnumerable<DepartmentRowDTO> items, int count)>> GetAllAsync(DepartmentFilterDTO filterDTO);
+        /// <returns>ServiceResult containing department row DTOs and count</returns>
+        Task<ServiceResult<GetAllResponseDataDTO<DepartmentRowDTO>>> GetAllAsync(DepartmentFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a specific department by its unique identifier.

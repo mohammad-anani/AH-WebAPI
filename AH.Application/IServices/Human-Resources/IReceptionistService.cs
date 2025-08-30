@@ -18,7 +18,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="filterDTO">Filter criteria for receptionist search</param>
         /// <returns>Response containing receptionist row DTOs and count</returns>
-        Task<ServiceResult<(IEnumerable<ReceptionistRowDTO> items, int count)>> GetAllAsync(ReceptionistFilterDTO filterDTO);
+        Task<ServiceResult<GetAllResponseDataDTO<ReceptionistRowDTO>>> GetAllAsync(ReceptionistFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a specific receptionist by their unique identifier.

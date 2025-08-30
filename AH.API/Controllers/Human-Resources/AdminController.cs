@@ -4,6 +4,9 @@ using AH.Application.DTOs.Update;
 using AH.Application.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using AH.Application.DTOs.Response;
+using AH.Application.DTOs.Row;
+using System.ComponentModel.DataAnnotations;
 
 namespace AH.API.Controllers
 {
@@ -33,7 +36,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetById([FromRoute]int id)
+        public async Task<IActionResult> GetById([FromRoute, Range(1, int.MaxValue)] int id)
         {
             var result = await _adminService.GetByIDAsync(id);
 
@@ -47,6 +50,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Add([FromBody] CreateAdminDTO createAdminDTO)
         {
+            createAdminDTO.CreatedByAdminID = 2;
             var result = await _adminService.AddAsync(createAdminDTO);
 
             return StatusCode(result.StatusCode, result.Message);
@@ -58,7 +62,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update([FromRoute]int id, [FromBody] UpdateAdminDTO updateAdminDTO)
+        public async Task<IActionResult> Update([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] UpdateAdminDTO updateAdminDTO)
         {
             updateAdminDTO.ID = id;
 
@@ -72,7 +76,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Delete([FromRoute]int id)
+        public async Task<IActionResult> Delete([FromRoute, Range(1, int.MaxValue)] int id)
         {
             var result = await _adminService.DeleteAsync(id);
 
@@ -84,7 +88,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Leave([FromRoute]int id)
+        public async Task<IActionResult> Leave([FromRoute, Range(1, int.MaxValue)] int id)
         {
             var result = await _adminService.LeaveAsync(id);
 

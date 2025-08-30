@@ -17,7 +17,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="filterDTO">Filter criteria for test order search</param>
         /// <returns>Response containing test order row DTOs and count</returns>
-        Task<ServiceResult<(IEnumerable<TestOrderRowDTO> items, int count)>> GetAllAsync(TestOrderFilterDTO filterDTO);
+        Task<ServiceResult<GetAllResponseDataDTO<TestOrderRowDTO>>> GetAllAsync(TestOrderFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a specific test order by its unique identifier.
