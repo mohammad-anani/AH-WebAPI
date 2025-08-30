@@ -23,7 +23,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById([FromRoute]int id)
         {
             var result = await _prescriptionService.GetByIDAsync(id);
 
@@ -48,7 +48,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdatePrescriptionDTO updatePrescriptionDTO)
+        public async Task<IActionResult> Update([FromRoute]int id, [FromBody] UpdatePrescriptionDTO updatePrescriptionDTO)
         {
             if (id != updatePrescriptionDTO.ID)
                 return BadRequest("ID mismatch between route and body.");
@@ -63,7 +63,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute]int id)
         {
             var result = await _prescriptionService.DeleteAsync(id);
 

@@ -59,7 +59,7 @@ namespace AH.API.Controllers
             return StatusCode(result.StatusCode, result.Data);
         }
 
-        [HttpPost("{id}/leave")]
+        [HttpPatch("{id}/leave")]
         public async Task<IActionResult> Leave(int id)
         {
             var result = await _receptionistService.LeaveAsync(id);

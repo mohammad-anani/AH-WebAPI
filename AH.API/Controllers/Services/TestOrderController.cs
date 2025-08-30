@@ -25,7 +25,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById([FromRoute]int id)
         {
             var result = await _testOrderService.GetByIDAsync(id);
 
@@ -49,7 +49,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Reserve(int id, [FromBody] CreateTestAppointmentFromTestOrderDTO createTestAppointmentDTO)
+        public async Task<IActionResult> Reserve([FromRoute]int id, [FromBody] CreateTestAppointmentFromTestOrderDTO createTestAppointmentDTO)
         {
             // Route ID authoritative
             createTestAppointmentDTO.TestOrderID = id;
@@ -63,7 +63,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute]int id)
         {
             var result = await _testOrderService.DeleteAsync(id);
 

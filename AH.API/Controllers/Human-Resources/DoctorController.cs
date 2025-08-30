@@ -43,7 +43,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById([FromRoute]int id)
         {
             var result = await _doctorService.GetByIDAsync(id);
 
@@ -68,7 +68,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateDoctorDTO updateDoctorDTO)
+        public async Task<IActionResult> Update([FromRoute]int id, [FromBody] UpdateDoctorDTO updateDoctorDTO)
         {
             if (id != updateDoctorDTO.ID)
                 return BadRequest("ID mismatch between route and body.");
@@ -113,19 +113,19 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute]int id)
         {
             var result = await _doctorService.DeleteAsync(id);
 
             return StatusCode(result.StatusCode, result.Data);
         }
 
-        [HttpPost("{id}/leave")]
+        [HttpPatch("{id}/leave")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Leave(int id)
+        public async Task<IActionResult> Leave([FromRoute]int id)
         {
             var result = await _doctorService.LeaveAsync(id);
 

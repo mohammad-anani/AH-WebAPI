@@ -49,7 +49,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateInsuranceDTO updateInsuranceDTO, CancellationToken cancellationToken)
+        public async Task<IActionResult> Update([FromRoute]int id, [FromBody] UpdateInsuranceDTO updateInsuranceDTO, CancellationToken cancellationToken)
         {
             updateInsuranceDTO.ID = id;
 
@@ -63,7 +63,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete([FromRoute]int id, CancellationToken cancellationToken)
         {
             var result = await _insuranceService.DeleteAsync(id, cancellationToken);
 
