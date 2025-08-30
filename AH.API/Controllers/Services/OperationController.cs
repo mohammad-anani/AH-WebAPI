@@ -105,5 +105,49 @@ namespace AH.API.Controllers
 
             return StatusCode(result.StatusCode, result.Data);
         }
+
+        [HttpPost("{id}/start")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Start(int id, [FromBody] StartServiceDTO dto)
+        {
+            var result = await _operationService.StartAsync(id, dto?.Notes);
+            return StatusCode(result.StatusCode, result.Data);
+        }
+
+        [HttpPost("{id}/cancel")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Cancel(int id, [FromBody] CancelServiceDTO dto)
+        {
+            var result = await _operationService.CancelAsync(id, dto?.Notes);
+            return StatusCode(result.StatusCode, result.Data);
+        }
+
+        [HttpPost("{id}/complete")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Complete(int id, [FromBody] CompleteServiceDTO dto)
+        {
+            var result = await _operationService.CompleteAsync(id, dto?.Notes, dto?.Result ?? string.Empty);
+            return StatusCode(result.StatusCode, result.Data);
+        }
+
+        [HttpPost("{id}/reschedule")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Reschedule(int id, [FromBody] RescheduleServiceDTO dto)
+        {
+            var result = await _operationService.RescheduleAsync(id, dto?.Notes, dto!.NewScheduledDate);
+            return StatusCode(result.StatusCode, result.Data);
+        }
     }
 }
