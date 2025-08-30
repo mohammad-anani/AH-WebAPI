@@ -25,7 +25,7 @@ namespace AH.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var result = await _receptionistService.GetByIDAsync(id);
 
@@ -41,10 +41,9 @@ namespace AH.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateReceptionistDTO updateReceptionistDTO)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateReceptionistDTO updateReceptionistDTO)
         {
-            if (id != updateReceptionistDTO.ID)
-                return BadRequest("ID mismatch between route and body.");
+            updateReceptionistDTO.ID = id;
 
             var result = await _receptionistService.UpdateAsync(updateReceptionistDTO.ToReceptionist());
 
@@ -52,7 +51,7 @@ namespace AH.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var result = await _receptionistService.DeleteAsync(id);
 
@@ -60,7 +59,7 @@ namespace AH.API.Controllers
         }
 
         [HttpPatch("{id}/leave")]
-        public async Task<IActionResult> Leave(int id)
+        public async Task<IActionResult> Leave([FromRoute] int id)
         {
             var result = await _receptionistService.LeaveAsync(id);
 

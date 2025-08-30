@@ -66,8 +66,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateOperationDTO updateOperationDTO)
         {
-            if (id != updateOperationDTO.ID)
-                return BadRequest("ID mismatch between route and body.");
+            updateOperationDTO.ID = id;
 
             var result = await _operationService.UpdateAsync(updateOperationDTO);
 
@@ -78,8 +77,9 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetDoctors([FromQuery] OperationDoctorFilterDTO filterDTO)
+        public async Task<IActionResult> GetDoctors([FromRoute] int id, [FromQuery] OperationDoctorFilterDTO filterDTO)
         {
+            filterDTO.OperationID = id;
             var result = await _operationDoctorService.GetAllByOperationIDAsync(filterDTO);
             return StatusCode(result.StatusCode, result.Data);
         }
@@ -88,7 +88,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetPayments([FromQuery] PaymentFilterDTO filterDTO)
+        public async Task<IActionResult> GetPayments([FromRoute] int id, [FromQuery] PaymentFilterDTO filterDTO)
         {
             var result = await _paymentService.GetAllByBillIDAsync(filterDTO);
             return StatusCode(result.StatusCode, result.Data);

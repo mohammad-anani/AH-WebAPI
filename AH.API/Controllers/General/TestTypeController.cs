@@ -33,7 +33,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetById([FromRoute]int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var result = await _testTypeService.GetByIDAsync(id);
 
@@ -58,10 +58,9 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update([FromRoute]int id, [FromBody] UpdateTestTypeDTO updateTestTypeDTO)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateTestTypeDTO updateTestTypeDTO)
         {
-            if (id != updateTestTypeDTO.ID)
-                return BadRequest("ID mismatch between route and body.");
+            updateTestTypeDTO.ID = id;
 
             var result = await _testTypeService.UpdateAsync(updateTestTypeDTO);
 
@@ -73,7 +72,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Delete([FromRoute]int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var result = await _testTypeService.DeleteAsync(id);
 
