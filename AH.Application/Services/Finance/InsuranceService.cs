@@ -60,9 +60,9 @@ namespace AH.Application.Services
         /// <param name="expirationDate">The new expiration date</param>
         /// <param name="cancellationToken">Token to observe while waiting for the task to complete.</param>
         /// <returns>ServiceResult containing true if renewal was successful, false otherwise</returns>
-        public async Task<ServiceResult<bool>> RenewAsync(int ID, decimal coverage, DateOnly expirationDate, CancellationToken cancellationToken = default)
+        public async Task<ServiceResult<bool>> RenewAsync(RenewInsuranceDTO renewInsuranceDTO, CancellationToken cancellationToken = default)
         {
-            var response = await _insuranceRepository.Renew(ID, coverage, expirationDate, cancellationToken);
+            var response = await _insuranceRepository.Renew(renewInsuranceDTO.ID, renewInsuranceDTO.Coverage, renewInsuranceDTO.ExpirationDate, cancellationToken);
             return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 

@@ -1,5 +1,6 @@
 using AH.Application.DTOs.Validation;
 using AH.Domain.Entities;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.Application.DTOs.Create
@@ -22,11 +23,7 @@ namespace AH.Application.DTOs.Create
         [FutureDateWithinYear]
         public DateOnly ExpirationDate { get; set; }
 
-        [Required(ErrorMessage = "Active status is required")]
-        public bool IsActive { get; set; }
-
-        [Required(ErrorMessage = "Created by receptionist ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Created by receptionist ID must be a positive number")]
+        [BindNever]
         public int CreatedByReceptionistID { get; set; }
 
         public CreateInsuranceDTO()
@@ -35,17 +32,15 @@ namespace AH.Application.DTOs.Create
             ProviderName = string.Empty;
             Coverage = 0;
             ExpirationDate = DateOnly.MinValue;
-            IsActive = true;
             CreatedByReceptionistID = -1;
         }
 
-        public CreateInsuranceDTO(int patientID, string providerName, decimal coverage, DateOnly expirationDate, bool isActive, int createdByReceptionistID)
+        public CreateInsuranceDTO(int patientID, string providerName, decimal coverage, DateOnly expirationDate, int createdByReceptionistID)
         {
             PatientID = patientID;
             ProviderName = providerName;
             Coverage = coverage;
             ExpirationDate = expirationDate;
-            IsActive = isActive;
             CreatedByReceptionistID = createdByReceptionistID;
         }
 
@@ -57,7 +52,7 @@ namespace AH.Application.DTOs.Create
                 ProviderName,
                 Coverage,
                 ExpirationDate,
-                IsActive,
+                true,
                 DateTime.MinValue,
                 new Receptionist(CreatedByReceptionistID)
             );

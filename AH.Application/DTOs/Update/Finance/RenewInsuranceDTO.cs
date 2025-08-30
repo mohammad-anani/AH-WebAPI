@@ -1,33 +1,38 @@
-using AH.Application.DTOs.Validation;
+﻿using AH.Application.DTOs.Validation;
 using AH.Domain.Entities;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace AH.Application.DTOs.Update
 {
-    public class UpdateInsuranceDTO
+    public class RenewInsuranceDTO
     {
         [BindNever]
         public int ID { get; set; }
 
-        [Required(ErrorMessage = "Provider name is required")]
-        [StringLength(50, MinimumLength = 10, ErrorMessage = "Provider name must be between 10 and 50 characters")]
-        public string ProviderName { get; set; }
+        [Required(ErrorMessage = "Expiration date is required")]
+        [FutureDateWithinYear]
+        public DateOnly ExpirationDate { get; set; }
 
         [Required(ErrorMessage = "Coverage is required")]
         [Range(0.0, 1.0, ErrorMessage = "Coverage must be between 0 and 1")]
         public decimal Coverage { get; set; }
 
-        public UpdateInsuranceDTO()
+        public RenewInsuranceDTO()
         {
             ID = -1;
-            ProviderName = string.Empty;
             Coverage = 0;
+            ExpirationDate = DateOnly.MinValue;
         }
 
-        public UpdateInsuranceDTO(int patientID, string providerName, decimal coverage, int createdByReceptionistID)
+        public RenewInsuranceDTO(decimal coverage, DateOnly expirationDate)
         {
-            ProviderName = providerName;
+            ExpirationDate = expirationDate;
             Coverage = coverage;
         }
 
@@ -36,9 +41,9 @@ namespace AH.Application.DTOs.Update
             return new Insurance(
                 -1,
                 new Patient(-1),
-                ProviderName,
+                "",
                 Coverage,
-                DateOnly.MinValue,
+                ExpirationDate,
                 true,
                 DateTime.MinValue,
                 new Receptionist(-1)

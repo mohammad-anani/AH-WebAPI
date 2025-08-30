@@ -38,7 +38,7 @@ namespace AH.Application.IServices
         /// <param name="expirationDate">The new expiration date</param>
         /// <param name="cancellationToken">Token to observe while waiting for the task to complete.</param>
         /// <returns>ServiceResult containing true if renewal was successful, false otherwise</returns>
-        Task<ServiceResult<bool>> RenewAsync(int ID, decimal coverage, DateOnly expirationDate, CancellationToken cancellationToken = default);
+        Task<ServiceResult<bool>> RenewAsync(RenewInsuranceDTO renewInsuranceDTO, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Creates a new insurance record in the system.
