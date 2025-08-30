@@ -2,11 +2,12 @@ using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Filter;
 using AH.Application.IServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace AH.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]s")]
     public class PaymentController : ControllerBase
     {
         private readonly IPaymentService _paymentService;
@@ -16,14 +17,11 @@ namespace AH.API.Controllers
             _paymentService = paymentService;
         }
 
-        [HttpGet("bill/{billId}")]
-        public async Task<IActionResult> GetAllByBillId([FromQuery] PaymentFilterDTO filterDTO)
-        {
-            var result = await _paymentService.GetAllByBillIDAsync(filterDTO);
-            return StatusCode(result.StatusCode, result.Data);
-        }
-
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById(int id)
         {
             var result = await _paymentService.GetByIDAsync(id);
@@ -32,6 +30,10 @@ namespace AH.API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Add([FromBody] CreatePaymentDTO createPaymentDTO)
         {
             var result = await _paymentService.AddAsync(createPaymentDTO);
@@ -40,6 +42,10 @@ namespace AH.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _paymentService.DeleteAsync(id);

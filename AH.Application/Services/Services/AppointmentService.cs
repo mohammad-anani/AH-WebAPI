@@ -43,9 +43,9 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="doctorID">The unique identifier of the doctor</param>
         /// <returns>ServiceResult containing appointment row DTOs and count as tuple</returns>
-        public async Task<ServiceResult<(IEnumerable<AppointmentRowDTO> items, int count)>> GetAllByDoctorIDAsync(int doctorID)
+        public async Task<ServiceResult<(IEnumerable<AppointmentRowDTO> items, int count)>> GetAllByDoctorIDAsync(AppointmentFilterDTO filterDTO)
         {
-            var response = await _appointmentRepository.GetAllByDoctorIDAsync(doctorID);
+            var response = await _appointmentRepository.GetAllByDoctorIDAsync(filterDTO);
             return ServiceResult<(IEnumerable<AppointmentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
@@ -54,9 +54,9 @@ namespace AH.Application.Services
         /// </summary>
         /// <param name="patientID">The unique identifier of the patient</param>
         /// <returns>ServiceResult containing appointment row DTOs and count as tuple</returns>
-        public async Task<ServiceResult<(IEnumerable<AppointmentRowDTO> items, int count)>> GetAllByPatientIDAsync(int patientID)
+        public async Task<ServiceResult<(IEnumerable<AppointmentRowDTO> items, int count)>> GetAllByPatientIDAsync(AppointmentFilterDTO filterDTO)
         {
-            var response = await _appointmentRepository.GetAllByPatientIDAsync(patientID);
+            var response = await _appointmentRepository.GetAllByPatientIDAsync(filterDTO);
             return ServiceResult<(IEnumerable<AppointmentRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 

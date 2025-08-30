@@ -25,14 +25,14 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="doctorID">The unique identifier of the doctor</param>
         /// <returns>ServiceResult containing appointment row DTOs and count as tuple</returns>
-        Task<ServiceResult<(IEnumerable<AppointmentRowDTO> items, int count)>> GetAllByDoctorIDAsync(int doctorID);
+        Task<ServiceResult<(IEnumerable<AppointmentRowDTO> items, int count)>> GetAllByDoctorIDAsync(AppointmentFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a paginated list of appointments for a specific patient.
         /// </summary>
         /// <param name="patientID">The unique identifier of the patient</param>
         /// <returns>ServiceResult containing appointment row DTOs and count as tuple</returns>
-        Task<ServiceResult<(IEnumerable<AppointmentRowDTO> items, int count)>> GetAllByPatientIDAsync(int patientID);
+        Task<ServiceResult<(IEnumerable<AppointmentRowDTO> items, int count)>> GetAllByPatientIDAsync(AppointmentFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a specific appointment by its unique identifier.

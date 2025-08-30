@@ -3,6 +3,7 @@ using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
+using AH.Application.DTOs.Update;
 
 namespace AH.Application.IServices
 {
@@ -24,14 +25,14 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="doctorID">The unique identifier of the doctor</param>
         /// <returns>Response containing operation row DTOs and count</returns>
-        Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllByDoctorIDAsync(int doctorID);
+        Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllByDoctorIDAsync(int doctorID, OperationFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a paginated list of operations for a specific patient.
         /// </summary>
         /// <param name="patientID">The unique identifier of the patient</param>
         /// <returns>Response containing operation row DTOs and count</returns>
-        Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllByPatientIDAsync(int patientID);
+        Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllByPatientIDAsync(OperationFilterDTO filterDTO);
 
         /// <summary>
         /// Retrieves a specific operation by its unique identifier.
@@ -52,7 +53,7 @@ namespace AH.Application.IServices
         /// </summary>
         /// <param name="operationDTO">The operation DTO with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
-        Task<ServiceResult<bool>> UpdateAsync(AddUpdateOperationDTO operationDTO);
+        Task<ServiceResult<bool>> UpdateAsync(UpdateOperationDTO operationDTO);
 
         /// <summary>
         /// Deletes an operation from the system.

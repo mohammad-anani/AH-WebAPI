@@ -2,6 +2,8 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Serilog;
 using System.Reflection;
+using AH.API.Routing;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
 ConfigHelper.Initialize(builder.Configuration);
-builder.Services.AddControllers();// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidationFilter>();
+    // Apply slugify convention so [controller] becomes dashed lowercase
+    options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
+});// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -44,11 +51,6 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     containerBuilder.Register(ctx => builder.Configuration)
        .As<IConfiguration>()
        .SingleInstance();
-});
-
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<ValidationFilter>();
 });
 
 Log.Logger = new LoggerConfiguration()

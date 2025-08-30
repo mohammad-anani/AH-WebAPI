@@ -5,8 +5,8 @@ namespace AH.Application.DTOs.Filter
     public class EmployeeFilter : PersonFilter, IAdminAudit
     {
         public int? DepartmentID { get; set; }
-        public decimal? SalaryFrom { get; set; }
-        public decimal? SalaryTo { get; set; }
+        public int? SalaryFrom { get; set; }
+        public int? SalaryTo { get; set; }
         public DateTime? HireDateFrom { get; set; }
         public DateTime? HireDateTo { get; set; }
         public DateTime? LeaveDateFrom { get; set; }
@@ -23,8 +23,8 @@ namespace AH.Application.DTOs.Filter
         // Full constructor
         public EmployeeFilter(
             int? departmentID,
-            decimal? salaryFrom,
-            decimal? salaryTo,
+            int? salaryFrom,
+            int? salaryTo,
             DateTime? hireDateFrom,
             DateTime? hireDateTo,
             DateTime? leaveDateFrom,

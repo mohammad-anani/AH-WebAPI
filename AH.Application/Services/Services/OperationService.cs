@@ -3,6 +3,7 @@ using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
+using AH.Application.DTOs.Update;
 using AH.Application.IRepositories;
 using AH.Application.IServices;
 
@@ -44,9 +45,9 @@ namespace AH.Application.Services
         /// <param name="doctorID">The unique identifier of the doctor</param>
         /// <returns>Response containing operation row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllByDoctorIDAsync(int doctorID)
+        public async Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllByDoctorIDAsync(int doctorID,OperationFilterDTO filterDTO)
         {
-            var response = await _operationRepository.GetAllByDoctorIDAsync(doctorID);
+            var response = await _operationRepository.GetAllByDoctorIDAsync(doctorID,filterDTO);
             return ServiceResult<(IEnumerable<OperationRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
@@ -56,9 +57,9 @@ namespace AH.Application.Services
         /// <param name="patientID">The unique identifier of the patient</param>
         /// <returns>Response containing operation row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllByPatientIDAsync(int patientID)
+        public async Task<ServiceResult<(IEnumerable<OperationRowDTO> items, int count)>> GetAllByPatientIDAsync(OperationFilterDTO filterDTO)
         {
-            var response = await _operationRepository.GetAllByPatientIDAsync(patientID);
+            var response = await _operationRepository.GetAllByPatientIDAsync(filterDTO);
             return ServiceResult<(IEnumerable<OperationRowDTO>, int)>.Create((response.Items, response.Count), response.Exception);
         }
 
@@ -93,9 +94,9 @@ namespace AH.Application.Services
         /// <param name="operationDTO">The operation DTO with updated information</param>
         /// <returns>True if update was successful, false otherwise</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<ServiceResult<bool>> UpdateAsync(AddUpdateOperationDTO operationDTO)
+        public async Task<ServiceResult<bool>> UpdateAsync(UpdateOperationDTO operationDTO)
         {
-            var response = await _operationRepository.UpdateAsync(operationDTO);
+            var response = await _operationRepository.UpdateAsync(operationDTO.ToAddUpdateOperationDTO());
             return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 

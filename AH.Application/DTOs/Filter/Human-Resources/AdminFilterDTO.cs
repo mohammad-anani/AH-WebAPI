@@ -15,8 +15,8 @@ namespace AH.Application.DTOs.Filter
             int? page,
             int? departmentID
             = null,
-            decimal? salaryFrom = null,
-            decimal? salaryTo = null,
+            int? salaryFrom = null,
+            int? salaryTo = null,
             DateTime? hireDateFrom = null,
             DateTime? hireDateTo = null,
             DateTime? leaveDateFrom = null,

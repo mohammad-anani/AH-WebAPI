@@ -42,9 +42,9 @@ namespace AH.Infrastructure.Repositories
             , parameters);
         }
 
-        public async Task<GetAllResponseDTO<OperationRowDTO>> GetAllByDoctorIDAsync(int doctorID)
+        public async Task<GetAllResponseDTO<OperationRowDTO>> GetAllByDoctorIDAsync(int doctorID, OperationFilterDTO filterDTO)
         {
-            var filterDTO = new OperationFilterDTO { /* set any default values if needed */ };
+           
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
                 ["DoctorID"] = (doctorID, SqlDbType.Int, null, null),
@@ -63,9 +63,9 @@ namespace AH.Infrastructure.Repositories
             , parameters);
         }
 
-        public async Task<GetAllResponseDTO<OperationRowDTO>> GetAllByPatientIDAsync(int patientID)
+        public async Task<GetAllResponseDTO<OperationRowDTO>> GetAllByPatientIDAsync(OperationFilterDTO filterDTO)
         {
-            var filterDTO = new OperationFilterDTO { PatientID = patientID };
+      
             return await this.GetAllAsync(filterDTO);
         }
 

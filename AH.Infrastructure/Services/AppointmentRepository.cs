@@ -43,15 +43,13 @@ namespace AH.Infrastructure.Repositories
             , parameters);
         }
 
-        public async Task<GetAllResponseDTO<AppointmentRowDTO>> GetAllByDoctorIDAsync(int doctorID)
+        public async Task<GetAllResponseDTO<AppointmentRowDTO>> GetAllByDoctorIDAsync(AppointmentFilterDTO filterDTO)
         {
-            var filterDTO = new AppointmentFilterDTO { DoctorID = doctorID };
             return await this.GetAllAsync(filterDTO);
         }
 
-        public async Task<GetAllResponseDTO<AppointmentRowDTO>> GetAllByPatientIDAsync(int patientID)
+        public async Task<GetAllResponseDTO<AppointmentRowDTO>> GetAllByPatientIDAsync(AppointmentFilterDTO filterDTO)
         {
-            var filterDTO = new AppointmentFilterDTO { PatientID = patientID };
             return await this.GetAllAsync(filterDTO);
         }
 

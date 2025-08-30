@@ -6,21 +6,17 @@ using Microsoft.AspNetCore.Mvc;
 namespace AH.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]s")]
     public class TestOrderController : ControllerBase
     {
         private readonly ITestOrderService _testOrderService;
 
-        public TestOrderController(ITestOrderService testOrderService)
+        private readonly ITestAppointmentService _testAppointmentService;
+
+        public TestOrderController(ITestOrderService testOrderService, ITestAppointmentService testAppointmentService)
         {
             _testOrderService = testOrderService;
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] TestOrderFilterDTO filterDTO)
-        {
-            var result = await _testOrderService.GetAllAsync(filterDTO);
-            return StatusCode(result.StatusCode, result.Data);
+            _testAppointmentService = testAppointmentService;
         }
 
         [HttpGet("{id}")]
@@ -35,6 +31,14 @@ namespace AH.API.Controllers
         public async Task<IActionResult> Add([FromBody] CreateTestOrderDTO createTestOrderDTO)
         {
             var result = await _testOrderService.AddAsync(createTestOrderDTO);
+
+            return StatusCode(result.StatusCode, result.Message);
+        }
+
+        [HttpPost("{id}/reserve")]
+        public async Task<IActionResult> Reserve([FromBody] CreateTestAppointmentFromTestOrderDTO createTestAppointmentDTO)
+        {
+            var result = await _testAppointmentService.AddFromTestOrderAsync(createTestAppointmentDTO);
 
             return StatusCode(result.StatusCode, result.Message);
         }

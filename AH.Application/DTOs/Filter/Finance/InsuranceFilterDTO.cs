@@ -1,8 +1,11 @@
-﻿namespace AH.Application.DTOs.Filter
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AH.Application.DTOs.Filter
 {
     public class InsuranceFilterDTO
     {
-        public int? PatientID { get; set; }
+        [Required]
+        public int PatientID { get; set; }
 
         public int? Page { get; set; }
     }

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AH.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]s")]
     public class ReceptionistController : ControllerBase
     {
         private readonly IReceptionistService _receptionistService;
