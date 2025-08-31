@@ -75,8 +75,9 @@ namespace AH.Application.DTOs.Create
             return new Person(FirstName, MiddleName, LastName, Gender, BirthDate, new Country(CountryID), Phone, new User(Email, Password));
         }
 
-        public static string HashPassword(User user)
+        public static string HashPassword(string password)
         {
+            User user = new User { Password = password };
             var passwordHasher = new PasswordHasher<User>();
             return passwordHasher.HashPassword(user, user.Password);
         }

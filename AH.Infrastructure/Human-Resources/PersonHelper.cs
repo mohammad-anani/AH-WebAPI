@@ -37,7 +37,7 @@ namespace AH.Infrastructure.Helpers
                 ["CountryID"] = (person.Country.ID, SqlDbType.Int, null, null),
                 ["Phone"] = (person.Phone, SqlDbType.NVarChar, 8, null),
                 ["Email"] = (person.User.Email, SqlDbType.NVarChar, 40, null),
-                ["Password"] = (CreatePersonDTO.HashPassword(person.User), SqlDbType.NVarChar, 200, null)
+                ["Password"] = (CreatePersonDTO.HashPassword(person.User.Password), SqlDbType.NVarChar, 200, null)
             };
             SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
         }

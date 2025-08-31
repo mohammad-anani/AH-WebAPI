@@ -1,5 +1,7 @@
-﻿using AH.Application.DTOs.Response;
+﻿using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Response;
 using AH.Application.IRepositories;
+using AH.Domain.Entities;
 using AH.Infrastructure.Helpers;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
@@ -39,7 +41,7 @@ namespace AH.Infrastructure.Repositories
             {
                 { "@Email", (email, SqlDbType.Int, null, null)
                 },
-                { "@Password", (password, SqlDbType.NVarChar, 256, null)
+                { "@Password", (CreatePersonDTO.HashPassword(password), SqlDbType.NVarChar, 256, null)
                 }
             };
 
