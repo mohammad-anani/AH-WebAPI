@@ -32,6 +32,11 @@ namespace AH.Infrastructure.Repositories
             return await ReusableCRUD.GetAllAsync<OperationRowDTO, OperationFilterDTO>("Fetch_Operations", _logger, filterDTO, cmd =>
             {
                 ServiceHelper.AddServiceFilterParameters(filterDTO, cmd);
+
+
+                var param = cmd.Parameters.AddWithValue("@OperationDoctors", filterDTO.ToOperationDoctorDatatable());
+                param.SqlDbType = SqlDbType.Structured;
+                param.TypeName = "dbo.OperationDoctorsType";
             }, (reader, converter) =>
 
                 new OperationRowDTO(converter.ConvertValue<int>("ID"),

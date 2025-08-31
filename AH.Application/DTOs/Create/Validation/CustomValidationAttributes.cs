@@ -144,4 +144,49 @@ namespace AH.Application.DTOs.Validation
             return $"{name} must be a comma-separated list of weekdays (Mon or Monday, case-insensitive).";
         }
     }
-}
+
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
+    public class OperationDoctorsAttribute : ValidationAttribute
+    {
+        private readonly int _maxDoctors;
+
+        public OperationDoctorsAttribute(int maxDoctors = 5)
+        {
+            _maxDoctors = maxDoctors;
+            ErrorMessage = $"The field must contain 1 to {_maxDoctors} doctors in the format DoctorID:Role;";
+        }
+
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        {
+            if (value == null) return ValidationResult.Success;
+
+            string doctorsString = value.ToString()!;
+            if (string.IsNullOrWhiteSpace(doctorsString))
+                return new ValidationResult(ErrorMessage);
+
+            var doctors = doctorsString.Split(';', StringSplitOptions.RemoveEmptyEntries);
+
+            if (doctors.Length == 0 || doctors.Length > _maxDoctors)
+                return new ValidationResult($"You must provide between 1 and {_maxDoctors} doctors.");
+
+            foreach (var doctor in doctors)
+            {
+                var parts = doctor.Split(':', StringSplitOptions.None);
+
+                if (parts.Length != 2)
+                    return new ValidationResult($"Each doctor entry must be in the format DoctorID:Role. Invalid: '{doctor}'");
+
+                if (string.IsNullOrWhiteSpace(parts[0]))
+                    return new ValidationResult($"DoctorID is required. Invalid entry: '{doctor}'");
+
+                // Optionally, validate that DoctorID is numeric
+                if (!int.TryParse(parts[0], out int doctorId) || doctorId <= 0)
+                    return new ValidationResult($"DoctorID must be a positive integer. Invalid entry: '{doctor}'");
+
+                // Role is optional, no further validation needed
+            }
+
+            return ValidationResult.Success;
+        }
+    }
+    }

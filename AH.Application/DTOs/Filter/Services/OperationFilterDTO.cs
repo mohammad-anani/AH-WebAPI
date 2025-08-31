@@ -1,4 +1,7 @@
 using AH.Application.DTOs.Filter.Helpers;
+using AH.Application.DTOs.Validation;
+using AH.Domain.Entities;
+using System.Data;
 
 namespace AH.Application.DTOs.Filter
 {
@@ -9,6 +12,9 @@ namespace AH.Application.DTOs.Filter
         public string? Description { get; set; }
 
         public int? DepartmentID { get; set; }
+
+        [OperationDoctors]
+        public string? Doctors { get; set; }
         public string? Sort { get; set; }
         public bool? Order { get; set; }
         public int? Page { get; set; }
@@ -61,5 +67,43 @@ namespace AH.Application.DTOs.Filter
             Order = null;
             Page = null;
         }
+
+        public DataTable ToOperationDoctorDatatable()
+        {
+            var table = new DataTable();
+            table.Columns.Add("DoctorID", typeof(int));
+            table.Columns.Add("Role", typeof(string));
+
+            if (string.IsNullOrWhiteSpace(Doctors))
+                return table;
+
+            // Ensure ending semicolon to simplify parsing
+            Doctors = Doctors.Trim();
+            if (!Doctors.EndsWith(";")) Doctors += ";";
+
+            int start = 0;
+            int sep;
+
+            while ((sep = Doctors.IndexOf(';', start)) >= 0)
+            {
+                var pair = Doctors[start..sep]; // substring between start and semicolon
+                if (!string.IsNullOrWhiteSpace(pair))
+                {
+                    var parts = pair.Split(':', 2); // split into DoctorID and Role
+                    if (parts.Length >= 1 && int.TryParse(parts[0], out int doctorId))
+                    {
+                        var role = parts.Length == 2 ? parts[1] : null;
+                        var row = table.NewRow();
+                        row["DoctorID"] = doctorId;
+                        row["Role"] = string.IsNullOrWhiteSpace(role) ? DBNull.Value : role;
+                        table.Rows.Add(row);
+                    }
+                }
+                start = sep + 1;
+            }
+
+            return table;
+        }
+
     }
 }
