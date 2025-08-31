@@ -20,9 +20,8 @@ namespace AH.Application.DTOs.Create
         [HireDateValidation]
         public DateTime HireDate { get; set; }
 
-        [Required(ErrorMessage = "Working days is required")]
-        [Range(1, 127, ErrorMessage = "Working days must be between 1 and 127")]
-        public int WorkingDays { get; set; }
+        [WorkingDaysString]
+        public string WorkingDays { get; set; }
 
         [Required(ErrorMessage = "Shift start time is required")]
         public TimeOnly ShiftStart { get; set; }
@@ -38,7 +37,7 @@ namespace AH.Application.DTOs.Create
             DepartmentID = -1;
             Salary = 0;
             HireDate = DateTime.MinValue;
-            WorkingDays = 0;
+            WorkingDays = String.Empty;
             ShiftStart = TimeOnly.MinValue;
             ShiftEnd = TimeOnly.MinValue;
             CreatedByAdminID = -1;
@@ -47,7 +46,7 @@ namespace AH.Application.DTOs.Create
         public Employee ToEmployee()
         {
             return new Employee(base.ToPerson(), new Department(DepartmentID),
-                Salary, HireDate, WorkingDays, ShiftStart, ShiftEnd, new AdminAudit(CreatedByAdminID));
+                Salary, HireDate, Employee.ToBitmask(WorkingDays), ShiftStart, ShiftEnd, new AdminAudit(CreatedByAdminID));
         }
     }
 }

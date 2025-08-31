@@ -1,4 +1,5 @@
 using AH.Application.DTOs.Filter.Helpers;
+using AH.Domain.Entities;
 
 namespace AH.Application.DTOs.Filter
 {
@@ -24,7 +25,7 @@ namespace AH.Application.DTOs.Filter
             TimeSpan? shiftStartTo = null,
             TimeSpan? shiftEndFrom = null,
             TimeSpan? shiftEndTo = null,
-            int? workingDays = null,
+            string? workingDays = null,
             DateTime? createdAtFrom = null,
             DateTime? createdAtTo = null,
             int? createdByAdminID = null,

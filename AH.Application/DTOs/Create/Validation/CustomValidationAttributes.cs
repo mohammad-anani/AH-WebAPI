@@ -1,3 +1,4 @@
+using AH.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.Application.DTOs.Validation
@@ -95,6 +96,52 @@ namespace AH.Application.DTOs.Validation
                 }
             }
             return new ValidationResult("Medication start must be now or later, end must be after start, and within 5 years from now.");
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    public class WorkingDaysStringAttribute : ValidationAttribute
+    {
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        {
+            if (value is not string input || string.IsNullOrWhiteSpace(input))
+            {
+                return new ValidationResult("Working days must be a comma-separated string of weekdays.");
+            }
+
+            // Split by comma, trim spaces, ignore empty items
+            var parts = input.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                             .Select(p => p.Trim())
+                             .ToList();
+
+            if (parts.Count == 0)
+                return new ValidationResult("You must specify at least 1 working day.");
+
+            if (parts.Count > 7)
+                return new ValidationResult("You cannot specify more than 7 working days.");
+
+            // Normalize using dictionary & check validity
+            var normalized = new List<string>();
+            foreach (var part in parts)
+            {
+                if (!Employee.ValidDays.TryGetValue(part, out var normalizedDay))
+                {
+                    return new ValidationResult($"Invalid working day: '{part}'.");
+                }
+                normalized.Add(normalizedDay);
+            }
+
+            // Check uniqueness (case-insensitive, but we already normalized so just Distinct)
+            if (normalized.Distinct().Count() != normalized.Count)
+                return new ValidationResult("Duplicate working days are not allowed.");
+
+            // Everything passed
+            return ValidationResult.Success;
+        }
+
+        public override string FormatErrorMessage(string name)
+        {
+            return $"{name} must be a comma-separated list of weekdays (Mon or Monday, case-insensitive).";
         }
     }
 }

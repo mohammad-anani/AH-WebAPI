@@ -25,9 +25,8 @@ namespace AH.Application.DTOs.Update
         [Range(100, 99999, ErrorMessage = "Salary must be between 100 and 99,999")]
         public int Salary { get; set; }
 
-        [Required(ErrorMessage = "Working days is required")]
-        [Range(1, 127, ErrorMessage = "Working days must be between 1 and 127")]
-        public int WorkingDays { get; set; }
+        [WorkingDaysString]
+        public string WorkingDays { get; set; }
 
         [Required(ErrorMessage = "Shift start time is required")]
         public TimeOnly ShiftStart { get; set; }
@@ -40,7 +39,7 @@ namespace AH.Application.DTOs.Update
             ID = -1;
             DepartmentID = -1;
             Salary = 0;
-            WorkingDays = 0;
+            WorkingDays = string.Empty;
             ShiftStart = TimeOnly.MinValue;
             ShiftEnd = TimeOnly.MinValue;
         }
@@ -48,7 +47,7 @@ namespace AH.Application.DTOs.Update
         public Employee ToEmployee()
         {
             return new Employee(base.ToPerson(), new Department(DepartmentID),
-                Salary, HireDate, WorkingDays, ShiftStart, ShiftEnd, new AdminAudit(-1));
+                Salary, HireDate, Employee.ToBitmask(WorkingDays), ShiftStart, ShiftEnd, new AdminAudit(-1));
         }
     }
 }

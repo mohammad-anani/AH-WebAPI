@@ -1,4 +1,6 @@
 using AH.Application.DTOs.Filter.Helpers;
+using AH.Application.DTOs.Validation;
+using AH.Domain.Entities;
 
 namespace AH.Application.DTOs.Filter
 {
@@ -15,7 +17,10 @@ namespace AH.Application.DTOs.Filter
         public TimeSpan? ShiftStartTo { get; set; }
         public TimeSpan? ShiftEndFrom { get; set; }
         public TimeSpan? ShiftEndTo { get; set; }
-        public int? WorkingDays { get; set; }
+
+        [WorkingDaysString]
+        public string? WorkingDays { get; set; }
+
         public DateTime? CreatedAtFrom { get; set; }
         public DateTime? CreatedAtTo { get; set; }
         public int? CreatedByAdminID { get; set; }
@@ -33,7 +38,7 @@ namespace AH.Application.DTOs.Filter
             TimeSpan? shiftStartTo,
             TimeSpan? shiftEndFrom,
             TimeSpan? shiftEndTo,
-            int? workingDays,
+           string? workingDays,
             DateTime? createdAtFrom,
             DateTime? createdAtTo,
             int? createdByAdminID)
@@ -57,6 +62,7 @@ namespace AH.Application.DTOs.Filter
 
         // Parameterless constructor
         public EmployeeFilter()
-        { }
+        {
+        }
     }
 }

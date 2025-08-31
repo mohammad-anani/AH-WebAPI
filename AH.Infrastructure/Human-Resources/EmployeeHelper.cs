@@ -28,7 +28,7 @@ namespace AH.Infrastructure.Helpers
                 ["ShiftStartTo"] = (employeeFilter.ShiftStartTo, SqlDbType.Time, null, null),
                 ["ShiftEndFrom"] = (employeeFilter.ShiftEndFrom, SqlDbType.Time, null, null),
                 ["ShiftEndTo"] = (employeeFilter.ShiftEndTo, SqlDbType.Time, null, null),
-                ["WorkingDays"] = (employeeFilter.WorkingDays, SqlDbType.Int, null, null),
+                ["WorkingDays"] = (Employee.ToBitmask(employeeFilter.WorkingDays ?? ""), SqlDbType.Int, null, null),
             };
 
             SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
@@ -82,19 +82,20 @@ namespace AH.Infrastructure.Helpers
 
             int? createdByAdminID = converter.ConvertValue<int?>("CreatedByAdminID");
             var employee = new EmployeeDTO
-            {
-                Person = PersonHelper.ReadPerson(reader),
+            (
+                 PersonHelper.ReadPerson(reader),
 
-                Department = DepartmentRepository.ReadDepartment(reader),
-                Salary = converter.ConvertValue<int>("Salary"),
-                HireDate = converter.ConvertValue<DateTime>("HireDate"),
-                LeaveDate = converter.ConvertValue<DateTime?>("LeaveDate"),
-                WorkingDays = converter.ConvertValue<int>("WorkingDays"),
-                ShiftStart = converter.ConvertValue<TimeOnly>("ShiftStart"),
-                ShiftEnd = converter.ConvertValue<TimeOnly>("ShiftEnd"),
-                CreatedByAdmin = createdByAdminID != null ? AdminAuditHelper.ReadAdmin(reader) : null,
-                CreatedAt = converter.ConvertValue<DateTime>("CreatedAt")
-            };
+                 DepartmentRepository.ReadDepartment(reader),
+                 converter.ConvertValue<int>("Salary"),
+                converter.ConvertValue<DateTime>("HireDate"),
+                 converter.ConvertValue<DateTime?>("LeaveDate"),
+                Employee.FromBitmask(converter.ConvertValue<int>("WorkingDays")).Split(",").ToList(),
+                converter.ConvertValue<TimeOnly>("ShiftStart"),
+                converter.ConvertValue<TimeOnly>("ShiftEnd"),
+                 createdByAdminID != null ? AdminAuditHelper.ReadAdmin(reader) : null,
+converter.ConvertValue<DateTime>("CreatedAt")
+
+                );
 
             return employee;
         };
