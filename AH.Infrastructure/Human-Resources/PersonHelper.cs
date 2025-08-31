@@ -1,4 +1,5 @@
-﻿using AH.Application.DTOs.Filter;
+﻿using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Filter;
 using AH.Domain.Entities;
 using Microsoft.Data.SqlClient;
 using System.Data;
@@ -36,7 +37,7 @@ namespace AH.Infrastructure.Helpers
                 ["CountryID"] = (person.Country.ID, SqlDbType.Int, null, null),
                 ["Phone"] = (person.Phone, SqlDbType.NVarChar, 8, null),
                 ["Email"] = (person.User.Email, SqlDbType.NVarChar, 40, null),
-                ["Password"] = (person.User.Password, SqlDbType.NVarChar, 64, null)
+                ["Password"] = (CreatePersonDTO.HashPassword(person.User), SqlDbType.NVarChar, 200, null)
             };
             SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
         }

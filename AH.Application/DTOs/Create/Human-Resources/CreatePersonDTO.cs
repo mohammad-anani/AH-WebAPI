@@ -1,5 +1,6 @@
 ﻿using AH.Application.DTOs.Validation;
 using AH.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.Application.DTOs.Create
@@ -40,7 +41,7 @@ namespace AH.Application.DTOs.Create
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
-        [StringLength(64, MinimumLength = 10, ErrorMessage = "Password must be between 10 and 64 characters")]
+        [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be between 10 and 64 characters")]
         public string Password { get; set; }
 
         public CreatePersonDTO()
@@ -72,6 +73,12 @@ namespace AH.Application.DTOs.Create
         public Person ToPerson()
         {
             return new Person(FirstName, MiddleName, LastName, Gender, BirthDate, new Country(CountryID), Phone, new User(Email, Password));
+        }
+
+        public static string HashPassword(User user)
+        {
+            var passwordHasher = new PasswordHasher<User>();
+            return passwordHasher.HashPassword(user, user.Password);
         }
     }
 }
