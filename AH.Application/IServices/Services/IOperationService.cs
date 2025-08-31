@@ -20,6 +20,8 @@ namespace AH.Application.IServices
         /// <returns>Response containing operation row DTOs and count</returns>
         Task<ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>> GetAllAsync(OperationFilterDTO filterDTO);
 
+        Task<ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>> GetPaymentsAsync(ServicePaymentsDTO filterDTO);
+
         /// <summary>
         /// Retrieves a paginated list of operations for a specific doctor.
         /// </summary>

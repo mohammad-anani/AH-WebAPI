@@ -36,7 +36,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<GetAllResponseDataDTO<TestAppointmentRowDTO>>> GetAllAsync(TestAppointmentFilterDTO filterDTO)
         {
             var response = await _testAppointmentRepository.GetAllAsync(filterDTO);
-            var data = new GetAllResponseDataDTO<TestAppointmentRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<TestAppointmentRowDTO>>.Create(data, response.Exception);
+            var data = new GetAllResponseDataDTO<TestAppointmentRowDTO>(response); return ServiceResult<GetAllResponseDataDTO<TestAppointmentRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<GetAllResponseDataDTO<TestAppointmentRowDTO>>> GetAllByPatientIDAsync(TestAppointmentFilterDTO filterDTO)
         {
             var response = await _testAppointmentRepository.GetAllByPatientIDAsync(filterDTO);
-            var data = new GetAllResponseDataDTO<TestAppointmentRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<TestAppointmentRowDTO>>.Create(data, response.Exception);
+            var data = new GetAllResponseDataDTO<TestAppointmentRowDTO>(response); return ServiceResult<GetAllResponseDataDTO<TestAppointmentRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>
@@ -164,6 +164,12 @@ namespace AH.Application.Services
         {
             var response = await _testAppointmentRepository.RescheduleAsync(id, notes, newScheduledDate);
             return ServiceResult<bool>.Create(response.Success, response.Exception);
+        }
+
+        public async Task<ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>> GetPaymentsAsync(ServicePaymentsDTO filterDTO)
+        {
+            var response = await _testAppointmentRepository.GetPaymentsAsync(filterDTO);
+            var data = new GetAllResponseDataDTO<PaymentRowDTO>(response); return ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>.Create(data, response.Exception); ;
         }
     }
 }

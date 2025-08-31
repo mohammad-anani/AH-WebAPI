@@ -17,6 +17,8 @@ namespace AH.Application.IRepositories
 
         Task<CreateResponseDTO> AddAsync(TestAppointment testAppointment);
 
+        Task<GetAllResponseDTO<PaymentRowDTO>> GetPaymentsAsync(ServicePaymentsDTO filterDTO);
+
         Task<CreateResponseDTO> AddFromTestOrderAsync(CreateTestAppointmentFromTestOrderDTO app);
 
         Task<SuccessResponseDTO> UpdateAsync(TestAppointment testAppointment);

@@ -36,7 +36,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>> GetAllAsync(OperationFilterDTO filterDTO)
         {
             var response = await _operationRepository.GetAllAsync(filterDTO);
-            var data = new GetAllResponseDataDTO<OperationRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>.Create(data, response.Exception);
+            var data = new GetAllResponseDataDTO<OperationRowDTO>(response); return ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>
@@ -45,10 +45,10 @@ namespace AH.Application.Services
         /// <param name="doctorID">The unique identifier of the doctor</param>
         /// <returns>Response containing operation row DTOs and count</returns>
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
-        public async Task<ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>> GetAllByDoctorIDAsync(int doctorID,OperationFilterDTO filterDTO)
+        public async Task<ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>> GetAllByDoctorIDAsync(int doctorID, OperationFilterDTO filterDTO)
         {
-            var response = await _operationRepository.GetAllByDoctorIDAsync(doctorID,filterDTO);
-            var data = new GetAllResponseDataDTO<OperationRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>.Create(data, response.Exception);
+            var response = await _operationRepository.GetAllByDoctorIDAsync(doctorID, filterDTO);
+            var data = new GetAllResponseDataDTO<OperationRowDTO>(response); return ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>> GetAllByPatientIDAsync(OperationFilterDTO filterDTO)
         {
             var response = await _operationRepository.GetAllByPatientIDAsync(filterDTO);
-            var data = new GetAllResponseDataDTO<OperationRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>.Create(data, response.Exception);
+            var data = new GetAllResponseDataDTO<OperationRowDTO>(response); return ServiceResult<GetAllResponseDataDTO<OperationRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>
@@ -164,6 +164,12 @@ namespace AH.Application.Services
         {
             var response = await _operationRepository.RescheduleAsync(id, notes, newScheduledDate);
             return ServiceResult<bool>.Create(response.Success, response.Exception);
+        }
+
+        public async Task<ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>> GetPaymentsAsync(ServicePaymentsDTO filterDTO)
+        {
+            var response = await _operationRepository.GetPaymentsAsync(filterDTO);
+            var data = new GetAllResponseDataDTO<PaymentRowDTO>(response); return ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>.Create(data, response.Exception); ;
         }
     }
 }

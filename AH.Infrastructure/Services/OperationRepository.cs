@@ -44,7 +44,6 @@ namespace AH.Infrastructure.Repositories
 
         public async Task<GetAllResponseDTO<OperationRowDTO>> GetAllByDoctorIDAsync(int doctorID, OperationFilterDTO filterDTO)
         {
-           
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
                 ["DoctorID"] = (doctorID, SqlDbType.Int, null, null),
@@ -65,7 +64,6 @@ namespace AH.Infrastructure.Repositories
 
         public async Task<GetAllResponseDTO<OperationRowDTO>> GetAllByPatientIDAsync(OperationFilterDTO filterDTO)
         {
-      
             return await this.GetAllAsync(filterDTO);
         }
 
@@ -173,6 +171,39 @@ namespace AH.Infrastructure.Repositories
             };
 
             return await ReusableCRUD.ExecuteByIDAsync("Reschedule_Operation", _logger, id, extraParams);
+        }
+
+        public async Task<GetAllResponseDTO<PaymentRowDTO>> GetPaymentsAsync(ServicePaymentsDTO filterDTO)
+        {
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["OperationID"] = (filterDTO.ID, SqlDbType.Int, null, null),
+                ["Page"] = (filterDTO.Page, SqlDbType.Int, null, null),
+            };
+
+            int totalCount = -1;
+            List<PaymentRowDTO> items = new List<PaymentRowDTO>();
+            ConvertingHelper converter = new ConvertingHelper();
+            RowCountOutputHelper rowCountOutputHelper = new RowCountOutputHelper();
+
+            Exception? ex = await ADOHelper.ExecuteReaderAsync(
+                 "Fetch_OperationPayments", _logger, cmd =>
+                 {
+                     SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+
+                     rowCountOutputHelper.AddToCommand(cmd);
+                 }, (reader, cmd) =>
+                 {
+                     items.Add(new PaymentRowDTO(
+                         converter.ConvertValue<int>("ID"),
+                         converter.ConvertValue<int>("Amount"),
+                         converter.ConvertValue<string>("Method")
+                        ));
+                 }, null, (reader, cmd) => { converter = new ConvertingHelper(reader); });
+
+            totalCount = rowCountOutputHelper.GetRowCount();
+
+            return new GetAllResponseDTO<PaymentRowDTO>(items, totalCount, ex);
         }
     }
 }

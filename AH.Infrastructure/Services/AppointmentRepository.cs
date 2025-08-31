@@ -161,5 +161,38 @@ DoctorRepository.ReadDoctor(reader),
                                         converter.ConvertValue<string>(prefix + "AppointmentStatus"),
                                         converter.ConvertValue<bool>(prefix + "AppointmentIsPaid"));
         }
+
+        public async Task<GetAllResponseDTO<PaymentRowDTO>> GetPaymentsAsync(ServicePaymentsDTO filterDTO)
+        {
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["AppointmentID"] = (filterDTO.ID, SqlDbType.Int, null, null),
+                ["Page"] = (filterDTO.Page, SqlDbType.Int, null, null),
+            };
+
+            int totalCount = -1;
+            List<PaymentRowDTO> items = new List<PaymentRowDTO>();
+            ConvertingHelper converter = new ConvertingHelper();
+            RowCountOutputHelper rowCountOutputHelper = new RowCountOutputHelper();
+
+            Exception? ex = await ADOHelper.ExecuteReaderAsync(
+                 "Fetch_AppointmentPayments", _logger, cmd =>
+                 {
+                     SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+
+                     rowCountOutputHelper.AddToCommand(cmd);
+                 }, (reader, cmd) =>
+                 {
+                     items.Add(new PaymentRowDTO(
+                         converter.ConvertValue<int>("ID"),
+                         converter.ConvertValue<int>("Amount"),
+                         converter.ConvertValue<string>("Method")
+                        ));
+                 }, null, (reader, cmd) => { converter = new ConvertingHelper(reader); });
+
+            totalCount = rowCountOutputHelper.GetRowCount();
+
+            return new GetAllResponseDTO<PaymentRowDTO>(items, totalCount, ex);
+        }
     }
 }

@@ -35,7 +35,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<GetAllResponseDataDTO<AppointmentRowDTO>>> GetAllAsync(AppointmentFilterDTO filterDTO)
         {
             var response = await _appointmentRepository.GetAllAsync(filterDTO);
-            var data = new GetAllResponseDataDTO<AppointmentRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<AppointmentRowDTO>>.Create(data, response.Exception);
+            var data = new GetAllResponseDataDTO<AppointmentRowDTO>(response); return ServiceResult<GetAllResponseDataDTO<AppointmentRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<GetAllResponseDataDTO<AppointmentRowDTO>>> GetAllByDoctorIDAsync(AppointmentFilterDTO filterDTO)
         {
             var response = await _appointmentRepository.GetAllByDoctorIDAsync(filterDTO);
-            var data = new GetAllResponseDataDTO<AppointmentRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<AppointmentRowDTO>>.Create(data, response.Exception);
+            var data = new GetAllResponseDataDTO<AppointmentRowDTO>(response); return ServiceResult<GetAllResponseDataDTO<AppointmentRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<GetAllResponseDataDTO<AppointmentRowDTO>>> GetAllByPatientIDAsync(AppointmentFilterDTO filterDTO)
         {
             var response = await _appointmentRepository.GetAllByPatientIDAsync(filterDTO);
-            var data = new GetAllResponseDataDTO<AppointmentRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<AppointmentRowDTO>>.Create(data, response.Exception);
+            var data = new GetAllResponseDataDTO<AppointmentRowDTO>(response); return ServiceResult<GetAllResponseDataDTO<AppointmentRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>
@@ -165,6 +165,12 @@ namespace AH.Application.Services
         {
             var response = await _appointmentRepository.RescheduleAsync(id, notes, newScheduledDate);
             return ServiceResult<bool>.Create(response.Success, response.Exception);
+        }
+
+        public async Task<ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>> GetPaymentsAsync(ServicePaymentsDTO filterDTO)
+        {
+            var response = await _appointmentRepository.GetPaymentsAsync(filterDTO);
+            var data = new GetAllResponseDataDTO<PaymentRowDTO>(response); return ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>.Create(data, response.Exception); ;
         }
     }
 }

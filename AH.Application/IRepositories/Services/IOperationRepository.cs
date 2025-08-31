@@ -16,6 +16,8 @@ namespace AH.Application.IRepositories
 
         Task<GetByIDResponseDTO<OperationDTO>> GetByIDAsync(int id);
 
+        Task<GetAllResponseDTO<PaymentRowDTO>> GetPaymentsAsync(ServicePaymentsDTO filterDTO);
+
         Task<CreateResponseDTO> AddAsync(AddUpdateOperationDTO operationDTO);
 
         Task<SuccessResponseDTO> UpdateAsync(AddUpdateOperationDTO operationDTO);

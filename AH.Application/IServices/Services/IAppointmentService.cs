@@ -62,6 +62,8 @@ namespace AH.Application.IServices
         /// <returns>ServiceResult containing true if update was successful, false otherwise</returns>
         Task<ServiceResult<bool>> UpdateAsync(UpdateAppointmentDTO updateAppointmentDTO);
 
+        Task<ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>> GetPaymentsAsync(ServicePaymentsDTO filterDTO);
+
         /// <summary>
         /// Deletes an appointment from the system.
         /// </summary>

@@ -103,9 +103,10 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetPayments([FromRoute, Range(1, int.MaxValue)] int id, [FromQuery] PaymentFilterDTO filterDTO)
+        public async Task<IActionResult> GetPayments([FromRoute, Range(1, int.MaxValue)] int id, [FromQuery] ServicePaymentsDTO filterDTO)
         {
-            var result = await _paymentService.GetAllByBillIDAsync(filterDTO);
+            filterDTO.ID = id;
+            var result = await _appointmentService.GetPaymentsAsync(filterDTO);
             return StatusCode(result.StatusCode, result.Data);
         }
 

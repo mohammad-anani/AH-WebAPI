@@ -20,6 +20,8 @@ namespace AH.Application.IServices
         /// <returns>Response containing test appointment row DTOs and count</returns>
         Task<ServiceResult<GetAllResponseDataDTO<TestAppointmentRowDTO>>> GetAllAsync(TestAppointmentFilterDTO filterDTO);
 
+        Task<ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>> GetPaymentsAsync(ServicePaymentsDTO filterDTO);
+
         /// <summary>
         /// Retrieves a paginated list of test appointments for a specific patient.
         /// </summary>
