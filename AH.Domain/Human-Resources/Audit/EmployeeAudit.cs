@@ -26,7 +26,7 @@
         {
             ID = -1;
             Person = new Person();
-            Department = new Department(); // Fix: Don't create new Department to avoid circular dependency
+            Department = new DepartmentAudit(); // Fix: Don't create new Department to avoid circular dependency
             Salary = -1;
             HireDate = DateTime.MinValue;
             LeaveDate = null;

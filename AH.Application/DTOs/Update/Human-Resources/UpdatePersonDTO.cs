@@ -39,10 +39,6 @@ namespace AH.Application.DTOs.Update
         [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Invalid email format")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Password is required")]
-        [StringLength(64, MinimumLength = 10, ErrorMessage = "Password must be between 10 and 64 characters")]
-        public string Password { get; set; }
-
         public UpdatePersonDTO()
         {
             FirstName = "";
@@ -53,7 +49,6 @@ namespace AH.Application.DTOs.Update
             CountryID = -1;
             Phone = "";
             Email = "";
-            Password = "";
         }
 
         public UpdatePersonDTO(string firstName, string middleName, string lastName, char gender, DateTime birthDate, int countryId, string phone, string email, string password)
@@ -66,12 +61,11 @@ namespace AH.Application.DTOs.Update
             CountryID = countryId;
             Phone = phone;
             Email = email;
-            Password = password;
         }
 
         public Person ToPerson()
         {
-            return new Person(FirstName, MiddleName, LastName, Gender, BirthDate, new Country(CountryID), Phone, new User(Email, Password));
+            return new Person(FirstName, MiddleName, LastName, Gender, BirthDate, new Country(CountryID), Phone, new User(Email, ""));
         }
     }
 }

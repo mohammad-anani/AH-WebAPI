@@ -40,7 +40,7 @@ namespace AH.Infrastructure.Helpers
         public static void AddCreateEmployeeParameters(Employee employee, SqlCommand cmd)
         {
             // Reuse Person parameters
-            PersonHelper.AddCreateUpdatePersonParameters(employee.Person, cmd);
+            PersonHelper.AddCreatePersonParameters(employee.Person, cmd);
 
             // Employee-specific parameters as dictionary
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
@@ -60,7 +60,7 @@ namespace AH.Infrastructure.Helpers
         public static void AddUpdateEmployeeParameters(Employee employee, SqlCommand cmd)
         {
             // Reuse Person parameters
-            PersonHelper.AddCreateUpdatePersonParameters(employee.Person, cmd);
+            PersonHelper.AddUpdatePersonParameters(employee.Person, cmd);
 
             // Employee-specific parameters as dictionary
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>

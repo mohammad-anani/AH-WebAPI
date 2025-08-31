@@ -74,7 +74,7 @@ namespace AH.Infrastructure.Repositories
 
             return await ReusableCRUD.AddAsync("Create_Patient", _logger, (cmd) =>
             {
-                PersonHelper.AddCreateUpdatePersonParameters(patient.Person, cmd);
+                PersonHelper.AddCreatePersonParameters(patient.Person, cmd);
             });
         }
 
@@ -82,7 +82,7 @@ namespace AH.Infrastructure.Repositories
         {
             return await ReusableCRUD.UpdateAsync("Update_Patient", _logger, patient.ID, (cmd) =>
             {
-                PersonHelper.AddCreateUpdatePersonParameters(patient.Person, cmd);
+                PersonHelper.AddUpdatePersonParameters(patient.Person, cmd);
             });
         }
 

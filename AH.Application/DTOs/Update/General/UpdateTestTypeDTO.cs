@@ -13,7 +13,7 @@ namespace AH.Application.DTOs.Update
         public int ID { get; set; }
 
         [Required(ErrorMessage = "Test type name is required")]
-        [StringLength(50, MinimumLength = 10, ErrorMessage = "Test type name must be between 10 and 50 characters")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Test type name must be between 3 and 50 characters")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Department ID is required")]

@@ -1,13 +1,10 @@
-﻿using AH.Domain.Entities.Audit;
-
-namespace AH.Domain.Entities
+﻿namespace AH.Domain.Entities.Audit
 {
     public class DepartmentAudit
     {
         public int ID { get; set; }
         public string Name { get; set; }
         public string Phone { get; set; }
-        public AdminAudit CreatedByAdmin { get; set; }
         public DateTime CreatedAt { get; set; }
 
         public DepartmentAudit()
@@ -15,16 +12,14 @@ namespace AH.Domain.Entities
             ID = -1;
             Name = "";
             Phone = "";
-            CreatedByAdmin = new AdminAudit(); // Fix: Don't create new AdminAudit to avoid circular dependency
             CreatedAt = DateTime.MinValue;
         }
 
-        public DepartmentAudit(int id, string name, string phone, AdminAudit createdByAdmin, DateTime createdAt)
+        public DepartmentAudit(int id, string name, string phone, DateTime createdAt)
         {
             ID = id;
             Name = name;
             Phone = phone;
-            CreatedByAdmin = createdByAdmin;
             CreatedAt = createdAt;
         }
 
@@ -33,7 +28,6 @@ namespace AH.Domain.Entities
             ID = id;
             Name = "";
             Phone = "";
-            CreatedByAdmin = new AdminAudit(); // Fix: Don't create new AdminAudit to avoid circular dependency
             CreatedAt = DateTime.MinValue;
         }
 
@@ -42,7 +36,6 @@ namespace AH.Domain.Entities
             ID = -1;
             Name = name;
             Phone = phone;
-            CreatedByAdmin = createdByAdmin;
             CreatedAt = DateTime.MinValue;
         }
     }

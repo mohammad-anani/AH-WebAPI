@@ -53,7 +53,7 @@ namespace AH.API.Controllers
             createAdminDTO.CreatedByAdminID = 2;
             var result = await _adminService.AddAsync(createAdminDTO);
 
-            return StatusCode(result.StatusCode, result.Message);
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpPut("{id}")]

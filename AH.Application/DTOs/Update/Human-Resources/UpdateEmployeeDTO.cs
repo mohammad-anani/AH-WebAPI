@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Validation;
 using AH.Domain.Entities;
 using AH.Domain.Entities.Audit;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -11,6 +12,10 @@ namespace AH.Application.DTOs.Update
         [Required(ErrorMessage = "Employee ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Employee ID must be a positive number")]
         public int ID { get; set; }
+
+        [Required(ErrorMessage = "HireDate is required")]
+        [HireDateValidation]
+        public DateTime HireDate { get; set; }
 
         [Required(ErrorMessage = "Department ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Department ID must be a positive number")]
@@ -43,7 +48,7 @@ namespace AH.Application.DTOs.Update
         public Employee ToEmployee()
         {
             return new Employee(base.ToPerson(), new Department(DepartmentID),
-                Salary, DateTime.MinValue, WorkingDays, ShiftStart, ShiftEnd, new AdminAudit(-1));
+                Salary, HireDate, WorkingDays, ShiftStart, ShiftEnd, new AdminAudit(-1));
         }
     }
 }
