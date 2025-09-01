@@ -128,9 +128,12 @@ builder.Services.Configure<RefreshTokenOptions>(refreshTokenSection);
 
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(builder =>
+    options.AddDefaultPolicy(policyBuilder =>
     {
-        builder.WithOrigins("http://localhost:5173");
+        policyBuilder.WithOrigins
+        (builder.Configuration.GetSection("AllowedOrigins")
+        .Get<string[]>() ?? []).AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
 
