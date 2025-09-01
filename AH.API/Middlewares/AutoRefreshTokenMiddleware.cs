@@ -1,6 +1,7 @@
 ﻿using AH.Application.DTOs.Response;
 using AH.Application.IServices;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -10,37 +11,49 @@ namespace AH.API.Middleware
     public class AutoRefreshTokenMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly int _refreshExpireMinutes;
 
-        public AutoRefreshTokenMiddleware(RequestDelegate next)
+        public AutoRefreshTokenMiddleware(RequestDelegate next, IOptions<AH.Application.Services.RefreshTokenOptions> refreshOptions)
         {
             _next = next;
+            _refreshExpireMinutes = int.TryParse(refreshOptions.Value.ExpireInMinutes, out var m) ? m : 60;
         }
 
         public async Task InvokeAsync(HttpContext context, IJwtService jwtService, IAuthService authService)
         {
-            // Get token from header
-            string token = context.Request.Headers["token"].FirstOrDefault()?.Split(" ").Last() ?? string.Empty;
+            // Prefer standard Authorization header, fallback to custom "token"
+            string authHeader = context.Request.Headers["Authorization"].FirstOrDefault() ?? string.Empty;
+            string token = string.Empty;
+            if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer ", System.StringComparison.OrdinalIgnoreCase))
+                token = authHeader.Substring("Bearer ".Length).Trim();
+            if (string.IsNullOrEmpty(token))
+                token = context.Request.Headers["token"].FirstOrDefault()?.Split(' ').Last() ?? string.Empty;
 
-            // Parse token into ClaimsPrincipal, check if expired
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                // No token provided: let pipeline continue (for AllowAnonymous endpoints)
+                await _next(context);
+                return;
+            }
+
             var (principal, isExpired) = jwtService.GetPrincipalFromJwtToken(token);
 
             if (principal == null)
             {
                 context.Response.StatusCode = 401;
                 await context.Response.WriteAsync("Invalid Token");
-                return; // stop pipeline
+                return;
             }
 
             if (!isExpired)
             {
-                // Token valid → continue normally
                 context.User = principal;
                 await _next(context);
                 return;
             }
 
             // Token expired → try refresh
-            var refreshToken = context.Request.Headers["refreshToken"];
+            var refreshToken = context.Request.Headers["refreshToken"].FirstOrDefault();
             if (string.IsNullOrEmpty(refreshToken))
             {
                 context.Response.StatusCode = 401;
@@ -50,35 +63,34 @@ namespace AH.API.Middleware
 
             // Extract user ID and role from expired token
             int userId = int.Parse(principal.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
-            string role = principal.FindFirst(ClaimTypes.Role)?.Value ?? "";
+            string role = principal.FindFirst(ClaimTypes.Role)?.Value ?? string.Empty;
 
-            // Validate refresh token using userId
             var (storedRefreshToken, expiryDate) = await authService.GetRefreshTokenByUserAsync(userId, role);
-            if (storedRefreshToken == null || storedRefreshToken != refreshToken || expiryDate <= DateTime.UtcNow)
+            if (storedRefreshToken == null || storedRefreshToken != refreshToken || !expiryDate.HasValue || expiryDate.Value <= DateTime.UtcNow)
             {
                 context.Response.StatusCode = 401;
                 await context.Response.WriteAsync("Refresh token mismatch or expired.");
                 return;
             }
 
-            // Create new tokens
+            // Create new tokens and persist new refresh token (rotate)
             var newTokens = jwtService.CreateToken(new SigninResponseDataDTO(userId, role));
+            var newRefreshExpiry = DateTime.UtcNow.AddMinutes(_refreshExpireMinutes);
+            await authService.UpdateUserRefreshTokenAsync(userId, role, newTokens.RefreshToken, newRefreshExpiry);
 
-            // Build ClaimsPrincipal directly from new token (no extra parsing)
+            // Assign updated ClaimsPrincipal
             var newPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
                 new Claim(ClaimTypes.Role, role)
             }, "Jwt"));
-
-            // Assign the new ClaimsPrincipal to HttpContext.User
             context.User = newPrincipal;
 
-            // Send new tokens to client via custom headers
+            // Send new tokens via headers
+            context.Response.Headers["Authorization"] = $"Bearer {newTokens.Token}";
             context.Response.Headers["token"] = newTokens.Token;
-            context.Response.Headers["refreshToken"] = newTokens.RefreshToken ?? "";
+            context.Response.Headers["refreshToken"] = newTokens.RefreshToken ?? string.Empty;
 
-            // Continue to next middleware/controller
             await _next(context);
         }
     }

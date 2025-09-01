@@ -24,4 +24,6 @@
     <ProjectReference Include="..\AH.Infrastructure\AH.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
 </Project>

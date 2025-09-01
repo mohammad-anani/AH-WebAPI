@@ -1,10 +1,10 @@
 ﻿using AH.Application.DTOs.Response;
 using AH.Application.IServices;
-using Jose;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -39,8 +39,8 @@ namespace AH.Application.Services
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.ID.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.ID.ToString()),
-                new Claim(ClaimTypes.Role, user.Role),     // enables [Authorize(Roles="Admin")]
-                new Claim("role", user.Role),               // optional extra
+                new Claim(ClaimTypes.Role, user.Role),
+                new Claim("role", user.Role),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
@@ -63,21 +63,19 @@ namespace AH.Application.Services
 
         public static string GenerateRefreshToken(int size = 64)
         {
-            // size = number of random bytes (64 = 512-bit token)
             var randomBytes = new byte[size];
             using var rng = RandomNumberGenerator.Create();
             rng.GetBytes(randomBytes);
 
-            // Convert to URL-safe base64 string
             return Convert.ToBase64String(randomBytes)
-                          .Replace('+', '-')  // URL safe
-                          .Replace('/', '_')  // URL safe
-                          .TrimEnd('=');      // remove padding
+                          .Replace('+', '-')
+                          .Replace('/', '_')
+                          .TrimEnd('=');
         }
 
         public (ClaimsPrincipal? Principal, bool IsExpired) GetPrincipalFromJwtToken(string? token)
         {
-            if (token == null)
+            if (string.IsNullOrWhiteSpace(token))
                 return (null, true);
 
             var tokenValidationParameters = new TokenValidationParameters()
@@ -88,15 +86,13 @@ namespace AH.Application.Services
                 ValidIssuer = _options.Issuer,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key)),
-                ValidateLifetime = false // We'll handle expiration manually
+                ValidateLifetime = false // allow reading expired tokens
             };
 
             var jwtHandler = new JwtSecurityTokenHandler();
-            ClaimsPrincipal principal;
-
             try
             {
-                principal = jwtHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+                var principal = jwtHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
 
                 if (securityToken is not JwtSecurityToken jwtToken ||
                     !jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
@@ -104,20 +100,13 @@ namespace AH.Application.Services
                     return (null, true);
                 }
 
-                // Check expiration manually
-                var expClaim = principal.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Exp)?.Value;
-                bool isExpired = true;
-                if (!string.IsNullOrEmpty(expClaim) && long.TryParse(expClaim, out var expSeconds))
-                {
-                    var expDate = DateTimeOffset.FromUnixTimeSeconds(expSeconds).UtcDateTime;
-                    isExpired = DateTime.UtcNow >= expDate;
-                }
-
+                // Determine expiration using the validated token's ValidTo (UTC)
+                var isExpired = DateTime.UtcNow >= jwtToken.ValidTo.ToUniversalTime();
                 return (principal, isExpired);
             }
             catch
             {
-                return (null, true); // invalid token treated as expired
+                return (null, true);
             }
         }
     }

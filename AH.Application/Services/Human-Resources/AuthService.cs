@@ -3,17 +3,13 @@ using AH.Application.IRepositories;
 using AH.Application.IServices;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AH.Application.Services
 {
     public class RefreshTokenOptions
     {
-        public string ExpireInMinutes { get; set; } = String.Empty;
+        public string ExpireInMinutes { get; set; } = string.Empty;
     }
 
     public class AuthService : IAuthService
@@ -33,7 +29,7 @@ namespace AH.Application.Services
         {
             var response = new SigninResponseDataDTO(await signinRepository.SigninAsync(email, password));
 
-            //add jwt token generation logic here and set to response.Token
+            // Generate access and refresh tokens
             jwtService.CreateToken(response);
             response.RefreshToken = JwtService.GenerateRefreshToken();
 
