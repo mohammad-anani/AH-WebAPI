@@ -14,6 +14,8 @@ namespace AH.Infrastructure.Helpers
             // Reuse Person parameters
             PersonHelper.AddPersonFilterParameters(employeeFilter, cmd);
 
+            int workingdays = Employee.ToBitmask(employeeFilter.WorkingDays ?? "");
+
             // Employee-specific parameters as dictionary
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
@@ -28,7 +30,7 @@ namespace AH.Infrastructure.Helpers
                 ["ShiftStartTo"] = (employeeFilter.ShiftStartTo, SqlDbType.Time, null, null),
                 ["ShiftEndFrom"] = (employeeFilter.ShiftEndFrom, SqlDbType.Time, null, null),
                 ["ShiftEndTo"] = (employeeFilter.ShiftEndTo, SqlDbType.Time, null, null),
-                ["WorkingDays"] = (Employee.ToBitmask(employeeFilter.WorkingDays ?? ""), SqlDbType.Int, null, null),
+                ["WorkingDays"] = (workingdays == -1 ? null : workingdays, SqlDbType.Int, null, null),
             };
 
             SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);

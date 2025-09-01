@@ -91,7 +91,7 @@ namespace AH.Domain.Entities
         public static int ToBitmask(string workingDaysString)
         {
             if (string.IsNullOrWhiteSpace(workingDaysString))
-                return 0;
+                return -1;
 
             int bitmask = 0;
 

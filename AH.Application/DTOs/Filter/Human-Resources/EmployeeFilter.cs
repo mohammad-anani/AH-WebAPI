@@ -1,6 +1,7 @@
 using AH.Application.DTOs.Filter.Helpers;
 using AH.Application.DTOs.Validation;
 using AH.Domain.Entities;
+using System.Runtime.InteropServices;
 
 namespace AH.Application.DTOs.Filter
 {
@@ -18,7 +19,7 @@ namespace AH.Application.DTOs.Filter
         public TimeSpan? ShiftEndFrom { get; set; }
         public TimeSpan? ShiftEndTo { get; set; }
 
-        [WorkingDaysString]
+        [WorkingDaysString(false)]
         public string? WorkingDays { get; set; }
 
         public DateTime? CreatedAtFrom { get; set; }

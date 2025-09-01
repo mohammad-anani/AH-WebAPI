@@ -102,12 +102,29 @@ namespace AH.Application.DTOs.Validation
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class WorkingDaysStringAttribute : ValidationAttribute
     {
+
+        public bool Required { get; set; }
+
+
+        public WorkingDaysStringAttribute(bool required=true)
+        {
+            Required = required;
+        }
+
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            if (value is not string input || string.IsNullOrWhiteSpace(input))
+            string input = value?.ToString()??"";
+
+            if (string.IsNullOrEmpty(input) && !Required)
+            {
+                return null;
+            }
+
+                if (string.IsNullOrWhiteSpace(input))
             {
                 return new ValidationResult("Working days must be a comma-separated string of weekdays.");
             }
+
 
             // Split by comma, trim spaces, ignore empty items
             var parts = input.Split(',', StringSplitOptions.RemoveEmptyEntries)
