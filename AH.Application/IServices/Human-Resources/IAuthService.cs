@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AH.Application.IServices
 {
-    public interface ISigninService
+    public interface IAuthService
     {
         public Task<SigninResponseDataDTO> SigninAsync(string email, string password);
     }

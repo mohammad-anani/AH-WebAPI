@@ -9,9 +9,9 @@ namespace AH.API.Controllers.Human_Resources
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly ISigninService signinService;
+        private readonly IAuthService signinService;
 
-        public AuthController(ISigninService signinService)
+        public AuthController(IAuthService signinService)
         {
             this.signinService = signinService;
         }

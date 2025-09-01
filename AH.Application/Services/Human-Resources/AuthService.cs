@@ -9,18 +9,25 @@ using System.Threading.Tasks;
 
 namespace AH.Application.Services
 {
-    public class SigninService : ISigninService
+    public class AuthService : IAuthService
     {
         private readonly ISigninRepository signinRepository;
+        private readonly IJwtService jwtService;
 
-        public SigninService(ISigninRepository signinRepository)
+        public AuthService(ISigninRepository signinRepository, IJwtService jwtService)
         {
             this.signinRepository = signinRepository;
+            this.jwtService = jwtService;
         }
 
         public async Task<SigninResponseDataDTO> SigninAsync(string email, string password)
         {
-            return new SigninResponseDataDTO(await signinRepository.SigninAsync(email, password));
+            var response = new SigninResponseDataDTO(await signinRepository.SigninAsync(email, password));
+
+            //add jwt token generation logic here and set to response.Token
+            response.Token = jwtService.CreateToken(response);
+
+            return response;
         }
     }
 }

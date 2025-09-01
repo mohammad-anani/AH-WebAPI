@@ -12,16 +12,20 @@ namespace AH.Application.DTOs.Response
 
         public string Role { get; set; }
 
+        public string Token { get; set; }
+
         public SigninResponseDataDTO(int id, string role)
         {
             ID = id;
             Role = role;
+            Token = string.Empty;
         }
 
         public SigninResponseDataDTO(SigninResponseDTO signinResponseDTO)
         {
             ID = signinResponseDTO.ID;
             Role = signinResponseDTO.Role;
+            Token = string.Empty;
         }
     }
 }

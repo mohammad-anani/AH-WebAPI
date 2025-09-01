@@ -16,11 +16,11 @@ using System.Xml.Linq;
 
 namespace AH.Infrastructure.Repositories
 {
-    public class SignInRepository : ISigninRepository
+    public class AuthRepository : ISigninRepository
     {
-        private readonly ILogger<SignInRepository> logger;
+        private readonly ILogger<AuthRepository> logger;
 
-        public SignInRepository(ILogger<SignInRepository> logger)
+        public AuthRepository(ILogger<AuthRepository> logger)
         {
             this.logger = logger;
         }
