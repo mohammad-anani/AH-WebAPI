@@ -124,6 +124,16 @@ builder.Services.AddAuthorization(); // Enables role-based auth via ClaimTypes.R
 builder.Services.Configure<JwtOptions>(jwtSection);
 builder.Services.Configure<RefreshTokenOptions>(refreshTokenSection);
 
+//--------------------- CORS -------------------
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("http://localhost:5173");
+    });
+});
+
 // -------------------- Build App --------------------
 var app = builder.Build();
 
@@ -138,6 +148,7 @@ app.UseHsts();
 app.UseHttpsRedirection();
 app.UseSerilogRequestLogging();
 
+app.UseCors();
 // Authentication first
 app.UseAuthentication();
 
