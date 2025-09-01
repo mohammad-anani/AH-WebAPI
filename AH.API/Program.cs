@@ -1,103 +1,96 @@
+using AH.API.Middleware;
 using AH.API.Routing;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using Serilog;
 using System.Reflection;
 using System.Text;
+using AH.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-// Use Autofac as the DI container instead of the default
+// -------------------- Use Autofac --------------------
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
 // Initialize configuration helper
 ConfigHelper.Initialize(builder.Configuration);
 
-// Add controllers and filters and configs
+// -------------------- Add Controllers --------------------
 builder.Services.AddControllers(options =>
 {
-    // Add validation filter to handle model validation errors globally
+    // Global validation filter
     options.Filters.Add<ValidationFilter>();
 
-    // Apply slugify convention so [controller] becomes dashed lowercase
-    options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
-
-    // Create a policy that requires an authenticated user
+    // Global authorize filter (all endpoints require authentication by default)
     var policy = new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .Build();
-
-    // Add it as a global filter
+        .RequireAuthenticatedUser()
+        .Build();
     options.Filters.Add(new AuthorizeFilter(policy));
-});// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
+    // Slugify convention for [controller] routes
+    options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
+})
+.AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ContractResolver = new DefaultContractResolver(); // PascalCase
+    options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+});
+
+// -------------------- Swagger --------------------
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//Ioc Container Configuration
+// -------------------- Autofac DI --------------------
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
-    //Repositories Injection
+    // Repositories
     containerBuilder.RegisterAssemblyTypes(Assembly.Load("AH.Infrastructure"))
         .Where(t => t.Namespace == "AH.Infrastructure.Repositories")
         .AsImplementedInterfaces()
         .InstancePerLifetimeScope();
 
-    //Services Injection
+    // Services
     containerBuilder.RegisterAssemblyTypes(Assembly.Load("AH.Application"))
-    .Where(t => t.Namespace == "AH.Application.Services")
-    .AsImplementedInterfaces()
-    .InstancePerLifetimeScope();
+        .Where(t => t.Namespace == "AH.Application.Services")
+        .AsImplementedInterfaces()
+        .InstancePerLifetimeScope();
 
-    //IServices Injection
+    // IServices
     containerBuilder.RegisterAssemblyTypes(Assembly.Load("AH.Application"))
-    .Where(t => t.Namespace == "AH.Application.IServices")
-    .AsImplementedInterfaces()
-    .InstancePerLifetimeScope();
+        .Where(t => t.Namespace == "AH.Application.IServices")
+        .AsImplementedInterfaces()
+        .InstancePerLifetimeScope();
 
-    //IRepositories Injection
+    // IRepositories
     containerBuilder.RegisterAssemblyTypes(Assembly.Load("AH.Infrastructure"))
-    .Where(t => t.Namespace == "AH.Infrastructure.IRepositories")
-    .AsImplementedInterfaces()
-    .InstancePerLifetimeScope();
+        .Where(t => t.Namespace == "AH.Infrastructure.IRepositories")
+        .AsImplementedInterfaces()
+        .InstancePerLifetimeScope();
 
-    //Configuration Injection
+    // Configuration
     containerBuilder.Register(ctx => builder.Configuration)
-       .As<IConfiguration>()
-       .SingleInstance();
+        .As<IConfiguration>()
+        .SingleInstance();
 });
 
-// Configure JSON serialization to use Newtonsoft.Json and keep property names as in C# (PascalCase)
-builder.Services.AddControllers()
-    .AddNewtonsoftJson(options =>
-    {
-        // Keep PascalCase (property names as in C#)
-        options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
-
-        // Optional: format JSON nicely
-        options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
-    });
-
-// Configure Serilog
+// -------------------- Serilog --------------------
 Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(builder.Configuration) // load from appsettings.json
+    .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
-    .WriteTo.Console() // at least write to console
+    .WriteTo.Console()
     .CreateLogger();
 
-// Use Serilog for logging
 builder.Host.UseSerilog(Log.Logger);
 
-//==JWT Authentication & Authorization Configuration==//
+// -------------------- JWT Authentication --------------------
 var jwtSection = builder.Configuration.GetSection("Jwt");
+var refreshTokenSection = builder.Configuration.GetSection("RefreshToken");
 var key = Encoding.UTF8.GetBytes(jwtSection["Key"]!);
 
 builder.Services
@@ -108,7 +101,7 @@ builder.Services
     })
     .AddJwtBearer(options =>
     {
-        options.RequireHttpsMetadata = false; // set true in production with HTTPS
+        options.RequireHttpsMetadata = false; // true in production
         options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -122,27 +115,40 @@ builder.Services
             IssuerSigningKey = new SymmetricSecurityKey(key),
 
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero // expire exactly at ExpireInMinutes
+            ClockSkew = TimeSpan.Zero
         };
     });
 
+builder.Services.AddAuthorization(); // Enables role-based auth via ClaimTypes.Role
+
+builder.Services.Configure<JwtOptions>(jwtSection);
+builder.Services.Configure<RefreshTokenOptions>(refreshTokenSection);
+
+// -------------------- Build App --------------------
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// -------------------- Middleware Pipeline --------------------
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-builder.Services.AddAuthorization(); // role-based works via ClaimTypes.Role
-
 app.UseHsts();
 app.UseHttpsRedirection();
-
 app.UseSerilogRequestLogging();
 
+// Authentication first
+app.UseAuthentication();
+
+// Auto-refresh middleware after authentication
+app.UseAutoRefreshToken();
+
+// Authorization after refresh middleware
 app.UseAuthorization();
 
+// Map controllers
 app.MapControllers();
+
+// Run the app
 app.Run();

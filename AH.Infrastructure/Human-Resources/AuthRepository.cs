@@ -63,5 +63,111 @@ namespace AH.Infrastructure.Repositories
 
             return new SigninResponseDTO((int)IDParam.Value, (string)RoleParam.Value, ex);
         }
+
+        public async Task<(string? token, DateTime? ExpiryDate)> GetRefreshTokenByUserAsync(int id, string role)
+        {
+            var TokenParam = new SqlParameter();
+            TokenParam.ParameterName = "@RefreshToken";
+            TokenParam.SqlDbType = SqlDbType.NVarChar;
+            TokenParam.Size = -1;
+            TokenParam.Direction = ParameterDirection.Output;
+
+            var ExpiryDateParam = new SqlParameter();
+            ExpiryDateParam.ParameterName = "@ExpiryDate";
+            ExpiryDateParam.SqlDbType = SqlDbType.DateTime;
+
+            var @params = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                { "@ID", (id, SqlDbType.Int, null, null)
+                },
+                { "@Role", (role, SqlDbType.NVarChar, -1, null)
+                }
+            };
+
+            Exception? ex = await ADOHelper.ExecuteNonQueryAsync(
+                 "FindEmployeeByEmailAndPassword", logger, cmd =>
+                 {
+                     SqlParameterHelper.AddParametersFromDictionary(cmd, @params);
+                     cmd.Parameters.Add(TokenParam);
+                     cmd.Parameters.Add(ExpiryDateParam);
+                 }, null);
+
+            if (ex != null)
+            {
+                throw new Exception();
+            }
+
+            if (TokenParam.Value == DBNull.Value || TokenParam.Value == null || ExpiryDateParam.Value == DBNull.Value || ExpiryDateParam.Value == null)
+                return (null, null);
+
+            return (TokenParam.Value.ToString(), (DateTime)ExpiryDateParam.Value);
+        }
+
+        public async Task<bool> UpdateUserRefreshTokenAsync(int userId, string role, string refreshToken, DateTime expiryDate)
+        {
+            SuccessOutputHelper successOutputHelper = new SuccessOutputHelper();
+            // Input parameters dictionary
+            var @params = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+    {
+        { "@UserID", (userId, SqlDbType.Int, null, null) },
+        { "@Role", (role, SqlDbType.NVarChar, -1, null) },
+        { "@RefreshToken", (refreshToken, SqlDbType.NVarChar, -1, null) },
+        { "@ExpiryDate", (expiryDate, SqlDbType.DateTime, null, null) }
+    };
+
+            // Execute the stored procedure
+            Exception? ex = await ADOHelper.ExecuteNonQueryAsync(
+                "dbo.UpdateUserRefreshToken",
+                logger,
+                cmd =>
+                {
+                    SqlParameterHelper.AddParametersFromDictionary(cmd, @params);
+                    successOutputHelper.AddToCommand(cmd); // Add the output parameter
+                },
+                null
+            );
+
+            if (ex != null)
+            {
+                throw new Exception("Failed to execute UpdateUserRefreshToken SP", ex);
+            }
+
+            // Return the success bit as boolean
+            bool successParam = successOutputHelper.GetResult();
+            return successParam;
+        }
+
+        public async Task<bool> UpdateUserRefreshTokenAsync(string email, string refreshToken, DateTime expiryDate)
+        {
+            SuccessOutputHelper successOutputHelper = new SuccessOutputHelper();
+            // Input parameters dictionary
+            var @params = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+    {
+        { "@Email", (email, SqlDbType.NVarChar, 40, null) },
+        { "@RefreshToken", (refreshToken, SqlDbType.NVarChar, -1, null) },
+        { "@ExpiryDate", (expiryDate, SqlDbType.DateTime, null, null) }
+    };
+
+            // Execute the stored procedure
+            Exception? ex = await ADOHelper.ExecuteNonQueryAsync(
+                "dbo.UpdateUserRefreshToken",
+                logger,
+                cmd =>
+                {
+                    SqlParameterHelper.AddParametersFromDictionary(cmd, @params);
+                    successOutputHelper.AddToCommand(cmd); // Add the output parameter
+                },
+                null
+            );
+
+            if (ex != null)
+            {
+                throw new Exception("Failed to execute UpdateUserRefreshToken SP", ex);
+            }
+
+            // Return the success bit as boolean
+            bool successParam = successOutputHelper.GetResult();
+            return successParam;
+        }
     }
 }

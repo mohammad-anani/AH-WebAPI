@@ -14,11 +14,14 @@ namespace AH.Application.DTOs.Response
 
         public string Token { get; set; }
 
+        public string RefreshToken { get; set; }
+
         public SigninResponseDataDTO(int id, string role)
         {
             ID = id;
             Role = role;
             Token = string.Empty;
+            RefreshToken = string.Empty;
         }
 
         public SigninResponseDataDTO(SigninResponseDTO signinResponseDTO)
@@ -26,6 +29,7 @@ namespace AH.Application.DTOs.Response
             ID = signinResponseDTO.ID;
             Role = signinResponseDTO.Role;
             Token = string.Empty;
+            RefreshToken = string.Empty;
         }
     }
 }
