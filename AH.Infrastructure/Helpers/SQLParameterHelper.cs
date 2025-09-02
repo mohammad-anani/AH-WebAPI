@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AH.Infrastructure.Helpers
 {
@@ -46,19 +47,78 @@ namespace AH.Infrastructure.Helpers
             SqlCommand cmd,
             Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)> parameters)
         {
+            // Track duplicates within this call (normalized with '@', case-insensitive)
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
             foreach (var kvp in parameters)
             {
-                var paramName = kvp.Key.StartsWith("@") ? kvp.Key : "@" + kvp.Key;
-                var value = kvp.Value.Value ?? DBNull.Value;
+                var originalName = kvp.Key?.Trim() ?? throw new ArgumentException("Parameter name cannot be null", nameof(parameters));
+                var paramName = originalName.StartsWith("@") ? originalName : "@" + originalName;
 
-                var sqlParam = kvp.Value.Size.HasValue
-                    ? new SqlParameter(paramName, kvp.Value.Type, kvp.Value.Size.Value)
-                    : new SqlParameter(paramName, kvp.Value.Type);
+                // 9 - Reject duplicate parameter names (including variations with/without '@')
+                if (!seen.Add(paramName) || cmd.Parameters.Contains(paramName))
+                {
+                    throw new ArgumentException($"Duplicate parameter name detected: {paramName}");
+                }
+
+                var (valueObj, sqlType, size, direction) = kvp.Value;
+                var value = valueObj ?? DBNull.Value;
+
+                // 5 - Size must be specified for NVarchar/VarChar/Char types
+                if (sqlType is SqlDbType.NVarChar or SqlDbType.VarChar or SqlDbType.Char)
+                {
+                    if (!size.HasValue || size.Value <= 0)
+                        throw new ArgumentException($"Size must be specified and > 0 for type {sqlType} (parameter {paramName})");
+                }
+
+                // 7 - Validate value type when not null/DBNull
+                if (value is not DBNull)
+                {
+                    ValidateValueMatchesSqlDbType(paramName, sqlType, value);
+
+                    // 8 - Strings must respect specified length when provided
+                    if (value is string s && size.HasValue)
+                    {
+                        if (s.Length > size.Value)
+                            throw new ArgumentException($"String length {s.Length} exceeds declared size {size.Value} for {paramName}");
+                    }
+                }
+
+                var sqlParam = size.HasValue
+                    ? new SqlParameter(paramName, sqlType, size.Value)
+                    : new SqlParameter(paramName, sqlType);
 
                 sqlParam.Value = value;
-                sqlParam.Direction = kvp.Value.Direction ?? ParameterDirection.Input;
+                sqlParam.Direction = direction ?? ParameterDirection.Input; // 2 - default to Input, 6 - preserve provided Output
 
                 cmd.Parameters.Add(sqlParam);
+            }
+        }
+
+        private static void ValidateValueMatchesSqlDbType(string name, SqlDbType type, object value)
+        {
+            // This is intentionally strict to enforce correctness per documented rules.
+            // Expand as needed for additional SqlDbType mappings.
+            bool ok = type switch
+            {
+                SqlDbType.Int => value is int,
+                SqlDbType.BigInt => value is long,
+                SqlDbType.SmallInt => value is short,
+                SqlDbType.TinyInt => value is byte,
+                SqlDbType.Bit => value is bool,
+                SqlDbType.Date or SqlDbType.DateTime or SqlDbType.DateTime2 or SqlDbType.SmallDateTime => value is DateTime,
+                SqlDbType.Decimal or SqlDbType.Money or SqlDbType.SmallMoney => value is decimal,
+                SqlDbType.Float => value is double,
+                SqlDbType.Real => value is float,
+                SqlDbType.UniqueIdentifier => value is Guid,
+                SqlDbType.Binary or SqlDbType.VarBinary or SqlDbType.Image => value is byte[],
+                SqlDbType.NVarChar or SqlDbType.VarChar or SqlDbType.Char or SqlDbType.NChar or SqlDbType.NText or SqlDbType.Text => value is string,
+                _ => true // do not over-restrict unknown mappings
+            };
+
+            if (!ok)
+            {
+                throw new ArgumentException($"Value for parameter {name} does not match SqlDbType {type}. Actual CLR type: {value.GetType().FullName}");
             }
         }
     }

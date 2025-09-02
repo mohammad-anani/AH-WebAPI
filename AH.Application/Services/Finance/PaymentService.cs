@@ -35,7 +35,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>> GetAllByBillIDAsync(PaymentFilterDTO filterDTO)
         {
             var response = await _paymentRepository.GetAllByBillIDAsync(filterDTO);
-            var data = new GetAllResponseDataDTO<PaymentRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>.Create(data, response.Exception); ;
+            var data = new GetAllResponseDataDTO<PaymentRowDTO>(response); return ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>.Create(data, response.Exception); ;
         }
 
         /// <summary>
