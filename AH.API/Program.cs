@@ -21,17 +21,23 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 // Initialize configuration helper
 ConfigHelper.Initialize(builder.Configuration);
 
+// Read feature flags
+bool enableAuth = builder.Configuration.GetValue<bool>("EnableAuth");
+
 // -------------------- Add Controllers --------------------
 builder.Services.AddControllers(options =>
 {
     // Global validation filter
     options.Filters.Add<ValidationFilter>();
 
-    // Global authorize filter (all endpoints require authentication by default)
-    var policy = new AuthorizationPolicyBuilder()
-        .RequireAuthenticatedUser()
-        .Build();
-    options.Filters.Add(new AuthorizeFilter(policy));
+    if (enableAuth)
+    {
+        // Global authorize filter (all endpoints require authentication by default)
+        var policy = new AuthorizationPolicyBuilder()
+            .RequireAuthenticatedUser()
+            .Build();
+        options.Filters.Add(new AuthorizeFilter(policy));
+    }
 
     // Slugify convention for [controller] routes
     options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
@@ -44,32 +50,55 @@ builder.Services.AddControllers(options =>
 
 // -------------------- Swagger --------------------
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    // JWT support in Swagger
+    if (enableAuth)
+    {
+        c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+        {
+            In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+            Description = "Enter JWT with Bearer",
+            Name = "Authorization",
+            Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey
+        });
+        c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+        {
+            {
+                new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                {
+                    Reference = new Microsoft.OpenApi.Models.OpenApiReference { Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme, Id = "Bearer" }
+                },
+                Array.Empty<string>()
+            }
+        });
+    }
+});
 
 // -------------------- Autofac DI --------------------
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
-    // Repositories
-    containerBuilder.RegisterAssemblyTypes(Assembly.Load("AH.Infrastructure"))
-        .Where(t => t.Namespace == "AH.Infrastructure.Repositories")
+    // Register Repositories & Services by namespace
+    var infraAssembly = Assembly.Load("AH.Infrastructure");
+    var appAssembly = Assembly.Load("AH.Application");
+
+    containerBuilder.RegisterAssemblyTypes(infraAssembly)
+        .Where(t => t.Namespace?.Contains("Repositories") == true)
         .AsImplementedInterfaces()
         .InstancePerLifetimeScope();
 
-    // Services
-    containerBuilder.RegisterAssemblyTypes(Assembly.Load("AH.Application"))
-        .Where(t => t.Namespace == "AH.Application.Services")
+    containerBuilder.RegisterAssemblyTypes(appAssembly)
+        .Where(t => t.Namespace?.Contains("Services") == true)
         .AsImplementedInterfaces()
         .InstancePerLifetimeScope();
 
-    // IServices
-    containerBuilder.RegisterAssemblyTypes(Assembly.Load("AH.Application"))
-        .Where(t => t.Namespace == "AH.Application.IServices")
+    containerBuilder.RegisterAssemblyTypes(appAssembly)
+        .Where(t => t.Namespace?.Contains("IServices") == true)
         .AsImplementedInterfaces()
         .InstancePerLifetimeScope();
 
-    // IRepositories
-    containerBuilder.RegisterAssemblyTypes(Assembly.Load("AH.Infrastructure"))
-        .Where(t => t.Namespace == "AH.Infrastructure.IRepositories")
+    containerBuilder.RegisterAssemblyTypes(infraAssembly)
+        .Where(t => t.Namespace?.Contains("IRepositories") == true)
         .AsImplementedInterfaces()
         .InstancePerLifetimeScope();
 
@@ -88,52 +117,53 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog(Log.Logger);
 
-// -------------------- JWT Authentication --------------------
-var jwtSection = builder.Configuration.GetSection("Jwt");
-var refreshTokenSection = builder.Configuration.GetSection("RefreshToken");
-var key = Encoding.UTF8.GetBytes(jwtSection["Key"]!);
+// -------------------- JWT Authentication (conditional) --------------------
+if (enableAuth)
+{
+    var jwtSection = builder.Configuration.GetSection("Jwt");
+    var refreshTokenSection = builder.Configuration.GetSection("RefreshToken");
+    var key = Encoding.UTF8.GetBytes(jwtSection["Key"]!);
 
-builder.Services
-    .AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        options.RequireHttpsMetadata = false; // true in production
-        options.SaveToken = true;
-        options.TokenValidationParameters = new TokenValidationParameters
+    builder.Services
+        .AddAuthentication(options =>
         {
-            ValidateIssuer = true,
-            ValidIssuer = jwtSection["Issuer"],
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.RequireHttpsMetadata = true; // Always true in production
+            options.SaveToken = true;
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = jwtSection["Issuer"],
 
-            ValidateAudience = true,
-            ValidAudience = jwtSection["Audience"],
+                ValidateAudience = true,
+                ValidAudience = jwtSection["Audience"],
 
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
 
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero
-        };
-    });
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
+            };
+        });
 
-builder.Services.AddAuthorization(); // Enables role-based auth via ClaimTypes.Role
+    builder.Services.AddAuthorization(); // Enables role-based auth via ClaimTypes.Role
+    builder.Services.Configure<JwtOptions>(jwtSection);
+    builder.Services.Configure<RefreshTokenOptions>(refreshTokenSection);
+}
 
-builder.Services.Configure<JwtOptions>(jwtSection);
-builder.Services.Configure<RefreshTokenOptions>(refreshTokenSection);
-
-//--------------------- CORS -------------------
-
+// -------------------- CORS --------------------
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policyBuilder =>
     {
-        policyBuilder.WithOrigins
-        (builder.Configuration.GetSection("AllowedOrigins")
-        .Get<string[]>() ?? []).AllowAnyMethod()
-              .AllowAnyHeader();
+        policyBuilder
+            .WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? Array.Empty<string>())
+            .AllowAnyMethod()
+            .AllowAnyHeader();
     });
 });
 
@@ -152,14 +182,13 @@ app.UseHttpsRedirection();
 app.UseSerilogRequestLogging();
 
 app.UseCors();
-// Authentication first
-app.UseAuthentication();
 
-// Auto-refresh middleware after authentication
-app.UseAutoRefreshToken();
-
-// Authorization after refresh middleware
-app.UseAuthorization();
+if (enableAuth)
+{
+    app.UseAuthentication();           // Must come before authorization
+    app.UseAutoRefreshToken();          // Refresh tokens after authentication
+    app.UseAuthorization();
+}
 
 // Map controllers
 app.MapControllers();
