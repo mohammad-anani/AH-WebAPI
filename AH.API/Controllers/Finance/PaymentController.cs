@@ -4,7 +4,6 @@ using AH.Application.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
 
 namespace AH.API.Controllers
 {
@@ -33,11 +32,20 @@ namespace AH.API.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Add([FromBody] CreatePaymentDTO createPaymentDTO)
         {
+            var subClaim = User.FindFirst("sub");
+            if (subClaim == null)
+                return Unauthorized("Missing 'sub' claim in token.");
+            if (!int.TryParse(subClaim.Value, out var receptionistId))
+                return Unauthorized("Invalid 'sub' claim in token.");
+
+            createPaymentDTO.CreatedByReceptionistID = receptionistId;
+
             var result = await _paymentService.AddAsync(createPaymentDTO);
 
             return StatusCode(result.StatusCode, result.Message);

@@ -1,6 +1,7 @@
 using AH.Application.DTOs.Entities.Services;
 using AH.Application.DTOs.Form;
 using AH.Domain.Entities;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 
@@ -8,6 +9,9 @@ namespace AH.Application.DTOs.Create
 {
     public class CreateOperationDTO : OperationFormDTO
     {
+        [BindNever]
+        public int CreatedByReceptionistID { get; set; }
+
         public CreateOperationDTO() : base()
         {
         }
@@ -24,20 +28,18 @@ namespace AH.Application.DTOs.Create
             DepartmentID = departmentID;
             Description = description;
             OperationDoctors = operationDoctors;
-            // The following fields belong to CreateServiceDTO which is not a base anymore. Keep ToOperation using direct construction
             _patientID = patientID;
             _scheduledDate = scheduledDate;
             Reason = reason;
             Notes = notes;
             _billAmount = billAmount;
-            _createdByReceptionistID = createdByReceptionistID;
+            CreatedByReceptionistID = createdByReceptionistID;
         }
 
         // Local fields to carry create-only service data
         private int _patientID;
         private DateTime _scheduledDate;
         private int _billAmount;
-        private int _createdByReceptionistID;
 
         public Operation ToOperation()
         {
@@ -55,7 +57,7 @@ namespace AH.Application.DTOs.Create
                     "",
                     Notes,
                     new Bill(-1, _billAmount, 0),
-                    new Receptionist(_createdByReceptionistID)
+                    new Receptionist(CreatedByReceptionistID)
                 )
             );
         }

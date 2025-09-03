@@ -1,11 +1,12 @@
 using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Filter;
-using AH.Application.DTOs.Update;
-using AH.Application.IServices;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using AH.Application.DTOs.Response;
 using AH.Application.DTOs.Row;
+using AH.Application.DTOs.Update;
+using AH.Application.IServices;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.API.Controllers
@@ -15,10 +16,12 @@ namespace AH.API.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _adminService;
+        private readonly IJwtService jwtService;
 
-        public AdminController(IAdminService adminService)
+        public AdminController(IAdminService adminService, IJwtService jwtService)
         {
             _adminService = adminService;
+            this.jwtService = jwtService;
         }
 
         [HttpGet]
@@ -45,15 +48,30 @@ namespace AH.API.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Add([FromBody] CreateAdminDTO createAdminDTO)
         {
-            createAdminDTO.CreatedByAdminID = 2;
-            var result = await _adminService.AddAsync(createAdminDTO);
+            try
+            {
+                // Get "sub" claim directly from User
+                var subClaim = User.FindFirst("sub");
+                if (subClaim == null)
+                    return Unauthorized("Missing 'sub' claim in token.");
 
-            return StatusCode(result.StatusCode, result.Data);
+                int createdByAdminID = Convert.ToInt32(subClaim.Value);
+                createAdminDTO.CreatedByAdminID = createdByAdminID;
+
+                var result = await _adminService.AddAsync(createAdminDTO);
+                return StatusCode(result.StatusCode, result.Data);
+            }
+            catch (Exception ex)
+            {
+                // Log exception if needed
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpPut("{id}")]

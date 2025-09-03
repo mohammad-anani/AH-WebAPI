@@ -53,7 +53,7 @@ namespace AH.API.Middleware
             }
 
             // Token expired → try refresh
-            var refreshToken = context.Request.Headers["refreshToken"].FirstOrDefault();
+            var refreshToken = context.Request.Headers["refresh-token"].FirstOrDefault();
             if (string.IsNullOrEmpty(refreshToken))
             {
                 context.Response.StatusCode = 401;

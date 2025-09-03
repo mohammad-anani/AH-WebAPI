@@ -34,11 +34,20 @@ namespace AH.API.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Add([FromBody] CreateInsuranceDTO createInsuranceDTO, CancellationToken cancellationToken)
         {
+            var subClaim = User.FindFirst("sub");
+            if (subClaim == null)
+                return Unauthorized("Missing 'sub' claim in token.");
+            if (!int.TryParse(subClaim.Value, out var receptionistId))
+                return Unauthorized("Invalid 'sub' claim in token.");
+
+            createInsuranceDTO.CreatedByReceptionistID = receptionistId;
+
             var result = await _insuranceService.AddAsync(createInsuranceDTO, cancellationToken);
 
             return StatusCode(result.StatusCode, result.Message);

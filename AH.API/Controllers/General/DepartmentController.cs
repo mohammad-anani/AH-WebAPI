@@ -43,11 +43,20 @@ namespace AH.API.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Add([FromBody] CreateDepartmentDTO createDepartmentDTO)
         {
+            var subClaim = User.FindFirst("sub");
+            if (subClaim == null)
+                return Unauthorized("Missing 'sub' claim in token.");
+            if (!int.TryParse(subClaim.Value, out var adminId))
+                return Unauthorized("Invalid 'sub' claim in token.");
+
+            createDepartmentDTO.CreatedByAdminID = adminId;
+
             var result = await _departmentService.AddAsync(createDepartmentDTO);
 
             return StatusCode(result.StatusCode, result.Message);
