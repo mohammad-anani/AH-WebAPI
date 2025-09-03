@@ -1,22 +1,15 @@
+using AH.Application.DTOs.Form;
 using AH.Domain.Entities;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.Application.DTOs.Create
 {
-    public class CreatePaymentDTO
+    public class CreatePaymentDTO : PaymentFormDTO
     {
         [Required(ErrorMessage = "Bill ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Bill ID must be a positive number")]
         public int BillID { get; set; }
-
-        [Required(ErrorMessage = "Amount is required")]
-        [Range(10, 9999, ErrorMessage = "Amount must be between 10 and 9,999")]
-        public int Amount { get; set; }
-
-        [Required(ErrorMessage = "Payment method is required")]
-        [Range(1, 3, ErrorMessage = "Method must be 1 (Card), 2 (Cash), or 3 (Insurance)")]
-        public int Method { get; set; }
 
         [BindNever]
         [Required(ErrorMessage = "Created by receptionist ID is required")]
@@ -42,7 +35,7 @@ namespace AH.Application.DTOs.Create
         public Payment ToPayment()
         {
             return new Payment(
-                new Bill(BillID, 0, 0), // We only need the ID for the Bill reference
+                new Bill(BillID, 0, 0),
                 Amount,
                 Payment.GetMethod(Method),
                 new Receptionist(CreatedByReceptionistID)

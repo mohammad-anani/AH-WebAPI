@@ -1,21 +1,13 @@
+using AH.Application.DTOs.Form;
 using AH.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.Application.DTOs.Update
 {
-    public class UpdateServiceDTO
+    public class UpdateServiceDTO : ServiceFormDTO
     {
-        [Required(ErrorMessage = "Reason is required")]
-        [StringLength(int.MaxValue, MinimumLength = 10, ErrorMessage = "Reason must be at least 10 characters")]
-        public string Reason { get; set; }
-
-        [StringLength(int.MaxValue, MinimumLength = 0, ErrorMessage = "Notes can be empty or any length")]
-        public string? Notes { get; set; }
-
         public UpdateServiceDTO()
         {
-            Reason = string.Empty;
-            Notes = null;
         }
 
         public UpdateServiceDTO(int patientID, DateTime scheduledDate, DateTime? actualStartingDate, string reason, string? result, DateTime? resultDate, string status, string? notes, int billAmount, int createdByReceptionistID)

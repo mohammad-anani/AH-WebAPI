@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Form;
 using AH.Application.DTOs.Validation;
 using AH.Domain.Entities;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -5,30 +6,18 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AH.Application.DTOs.Update
 {
-    public class UpdateInsuranceDTO
+    public class UpdateInsuranceDTO : InsuranceFormDTO
     {
         [BindNever]
         public int ID { get; set; }
 
-        [Required(ErrorMessage = "Provider name is required")]
-        [StringLength(50, MinimumLength = 10, ErrorMessage = "Provider name must be between 10 and 50 characters")]
-        public string ProviderName { get; set; }
-
-        [Required(ErrorMessage = "Coverage is required")]
-        [Range(0.0, 1.0, ErrorMessage = "Coverage must be between 0 and 1")]
-        public decimal Coverage { get; set; }
-
         public UpdateInsuranceDTO()
         {
             ID = -1;
-            ProviderName = string.Empty;
-            Coverage = 0;
         }
 
         public UpdateInsuranceDTO(int patientID, string providerName, decimal coverage, int createdByReceptionistID)
         {
-            ProviderName = providerName;
-            Coverage = coverage;
         }
 
         public Insurance ToInsurance()

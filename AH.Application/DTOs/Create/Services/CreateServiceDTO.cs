@@ -1,3 +1,4 @@
+using AH.Application.DTOs.Form;
 using AH.Application.DTOs.Validation;
 using AH.Domain.Entities;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -5,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AH.Application.DTOs.Create
 {
-    public class CreateServiceDTO
+    public class CreateServiceDTO : ServiceFormDTO
     {
         [Required(ErrorMessage = "Patient ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Patient ID must be a positive number")]
@@ -14,13 +15,6 @@ namespace AH.Application.DTOs.Create
         [Required(ErrorMessage = "Scheduled date is required")]
         [FutureDateWithinYear]
         public DateTime ScheduledDate { get; set; }
-
-        [Required(ErrorMessage = "Reason is required")]
-        [StringLength(int.MaxValue, MinimumLength = 10, ErrorMessage = "Reason must be at least 10 characters")]
-        public string Reason { get; set; }
-
-        [StringLength(int.MaxValue, MinimumLength = 0, ErrorMessage = "Notes can be empty or any length")]
-        public string? Notes { get; set; }
 
         [Required(ErrorMessage = "Bill amount is required")]
         [Range(10, 99999, ErrorMessage = "Bill amount must be between 10 and 99,999")]
@@ -35,8 +29,6 @@ namespace AH.Application.DTOs.Create
         {
             PatientID = -1;
             ScheduledDate = DateTime.MinValue;
-            Reason = string.Empty;
-            Notes = null;
             BillAmount = 0;
             CreatedByReceptionistID = -1;
         }

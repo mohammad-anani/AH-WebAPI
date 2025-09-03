@@ -1,39 +1,19 @@
 using AH.Application.DTOs.Entities.Services;
+using AH.Application.DTOs.Form;
 using AH.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 
 namespace AH.Application.DTOs.Create
 {
-    public class CreateOperationDTO : CreateServiceDTO
+    public class CreateOperationDTO : OperationFormDTO
     {
-        [Required(ErrorMessage = "Operation name is required")]
-        [Range(10, 100, ErrorMessage = "Operation name must be between 10 and 100")]
-        public int OperationName { get; set; }
-
-        [Required(ErrorMessage = "Department ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Department ID must be a positive number")]
-        public int DepartmentID { get; set; }
-
-        [Required(ErrorMessage = "Description is required")]
-        [StringLength(int.MaxValue, MinimumLength = 10, ErrorMessage = "Description must be at least 10 characters")]
-        public string Description { get; set; }
-
-        [Required(ErrorMessage = "Operation doctors list is required")]
-        [MinLength(1, ErrorMessage = "At least 1 doctor is required")]
-        [MaxLength(5, ErrorMessage = "Maximum 5 doctors allowed")]
-        public List<OperationDoctorDTO> OperationDoctors { get; set; }
-
         public CreateOperationDTO() : base()
         {
-            OperationName = -1;
-            DepartmentID = -1;
-            Description = string.Empty;
-            OperationDoctors = new List<OperationDoctorDTO>();
         }
 
         public CreateOperationDTO(int operationName, int departmentID, string description, List<OperationDoctorDTO> operationDoctors, int patientID, DateTime scheduledDate, string reason, string? notes, int billAmount, int createdByReceptionistID)
-            : base(patientID, scheduledDate, reason, notes, billAmount, createdByReceptionistID)
+            : base()
         {
             if (operationDoctors.Count > 5 || operationDoctors.Count == 0)
             {
@@ -44,7 +24,20 @@ namespace AH.Application.DTOs.Create
             DepartmentID = departmentID;
             Description = description;
             OperationDoctors = operationDoctors;
+            // The following fields belong to CreateServiceDTO which is not a base anymore. Keep ToOperation using direct construction
+            _patientID = patientID;
+            _scheduledDate = scheduledDate;
+            Reason = reason;
+            Notes = notes;
+            _billAmount = billAmount;
+            _createdByReceptionistID = createdByReceptionistID;
         }
+
+        // Local fields to carry create-only service data
+        private int _patientID;
+        private DateTime _scheduledDate;
+        private int _billAmount;
+        private int _createdByReceptionistID;
 
         public Operation ToOperation()
         {
@@ -52,7 +45,18 @@ namespace AH.Application.DTOs.Create
                 OperationName,
                 new Department(DepartmentID),
                 Description,
-                base.ToService()
+                new Service(
+                    new Patient(_patientID),
+                    _scheduledDate,
+                    null,
+                    Reason,
+                    null,
+                    null,
+                    "",
+                    Notes,
+                    new Bill(-1, _billAmount, 0),
+                    new Receptionist(_createdByReceptionistID)
+                )
             );
         }
 
