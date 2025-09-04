@@ -89,7 +89,7 @@ namespace AH.API.Middleware
             // Create new tokens and persist new refresh token (rotate)
             var newTokens = jwtService.CreateToken(new SigninResponseDataDTO(userId, role));
             var newRefreshExpiry = DateTime.UtcNow.AddMinutes(_refreshExpireMinutes);
-            await authService.UpdateUserRefreshTokenAsync(userId, role, newTokens.RefreshToken, newRefreshExpiry);
+            await authService.UpdateUserRefreshTokenAsync(userId, role, refreshToken, newRefreshExpiry);
 
             // Assign updated ClaimsPrincipal
             var newPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new[]
@@ -102,7 +102,7 @@ namespace AH.API.Middleware
             // Send new tokens via headers
             context.Response.Headers["Authorization"] = $"Bearer {newTokens.Token}";
             context.Response.Headers["token"] = newTokens.Token;
-            context.Response.Headers["refreshToken"] = newTokens.RefreshToken ?? string.Empty;
+            context.Response.Headers["refresh-token"] = newTokens.RefreshToken ?? string.Empty;
 
             await _next(context);
         }

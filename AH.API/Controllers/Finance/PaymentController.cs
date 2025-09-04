@@ -1,8 +1,9 @@
 using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Filter;
 using AH.Application.IServices;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.API.Controllers
@@ -23,6 +24,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Receptionist,Admin,Patient")]
         public async Task<IActionResult> GetById([FromRoute, Range(1, int.MaxValue)] int id)
         {
             var result = await _paymentService.GetByIDAsync(id);
@@ -36,6 +38,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Receptionist")]
         public async Task<IActionResult> Add([FromBody] CreatePaymentDTO createPaymentDTO)
         {
             var subClaim = User.FindFirst("sub");
@@ -56,6 +59,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute, Range(1, int.MaxValue)] int id)
         {
             var result = await _paymentService.DeleteAsync(id);

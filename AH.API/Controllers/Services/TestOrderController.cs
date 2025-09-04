@@ -1,8 +1,9 @@
 using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Filter;
 using AH.Application.IServices;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.API.Controllers
@@ -26,7 +27,8 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetById([FromRoute, Range(1, int.MaxValue)]int id)
+        [Authorize]
+        public async Task<IActionResult> GetById([FromRoute, Range(1, int.MaxValue)] int id)
         {
             var result = await _testOrderService.GetByIDAsync(id);
 
@@ -39,6 +41,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Doctor")]
         public async Task<IActionResult> Add([FromBody] CreateTestOrderDTO createTestOrderDTO)
         {
             var result = await _testOrderService.AddAsync(createTestOrderDTO);
@@ -51,7 +54,8 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Reserve([FromRoute, Range(1, int.MaxValue)]int id, [FromBody] CreateTestAppointmentFromTestOrderDTO createTestAppointmentDTO)
+        [Authorize(Roles = "Receptionist")]
+        public async Task<IActionResult> Reserve([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] CreateTestAppointmentFromTestOrderDTO createTestAppointmentDTO)
         {
             // Route ID authoritative
             createTestAppointmentDTO.TestOrderID = id;
@@ -65,7 +69,8 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Delete([FromRoute, Range(1, int.MaxValue)]int id)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete([FromRoute, Range(1, int.MaxValue)] int id)
         {
             var result = await _testOrderService.DeleteAsync(id);
 

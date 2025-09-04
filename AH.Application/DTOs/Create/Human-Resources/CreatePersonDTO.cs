@@ -3,6 +3,8 @@ using AH.Application.DTOs.Validation;
 using AH.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace AH.Application.DTOs.Create
 {
@@ -29,9 +31,11 @@ namespace AH.Application.DTOs.Create
 
         public static string HashPassword(string password)
         {
-            User user = new User { Password = password };
-            var passwordHasher = new PasswordHasher<User>();
-            return passwordHasher.HashPassword(user, user.Password);
+            // Deterministic SHA-256 hash to allow DB comparison in stored procedures
+            using var sha256 = SHA256.Create();
+            byte[] bytes = Encoding.UTF8.GetBytes(password);
+            byte[] hash = sha256.ComputeHash(bytes);
+            return Convert.ToHexString(hash).ToLowerInvariant();
         }
     }
 }

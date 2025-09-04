@@ -1,4 +1,4 @@
-using AH.API.Middleware;
+﻿using AH.API.Middleware;
 using AH.API.Routing;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -24,6 +24,8 @@ ConfigHelper.Initialize(builder.Configuration);
 // -------------------- Bind Options --------------------
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.Configure<RefreshTokenOptions>(builder.Configuration.GetSection("RefreshToken"));
+// Bind FeatureToggles so AutoRefreshTokenMiddleware can resolve IOptionsMonitor<FeatureToggles>
+builder.Services.Configure<FeatureToggles>(builder.Configuration);
 
 // Read feature flags
 bool enableAuth = builder.Configuration.GetValue<bool>("EnableAuth");
@@ -55,13 +57,17 @@ builder.Services.AddSwaggerGen(c =>
 {
     if (enableAuth)
     {
+        // Define HTTP Bearer security scheme
         c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
         {
+            Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http, // HTTP scheme
+            Scheme = "bearer",                                        // "bearer"
+            BearerFormat = "JWT",                                     // optional, for clarity
             In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-            Description = "Enter JWT with Bearer",
-            Name = "Authorization",
-            Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey
+            Description = "Enter your JWT token only. Swagger will add the 'Bearer ' prefix automatically."
         });
+
+        // Require Bearer token for all endpoints
         c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
         {
             {
@@ -77,13 +83,27 @@ builder.Services.AddSwaggerGen(c =>
             }
         });
     }
+
+    // Optional: pretty JSON and PascalCase
+    c.DescribeAllParametersInCamelCase();
 });
 
 // -------------------- JWT Authentication (conditional) --------------------
 if (enableAuth)
 {
     var jwtSection = builder.Configuration.GetSection("Jwt");
-    var key = Encoding.UTF8.GetBytes(jwtSection["Key"]!);
+    var issuer = jwtSection["Issuer"] ?? string.Empty;
+    var audience = jwtSection["Audience"] ?? string.Empty;
+
+    // Ensure key length >= 32 bytes (HS256)
+    var keyBytes = Encoding.UTF8.GetBytes(jwtSection["Key"] ?? string.Empty);
+    if (keyBytes.Length < 32)
+    {
+        Array.Resize(ref keyBytes, 32); // ✅ Pad here too to match JwtService
+    }
+
+    var validateIssuer = !string.IsNullOrWhiteSpace(issuer);
+    var validateAudience = !string.IsNullOrWhiteSpace(audience);
 
     builder.Services
         .AddAuthentication(options =>
@@ -97,12 +117,12 @@ if (enableAuth)
             options.SaveToken = true;
             options.TokenValidationParameters = new TokenValidationParameters
             {
-                ValidateIssuer = true,
-                ValidIssuer = jwtSection["Issuer"],
-                ValidateAudience = true,
-                ValidAudience = jwtSection["Audience"],
+                ValidateIssuer = validateIssuer,
+                ValidIssuer = validateIssuer ? issuer : null,
+                ValidateAudience = validateAudience,
+                ValidAudience = validateAudience ? audience : null,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
+                IssuerSigningKey = new SymmetricSecurityKey(keyBytes), // ✅ now matches JwtService
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero
             };
@@ -179,8 +199,8 @@ app.UseCors();
 
 if (enableAuth)
 {
-    app.UseAuthentication();           // Must come first
     app.UseAutoRefreshToken();          // Refresh expired tokens
+    app.UseAuthentication();           // Must come first
     app.UseAuthorization();
 }
 

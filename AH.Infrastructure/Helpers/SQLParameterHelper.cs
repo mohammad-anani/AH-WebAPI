@@ -33,11 +33,13 @@ namespace AH.Infrastructure.Helpers
         /// Type safety:
         /// - Uses strongly-typed SqlDbType for parameter definition
         /// - Handles size constraints for variable-length types (NVarChar, VarChar, etc.)
+        /// - For variable-length types that support MAX (NVarchar, VarChar, VarBinary), a size of -1 is treated as MAX
         /// </remarks>
         /// <example>
         /// var parameters = new Dictionary&lt;string, (object?, SqlDbType, int?, ParameterDirection?)&gt;
         /// {
         ///     ["Name"] = ("John Doe", SqlDbType.NVarChar, 100, null),
+        ///     ["Description"] = (longText, SqlDbType.NVarChar, -1, null), // -1 == NVARCHAR(MAX)
         ///     ["Age"] = (25, SqlDbType.Int, null, null),
         ///     ["IsActive"] = (true, SqlDbType.Bit, null, null)
         /// };
@@ -64,9 +66,19 @@ namespace AH.Infrastructure.Helpers
                 var (valueObj, sqlType, size, direction) = kvp.Value;
                 var value = valueObj ?? DBNull.Value;
 
-                // 5 - Size must be specified for NVarchar/VarChar/Char types
-                if (sqlType is SqlDbType.NVarChar or SqlDbType.VarChar or SqlDbType.Char)
+                // 5 - Size must be specified for NVarchar/VarChar and VarBinary types
+                //     Accept -1 as MAX for variable-length types that support it
+                if (sqlType is SqlDbType.NVarChar or SqlDbType.VarChar or SqlDbType.VarBinary)
                 {
+                    if (!size.HasValue)
+                        throw new ArgumentException($"Size must be specified for type {sqlType} (parameter {paramName})");
+
+                    if (size.Value == 0 || size.Value < -1)
+                        throw new ArgumentException($"Invalid size {size.Value} for type {sqlType} (parameter {paramName}). Use -1 for MAX or a positive size.");
+                }
+                else if (sqlType is SqlDbType.Char or SqlDbType.NChar)
+                {
+                    // Fixed-length types require a positive size; MAX not supported
                     if (!size.HasValue || size.Value <= 0)
                         throw new ArgumentException($"Size must be specified and > 0 for type {sqlType} (parameter {paramName})");
                 }
@@ -76,11 +88,19 @@ namespace AH.Infrastructure.Helpers
                 {
                     ValidateValueMatchesSqlDbType(paramName, sqlType, value);
 
-                    // 8 - Strings must respect specified length when provided
-                    if (value is string s && size.HasValue)
+                    // 8 - Strings/byte[] must respect specified length when provided (except when MAX)
+                    if (size.HasValue && size.Value != -1)
                     {
-                        if (s.Length > size.Value)
-                            throw new ArgumentException($"String length {s.Length} exceeds declared size {size.Value} for {paramName}");
+                        if (value is string s)
+                        {
+                            if (s.Length > size.Value)
+                                throw new ArgumentException($"String length {s.Length} exceeds declared size {size.Value} for {paramName}");
+                        }
+                        else if (value is byte[] bytes)
+                        {
+                            if (bytes.Length > size.Value)
+                                throw new ArgumentException($"Binary length {bytes.Length} exceeds declared size {size.Value} for {paramName}");
+                        }
                     }
                 }
 

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AH.API.Controllers
 {
@@ -25,6 +26,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Receptionist,Admin,Patient")]
         public async Task<IActionResult> GetById([FromRoute, Range(1, int.MaxValue)] int id, CancellationToken cancellationToken)
         {
             var result = await _insuranceService.GetByIDAsync(id, cancellationToken);
@@ -38,6 +40,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Receptionist")]
         public async Task<IActionResult> Add([FromBody] CreateInsuranceDTO createInsuranceDTO, CancellationToken cancellationToken)
         {
             var subClaim = User.FindFirst("sub");
@@ -59,7 +62,8 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update([FromRoute, Range(1, int.MaxValue)]int id, [FromBody] UpdateInsuranceDTO updateInsuranceDTO, CancellationToken cancellationToken)
+        [Authorize(Roles = "Receptionist")]
+        public async Task<IActionResult> Update([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] UpdateInsuranceDTO updateInsuranceDTO, CancellationToken cancellationToken)
         {
             updateInsuranceDTO.ID = id;
 
@@ -73,7 +77,8 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Delete([FromRoute, Range(1, int.MaxValue)]int id, CancellationToken cancellationToken)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete([FromRoute, Range(1, int.MaxValue)] int id, CancellationToken cancellationToken)
         {
             var result = await _insuranceService.DeleteAsync(id, cancellationToken);
 
@@ -86,6 +91,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Receptionist")]
         public async Task<IActionResult> Renew([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] RenewInsuranceDTO renewInsuranceDTO, CancellationToken cancellationToken)
         {
             renewInsuranceDTO.ID = id;

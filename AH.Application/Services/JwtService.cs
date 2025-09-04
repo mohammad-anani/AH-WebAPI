@@ -27,7 +27,14 @@ namespace AH.Application.Services
         public JwtService(IOptions<JwtOptions> options)
         {
             _options = options.Value;
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key));
+            // Ensure key length meets HS256 requirement (>= 256 bits / 32 bytes)
+            var keyBytes = Encoding.UTF8.GetBytes(_options.Key ?? string.Empty);
+            if (keyBytes.Length < 32)
+            {
+                // Pad the key deterministically to 32 bytes minimum
+                Array.Resize(ref keyBytes, 32);
+            }
+            var key = new SymmetricSecurityKey(keyBytes);
             _creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         }
 
@@ -56,7 +63,6 @@ namespace AH.Application.Services
             string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
             user.Token = tokenString;
-            user.RefreshToken = GenerateRefreshToken();
 
             return user;
         }
@@ -78,6 +84,12 @@ namespace AH.Application.Services
             if (string.IsNullOrWhiteSpace(token))
                 return (null, true);
 
+            var keyBytes = Encoding.UTF8.GetBytes(_options.Key ?? string.Empty);
+            if (keyBytes.Length < 32)
+            {
+                Array.Resize(ref keyBytes, 32);
+            }
+
             var tokenValidationParameters = new TokenValidationParameters()
             {
                 ValidateAudience = true,
@@ -85,7 +97,7 @@ namespace AH.Application.Services
                 ValidateIssuer = true,
                 ValidIssuer = _options.Issuer,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key)),
+                IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
                 ValidateLifetime = false // allow reading expired tokens
             };
 
@@ -100,7 +112,6 @@ namespace AH.Application.Services
                     return (null, true);
                 }
 
-                // Determine expiration using the validated token's ValidTo (UTC)
                 var isExpired = DateTime.UtcNow >= jwtToken.ValidTo.ToUniversalTime();
                 return (principal, isExpired);
             }

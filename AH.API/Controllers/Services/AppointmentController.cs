@@ -3,8 +3,9 @@ using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Update;
 using AH.Application.IServices;
 using AH.Application.Services;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.API.Controllers
@@ -33,6 +34,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Receptionist,Admin")]
         public async Task<IActionResult> GetAll([FromQuery] AppointmentFilterDTO filterDTO)
         {
             var result = await _appointmentService.GetAllAsync(filterDTO);
@@ -43,6 +45,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
         public async Task<IActionResult> GetPrescriptions([FromRoute, Range(1, int.MaxValue)] int id, [FromQuery] PrescriptionFilterDTO filterDTO)
         {
             filterDTO.AppointmentID = id;
@@ -54,6 +57,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
         public async Task<IActionResult> GetTestOrders([FromRoute, Range(1, int.MaxValue)] int id, [FromQuery] TestOrderFilterDTO filterDTO)
         {
             filterDTO.AppointmentID = id;
@@ -66,6 +70,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
         public async Task<IActionResult> GetById([FromRoute, Range(1, int.MaxValue)] int id)
         {
             var result = await _appointmentService.GetByIDAsync(id);
@@ -79,6 +84,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Receptionist")]
         public async Task<IActionResult> Add([FromBody] CreateAppointmentDTO createAppointmentDTO)
         {
             var subClaim = User.FindFirst("sub");
@@ -99,6 +105,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Receptionist")]
         public async Task<IActionResult> AddFromPreviousAppointment([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] CreateAppointmentFromPreviousDTO createAppointmentDTO)
         {
             createAppointmentDTO.AppointmentID = id;
@@ -112,6 +119,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Receptionist,Admin,Patient")]
         public async Task<IActionResult> GetPayments([FromRoute, Range(1, int.MaxValue)] int id, [FromQuery] ServicePaymentsDTO filterDTO)
         {
             filterDTO.ID = id;
@@ -125,6 +133,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Receptionist")]
         public async Task<IActionResult> Update([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] UpdateAppointmentDTO updateAppointmentDTO)
         {
             updateAppointmentDTO.ID = id;
@@ -139,6 +148,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute, Range(1, int.MaxValue)] int id)
         {
             var result = await _appointmentService.DeleteAsync(id);
@@ -151,6 +161,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Receptionist")]
         public async Task<IActionResult> Start([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] StartServiceDTO dto)
         {
             var result = await _appointmentService.StartAsync(id, dto?.Notes);
@@ -162,6 +173,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Receptionist")]
         public async Task<IActionResult> Cancel([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] CancelServiceDTO dto)
         {
             var result = await _appointmentService.CancelAsync(id, dto?.Notes);
@@ -173,6 +185,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Doctor")]
         public async Task<IActionResult> Complete([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] CompleteServiceDTO dto)
         {
             var result = await _appointmentService.CompleteAsync(id, dto?.Notes, dto?.Result ?? string.Empty);
@@ -184,6 +197,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Receptionist")]
         public async Task<IActionResult> Reschedule([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] RescheduleServiceDTO dto)
         {
             var result = await _appointmentService.RescheduleAsync(id, dto?.Notes, dto!.NewScheduledDate);

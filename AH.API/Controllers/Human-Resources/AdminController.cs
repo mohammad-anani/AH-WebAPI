@@ -13,6 +13,7 @@ namespace AH.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]s")]
+    [Authorize]
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _adminService;
@@ -28,6 +29,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll([FromQuery] AdminFilterDTO filterDTO)
         {
             var result = await _adminService.GetAllAsync(filterDTO);
@@ -39,6 +41,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetById([FromRoute, Range(1, int.MaxValue)] int id)
         {
             var result = await _adminService.GetByIDAsync(id);
@@ -52,6 +55,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Add([FromBody] CreateAdminDTO createAdminDTO)
         {
             try
@@ -80,6 +84,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] UpdateAdminDTO updateAdminDTO)
         {
             updateAdminDTO.ID = id;
@@ -94,6 +99,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute, Range(1, int.MaxValue)] int id)
         {
             var result = await _adminService.DeleteAsync(id);
@@ -106,6 +112,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Leave([FromRoute, Range(1, int.MaxValue)] int id)
         {
             var result = await _adminService.LeaveAsync(id);

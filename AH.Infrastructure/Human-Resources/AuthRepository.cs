@@ -27,41 +27,52 @@ namespace AH.Infrastructure.Repositories
 
         public async Task<SigninResponseDTO> SigninAsync(string email, string password)
         {
-            var IDParam = new SqlParameter();
-            IDParam.ParameterName = "@ID";
-            IDParam.SqlDbType = SqlDbType.Int;
-            IDParam.Direction = ParameterDirection.Output;
-
-            var RoleParam = new SqlParameter();
-            RoleParam.ParameterName = "@Role";
-            RoleParam.SqlDbType = SqlDbType.NVarChar;
-            RoleParam.Size = 20;
-
-            var @params = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            var IDParam = new SqlParameter
             {
-                { "@Email", (email, SqlDbType.NVarChar, 40, null)
-                },
-                { "@Password", (CreatePersonDTO.HashPassword(password), SqlDbType.NVarChar, 256, null)
-                }
+                ParameterName = "@ID",
+                SqlDbType = SqlDbType.Int,
+                Direction = ParameterDirection.Output
             };
 
-            Exception? ex = await ADOHelper.ExecuteNonQueryAsync(
-                 "FindEmployeeByEmailAndPassword", logger, cmd =>
-                 {
-                     SqlParameterHelper.AddParametersFromDictionary(cmd, @params);
-                     cmd.Parameters.Add(IDParam);
-                     cmd.Parameters.Add(RoleParam);
-                 }, null);
+            var RoleParam = new SqlParameter
+            {
+                ParameterName = "@Role",
+                SqlDbType = SqlDbType.NVarChar,
+                Size = 20,
+                Direction = ParameterDirection.Output
+            };
 
-            if (ex != null && (ex.Message.Contains("does not exist") || ex.Message.Contains("not found") || ex.Message.Contains("Invalid") && ex.Message.Contains("ID")))
+            var @params = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+    {
+        { "@Email", (email, SqlDbType.NVarChar, 40, null) },
+        { "@Password", (password, SqlDbType.NVarChar, 200, null) } // match SP
+    };
+
+            Exception? ex = await ADOHelper.ExecuteNonQueryAsync(
+                "FindEmployeeByEmailAndPassword", logger, cmd =>
+                {
+                    SqlParameterHelper.AddParametersFromDictionary(cmd, @params);
+                    cmd.Parameters.Add(IDParam);
+                    cmd.Parameters.Add(RoleParam);
+                }, null);
+
+            // Improved error checking
+            if (ex != null && (
+                ex.Message.Contains("does not exist") ||
+                ex.Message.Contains("not found") ||
+                (ex.Message.Contains("Invalid") && ex.Message.Contains("ID"))
+            ))
             {
                 return new SigninResponseDTO(-1, string.Empty, new Exception("Invalid email or password."));
             }
 
-            if (IDParam.Value == DBNull.Value || IDParam.Value == null || RoleParam.Value == DBNull.Value || RoleParam.Value == null)
+            if (IDParam.Value == DBNull.Value || IDParam.Value == null ||
+                RoleParam.Value == DBNull.Value || RoleParam.Value == null)
+            {
                 return new SigninResponseDTO(-1, string.Empty, new InvalidDataException());
+            }
 
-            return new SigninResponseDTO((int)IDParam.Value, (string)RoleParam.Value, ex);
+            return new SigninResponseDTO((int)IDParam.Value, RoleParam.Value as string ?? string.Empty, ex);
         }
 
         public async Task<(string? token, DateTime? ExpiryDate)> GetRefreshTokenByUserAsync(int id, string role)
@@ -69,23 +80,24 @@ namespace AH.Infrastructure.Repositories
             var TokenParam = new SqlParameter();
             TokenParam.ParameterName = "@RefreshToken";
             TokenParam.SqlDbType = SqlDbType.NVarChar;
-            TokenParam.Size = -1;
+            TokenParam.Size = 200;
             TokenParam.Direction = ParameterDirection.Output;
 
             var ExpiryDateParam = new SqlParameter();
             ExpiryDateParam.ParameterName = "@ExpiryDate";
             ExpiryDateParam.SqlDbType = SqlDbType.DateTime;
+            ExpiryDateParam.Direction = ParameterDirection.Output;
 
             var @params = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
-                { "@ID", (id, SqlDbType.Int, null, null)
+                { "@UserID", (id, SqlDbType.Int, null, null)
                 },
-                { "@Role", (role, SqlDbType.NVarChar, -1, null)
+                { "@Role", (role, SqlDbType.NVarChar, 50, null)
                 }
             };
 
             Exception? ex = await ADOHelper.ExecuteNonQueryAsync(
-                 "FindEmployeeByEmailAndPassword", logger, cmd =>
+                 "GetUserRefreshToken", logger, cmd =>
                  {
                      SqlParameterHelper.AddParametersFromDictionary(cmd, @params);
                      cmd.Parameters.Add(TokenParam);
@@ -150,7 +162,7 @@ namespace AH.Infrastructure.Repositories
 
             // Execute the stored procedure
             Exception? ex = await ADOHelper.ExecuteNonQueryAsync(
-                "dbo.UpdateUserRefreshToken",
+                "dbo.UpdateUserRefreshTokenByCredentials",
                 logger,
                 cmd =>
                 {
