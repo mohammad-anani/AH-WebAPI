@@ -21,25 +21,26 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 // Initialize configuration helper
 ConfigHelper.Initialize(builder.Configuration);
 
+// -------------------- Bind Options --------------------
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
+builder.Services.Configure<RefreshTokenOptions>(builder.Configuration.GetSection("RefreshToken"));
+
 // Read feature flags
 bool enableAuth = builder.Configuration.GetValue<bool>("EnableAuth");
 
 // -------------------- Add Controllers --------------------
 builder.Services.AddControllers(options =>
 {
-    // Global validation filter
     options.Filters.Add<ValidationFilter>();
 
     if (enableAuth)
     {
-        // Global authorize filter (all endpoints require authentication by default)
         var policy = new AuthorizationPolicyBuilder()
             .RequireAuthenticatedUser()
             .Build();
         options.Filters.Add(new AuthorizeFilter(policy));
     }
 
-    // Slugify convention for [controller] routes
     options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
 })
 .AddNewtonsoftJson(options =>
@@ -52,7 +53,6 @@ builder.Services.AddControllers(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    // JWT support in Swagger
     if (enableAuth)
     {
         c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
@@ -67,7 +67,11 @@ builder.Services.AddSwaggerGen(c =>
             {
                 new Microsoft.OpenApi.Models.OpenApiSecurityScheme
                 {
-                    Reference = new Microsoft.OpenApi.Models.OpenApiReference { Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme, Id = "Bearer" }
+                    Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                    {
+                        Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
                 },
                 Array.Empty<string>()
             }
@@ -75,10 +79,41 @@ builder.Services.AddSwaggerGen(c =>
     }
 });
 
+// -------------------- JWT Authentication (conditional) --------------------
+if (enableAuth)
+{
+    var jwtSection = builder.Configuration.GetSection("Jwt");
+    var key = Encoding.UTF8.GetBytes(jwtSection["Key"]!);
+
+    builder.Services
+        .AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.RequireHttpsMetadata = true;
+            options.SaveToken = true;
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = jwtSection["Issuer"],
+                ValidateAudience = true,
+                ValidAudience = jwtSection["Audience"],
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
+            };
+        });
+
+    builder.Services.AddAuthorization();
+}
+
 // -------------------- Autofac DI --------------------
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
-    // Register Repositories & Services by namespace
     var infraAssembly = Assembly.Load("AH.Infrastructure");
     var appAssembly = Assembly.Load("AH.Application");
 
@@ -102,7 +137,6 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
         .AsImplementedInterfaces()
         .InstancePerLifetimeScope();
 
-    // Configuration
     containerBuilder.Register(ctx => builder.Configuration)
         .As<IConfiguration>()
         .SingleInstance();
@@ -114,46 +148,7 @@ Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .WriteTo.Console()
     .CreateLogger();
-
 builder.Host.UseSerilog(Log.Logger);
-
-// -------------------- JWT Authentication (conditional) --------------------
-if (enableAuth)
-{
-    var jwtSection = builder.Configuration.GetSection("Jwt");
-    var refreshTokenSection = builder.Configuration.GetSection("RefreshToken");
-    var key = Encoding.UTF8.GetBytes(jwtSection["Key"]!);
-
-    builder.Services
-        .AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(options =>
-        {
-            options.RequireHttpsMetadata = true; // Always true in production
-            options.SaveToken = true;
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidIssuer = jwtSection["Issuer"],
-
-                ValidateAudience = true,
-                ValidAudience = jwtSection["Audience"],
-
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero
-            };
-        });
-
-    builder.Services.AddAuthorization(); // Enables role-based auth via ClaimTypes.Role
-    builder.Services.Configure<JwtOptions>(jwtSection);
-    builder.Services.Configure<RefreshTokenOptions>(refreshTokenSection);
-}
 
 // -------------------- CORS --------------------
 builder.Services.AddCors(options =>
@@ -180,18 +175,17 @@ if (app.Environment.IsDevelopment())
 app.UseHsts();
 app.UseHttpsRedirection();
 app.UseSerilogRequestLogging();
-
 app.UseCors();
 
 if (enableAuth)
 {
-    app.UseAuthentication();           // Must come before authorization
-    app.UseAutoRefreshToken();          // Refresh tokens after authentication
+    app.UseAuthentication();           // Must come first
+    app.UseAutoRefreshToken();          // Refresh expired tokens
     app.UseAuthorization();
 }
 
 // Map controllers
 app.MapControllers();
 
-// Run the app
+// Run
 app.Run();

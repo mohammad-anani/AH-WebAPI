@@ -12,15 +12,28 @@ namespace AH.API.Middleware
     {
         private readonly RequestDelegate _next;
         private readonly int _refreshExpireMinutes;
+        private readonly bool _enableAuth;
 
-        public AutoRefreshTokenMiddleware(RequestDelegate next, IOptions<AH.Application.Services.RefreshTokenOptions> refreshOptions)
+        public AutoRefreshTokenMiddleware(
+            RequestDelegate next,
+            IOptions<AH.Application.Services.RefreshTokenOptions> refreshOptions,
+            IOptionsMonitor<FeatureToggles> featureToggles // 👈 inject EnableAuth toggle
+        )
         {
             _next = next;
             _refreshExpireMinutes = int.TryParse(refreshOptions.Value.ExpireInMinutes, out var m) ? m : 60;
+            _enableAuth = featureToggles.CurrentValue.EnableAuth;
         }
 
         public async Task InvokeAsync(HttpContext context, IJwtService jwtService, IAuthService authService)
         {
+            // ✅ If auth is disabled → skip and just continue pipeline
+            if (!_enableAuth)
+            {
+                await _next(context);
+                return;
+            }
+
             // Prefer standard Authorization header, fallback to custom "token"
             string authHeader = context.Request.Headers["Authorization"].FirstOrDefault() ?? string.Empty;
             string token = string.Empty;
@@ -93,6 +106,12 @@ namespace AH.API.Middleware
 
             await _next(context);
         }
+    }
+
+    // Small POCO for feature flags
+    public class FeatureToggles
+    {
+        public bool EnableAuth { get; set; }
     }
 
     public static class AutoRefreshTokenMiddlewareExtensions

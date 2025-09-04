@@ -39,7 +39,7 @@ namespace AH.Infrastructure.Repositories
 
             var @params = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
-                { "@Email", (email, SqlDbType.Int, null, null)
+                { "@Email", (email, SqlDbType.NVarChar, 40, null)
                 },
                 { "@Password", (CreatePersonDTO.HashPassword(password), SqlDbType.NVarChar, 256, null)
                 }

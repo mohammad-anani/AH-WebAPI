@@ -56,13 +56,13 @@ namespace AH.API.Controllers
         {
             try
             {
-                // Get "sub" claim directly from User
-                var subClaim = User.FindFirst("sub");
-                if (subClaim == null)
-                    return Unauthorized("Missing 'sub' claim in token.");
+                //// Get "sub" claim directly from User
+                //var subClaim = User.FindFirst("sub");
+                //if (subClaim == null)
+                //    return Unauthorized("Missing 'sub' claim in token.");
 
-                int createdByAdminID = Convert.ToInt32(subClaim.Value);
-                createAdminDTO.CreatedByAdminID = createdByAdminID;
+                //int createdByAdminID = Convert.ToInt32(subClaim.Value);
+                createAdminDTO.CreatedByAdminID = null; //createdByAdminID;
 
                 var result = await _adminService.AddAsync(createAdminDTO);
                 return StatusCode(result.StatusCode, result.Data);

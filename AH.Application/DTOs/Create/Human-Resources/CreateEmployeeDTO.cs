@@ -14,7 +14,7 @@ namespace AH.Application.DTOs.Create
         public string Password { get; set; }
 
         [BindNever]
-        public int CreatedByAdminID { get; set; }
+        public int? CreatedByAdminID { get; set; }
 
         public CreateEmployeeDTO() : base()
         {
@@ -26,7 +26,7 @@ namespace AH.Application.DTOs.Create
         {
             var person = new Person(FirstName, MiddleName, LastName, Gender, BirthDate, new Country(CountryID), Phone, new User(Email, Password));
             return new Employee(person, new Department(DepartmentID),
-                Salary, HireDate, Employee.ToBitmask(WorkingDays), ShiftStart, ShiftEnd, new AdminAudit(CreatedByAdminID));
+                Salary, HireDate, Employee.ToBitmask(WorkingDays), ShiftStart, ShiftEnd, CreatedByAdminID != null ? new AdminAudit((int)CreatedByAdminID) : null);
         }
     }
 }

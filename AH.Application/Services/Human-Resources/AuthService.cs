@@ -1,4 +1,5 @@
-﻿using AH.Application.DTOs.Response;
+﻿using AH.Application.DTOs.Create;
+using AH.Application.DTOs.Response;
 using AH.Application.IRepositories;
 using AH.Application.IServices;
 using Microsoft.Extensions.Options;
@@ -27,7 +28,7 @@ namespace AH.Application.Services
 
         public async Task<SigninResponseDataDTO> SigninAsync(string email, string password)
         {
-            var response = new SigninResponseDataDTO(await signinRepository.SigninAsync(email, password));
+            var response = new SigninResponseDataDTO(await signinRepository.SigninAsync(email, CreatePersonDTO.HashPassword(password)));
 
             // Generate access and refresh tokens
             jwtService.CreateToken(response);
