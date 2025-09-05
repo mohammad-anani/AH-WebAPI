@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace AH.API.Controllers
 {
@@ -60,14 +61,15 @@ namespace AH.API.Controllers
         {
             try
             {
-                //// Get "sub" claim directly from User
-                //var subClaim = User.FindFirst("sub");
-                //if (subClaim == null)
-                //    return Unauthorized("Missing 'sub' claim in token.");
+                var subClaim = User.Claims
+.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
 
-                //int createdByAdminID = Convert.ToInt32(subClaim.Value);
-                createAdminDTO.CreatedByAdminID = null; //createdByAdminID;
+                if (subClaim == null)
+                    return Unauthorized("Missing Name Identifier claim in token.");
+                if (!int.TryParse(subClaim.Value, out var adminId))
+                    return Unauthorized("Invalid Name Identifier claim in token.");
 
+                createAdminDTO.CreatedByAdminID = adminId;
                 var result = await _adminService.AddAsync(createAdminDTO);
                 return StatusCode(result.StatusCode, result.Data);
             }

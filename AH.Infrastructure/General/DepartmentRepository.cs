@@ -89,9 +89,14 @@ namespace AH.Infrastructure.Repositories
         {
             ConvertingHelper converter = new ConvertingHelper(reader);
 
-            return new DepartmentRowDTO(converter.ConvertValue<int>("ID"), converter.ConvertValue<string>("DepartmentName"),
-               converter.ConvertValue<string>("DepartmentPhone")
-            );
+            int? id = converter.ConvertValue<int?>("DepartmentID");
+
+            if (id.HasValue)
+                return new DepartmentRowDTO(converter.ConvertValue<int>("DepartmentID"), converter.ConvertValue<string>("DepartmentName"),
+                   converter.ConvertValue<string>("DepartmentPhone")
+                );
+            else
+                return new DepartmentRowDTO();
         }
     }
 }

@@ -44,7 +44,7 @@ namespace AH.API.Controllers
         {
             var result = await _prescriptionService.AddAsync(createPrescriptionDTO);
 
-            return StatusCode(result.StatusCode, result.Message);
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpPut("{id}")]

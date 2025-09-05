@@ -10,12 +10,15 @@ namespace AH.Infrastructure.Helpers
     {
         public static void AddPersonFilterParameters(PersonFilter personFilter, SqlCommand cmd)
         {
+            // Ensure nullable Gender maps to NULL (DBNull) rather than empty string
+            object? genderValue = personFilter.Gender.HasValue ? personFilter.Gender.Value.ToString() : null;
+
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
                 ["FirstName"] = (personFilter.FirstName, SqlDbType.NVarChar, 20, null),
                 ["MiddleName"] = (personFilter.MiddleName, SqlDbType.NVarChar, 20, null),
                 ["LastName"] = (personFilter.LastName, SqlDbType.NVarChar, 20, null),
-                ["Gender"] = (personFilter.Gender.ToString(), SqlDbType.NVarChar, 1, null),
+                ["Gender"] = (genderValue, SqlDbType.NVarChar, 1, null),
                 ["BirthDateFrom"] = (personFilter.BirthDateFrom, SqlDbType.Date, null, null),
                 ["BirthDateTo"] = (personFilter.BirthDateTo, SqlDbType.Date, null, null),
                 ["CountryID"] = (personFilter.CountryID, SqlDbType.Int, null, null),
@@ -49,7 +52,7 @@ namespace AH.Infrastructure.Helpers
                 ["FirstName"] = (person.FirstName, SqlDbType.NVarChar, 20, null),
                 ["MiddleName"] = (person.MiddleName, SqlDbType.NVarChar, 20, null),
                 ["LastName"] = (person.LastName, SqlDbType.NVarChar, 20, null),
-                ["Gender"] = (person.Gender, SqlDbType.Char, 1, null),
+                ["Gender"] = (person.Gender.ToString(), SqlDbType.NVarChar, 1, null),
                 ["BirthDate"] = (person.BirthDate, SqlDbType.Date, null, null),
                 ["CountryID"] = (person.Country.ID, SqlDbType.Int, null, null),
                 ["Phone"] = (person.Phone, SqlDbType.NVarChar, 8, null),

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace AH.API.Controllers
 {
@@ -55,9 +56,19 @@ namespace AH.API.Controllers
         [Authorize(Roles = "Receptionist")]
         public async Task<IActionResult> Add([FromBody] CreateTestAppointmentDTO createTestAppointmentDTO)
         {
+            var subClaim = User.Claims
+.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+
+            if (subClaim == null)
+                return Unauthorized("Missing Name Identifier claim in token.");
+            if (!int.TryParse(subClaim.Value, out var receptionistId))
+                return Unauthorized("Invalid Name Identifier claim in token.");
+
+            createTestAppointmentDTO.CreatedByReceptionistID = receptionistId;
+
             var result = await _testAppointmentService.AddAsync(createTestAppointmentDTO);
 
-            return StatusCode(result.StatusCode, result.Message);
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpPut("{id}")]

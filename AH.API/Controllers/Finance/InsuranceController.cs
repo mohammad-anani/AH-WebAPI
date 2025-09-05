@@ -2,11 +2,12 @@ using AH.Application.DTOs.Create;
 using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Update;
 using AH.Application.IServices;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading;
-using Microsoft.AspNetCore.Http;
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
+using System.Threading;
 
 namespace AH.API.Controllers
 {
@@ -43,17 +44,19 @@ namespace AH.API.Controllers
         [Authorize(Roles = "Receptionist")]
         public async Task<IActionResult> Add([FromBody] CreateInsuranceDTO createInsuranceDTO, CancellationToken cancellationToken)
         {
-            var subClaim = User.FindFirst("sub");
+            var subClaim = User.Claims
+.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+
             if (subClaim == null)
-                return Unauthorized("Missing 'sub' claim in token.");
+                return Unauthorized("Missing Name Identifier claim in token.");
             if (!int.TryParse(subClaim.Value, out var receptionistId))
-                return Unauthorized("Invalid 'sub' claim in token.");
+                return Unauthorized("Invalid Name Identifier claim in token.");
 
             createInsuranceDTO.CreatedByReceptionistID = receptionistId;
 
             var result = await _insuranceService.AddAsync(createInsuranceDTO, cancellationToken);
 
-            return StatusCode(result.StatusCode, result.Message);
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpPut("{id}")]

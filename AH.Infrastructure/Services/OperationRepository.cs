@@ -34,7 +34,7 @@ namespace AH.Infrastructure.Repositories
                 ServiceHelper.AddServiceFilterParameters(filterDTO, cmd);
 
 
-                var param = cmd.Parameters.AddWithValue("@OperationDoctors", filterDTO.ToOperationDoctorDatatable());
+                var param = cmd.Parameters.AddWithValue("@Doctors", filterDTO.ToOperationDoctorDatatable());
                 param.SqlDbType = SqlDbType.Structured;
                 param.TypeName = "dbo.OperationDoctorsType";
             }, (reader, converter) =>

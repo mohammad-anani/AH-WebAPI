@@ -3,10 +3,11 @@ using AH.Application.DTOs.Filter;
 using AH.Application.DTOs.Update;
 using AH.Application.IServices;
 using AH.Application.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace AH.API.Controllers
 {
@@ -62,9 +63,19 @@ namespace AH.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Add([FromBody] CreateDoctorDTO createDoctorDTO)
         {
+            var subClaim = User.Claims
+.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+
+            if (subClaim == null)
+                return Unauthorized("Missing Name Identifier claim in token.");
+            if (!int.TryParse(subClaim.Value, out var adminId))
+                return Unauthorized("Invalid Name Identifier claim in token.");
+
+            createDoctorDTO.CreatedByAdminID = adminId;
+
             var result = await _doctorService.AddAsync(createDoctorDTO);
 
-            return StatusCode(result.StatusCode, result.Message);
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpPut("{id}")]

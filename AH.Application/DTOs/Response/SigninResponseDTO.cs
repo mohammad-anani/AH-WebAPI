@@ -12,7 +12,7 @@ namespace AH.Application.DTOs.Response
 
         public string Role { get; set; }
 
-        private Exception? Exception { get; set; }
+        public Exception? Exception { get; set; }
 
         public SigninResponseDTO(int id, string role, Exception? exception)
         {

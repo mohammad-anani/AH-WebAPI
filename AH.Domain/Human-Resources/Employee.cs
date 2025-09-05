@@ -88,30 +88,36 @@ namespace AH.Domain.Entities
             CreatedAt = DateTime.MinValue;
         }
 
-        public static int ToBitmask(string workingDaysString)
+        public static int ToBitmask(List<string> workingDays)
         {
-            if (string.IsNullOrWhiteSpace(workingDaysString))
+            if (workingDays == null || workingDays.Count == 0)
                 return -1;
 
             int bitmask = 0;
 
-            foreach (var part in workingDaysString.Split(',', StringSplitOptions.RemoveEmptyEntries))
+            foreach (var part in workingDays)
             {
-                if (Enum.TryParse<WorkingDaysEnum>(part.Trim(), ignoreCase: true, out var day))
+                var trimmed = part.Trim();
+
+                if (Enum.TryParse<WorkingDaysEnum>(trimmed, ignoreCase: true, out var day))
                 {
                     bitmask |= (int)day;
                 }
-                else if (ValidDays.TryGetValue(part.Trim(), out var normalized))
+                else if (ValidDays.TryGetValue(trimmed, out var normalized))
                 {
                     // Try again using normalized day name from ValidDays dictionary
-                    if (Enum.TryParse<WorkingDaysEnum>(normalized, out var normalizedDay))
+                    if (Enum.TryParse<WorkingDaysEnum>(normalized, ignoreCase: true, out var normalizedDay))
                     {
                         bitmask |= (int)normalizedDay;
+                    }
+                    else
+                    {
+                        return -1;
                     }
                 }
                 else
                 {
-                    throw new ArgumentException($"Invalid working day: '{part}'.");
+                    return -1;
                 }
             }
 

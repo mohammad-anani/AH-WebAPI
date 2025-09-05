@@ -1,17 +1,18 @@
-﻿using AH.API.Middleware;
+﻿using AH.API.Helpers;
+using AH.API.Middleware;
 using AH.API.Routing;
+using AH.Application.Services;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using Serilog;
 using System.Reflection;
 using System.Text;
-using AH.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +50,7 @@ builder.Services.AddControllers(options =>
 {
     options.SerializerSettings.ContractResolver = new DefaultContractResolver(); // PascalCase
     options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+    options.SerializerSettings.Converters.Add(new TimeOnlyJsonConverter());
 });
 
 // -------------------- Swagger --------------------

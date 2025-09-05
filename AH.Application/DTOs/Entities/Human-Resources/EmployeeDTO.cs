@@ -6,7 +6,7 @@ namespace AH.Application.DTOs.Entities
     public class EmployeeDTO
     {
         public Person Person { get; set; }
-        public DepartmentRowDTO Department { get; set; }
+        public DepartmentRowDTO? Department { get; set; }
         public int Salary { get; set; }
         public DateTime HireDate { get; set; }
         public DateTime? LeaveDate { get; set; }
@@ -33,7 +33,7 @@ namespace AH.Application.DTOs.Entities
         public EmployeeDTO(Person person, DepartmentRowDTO department, int salary, DateTime hireDate, DateTime? leaveDate, List<string> workingDays, TimeOnly shiftStart, TimeOnly shiftEnd, AdminRowDTO? createdByAdmin, DateTime createdAt)
         {
             Person = person;
-            Department = department;
+            Department = department.ID==-1?null:department;
             Salary = salary;
             HireDate = hireDate;
             LeaveDate = leaveDate;

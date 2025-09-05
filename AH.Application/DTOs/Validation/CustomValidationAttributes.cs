@@ -99,45 +99,60 @@ namespace AH.Application.DTOs.Validation
         }
     }
 
+
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class WorkingDaysStringAttribute : ValidationAttribute
     {
-
         public bool Required { get; set; }
 
-
-        public WorkingDaysStringAttribute(bool required=true)
+        public WorkingDaysStringAttribute(bool required = true)
         {
             Required = required;
         }
 
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            string input = value?.ToString()??"";
-
-            if (string.IsNullOrEmpty(input) && !Required)
+            // Handle null or empty
+            if (value == null)
             {
-                return null;
+                return Required
+                    ? new ValidationResult("Working days are required.")
+                    : ValidationResult.Success;
             }
 
-                if (string.IsNullOrWhiteSpace(input))
+            // Convert to list of strings
+            List<string> parts;
+
+            switch (value)
             {
-                return new ValidationResult("Working days must be a comma-separated string of weekdays.");
-            }
-
-
-            // Split by comma, trim spaces, ignore empty items
-            var parts = input.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                case string s:
+                    parts = s.Split(',', StringSplitOptions.RemoveEmptyEntries)
                              .Select(p => p.Trim())
                              .ToList();
+                    break;
 
-            if (parts.Count == 0)
-                return new ValidationResult("You must specify at least 1 working day.");
+                case List<string> list:
+                    parts = list.Where(p => !string.IsNullOrWhiteSpace(p))
+                                .Select(p => p.Trim())
+                                .ToList();
+                    break;
+
+                default:
+                    return new ValidationResult("Invalid type for working days. Must be a string or list of strings.");
+            }
+
+            // Check required
+            if (!parts.Any())
+            {
+                return Required
+                    ? new ValidationResult("You must specify at least 1 working day.")
+                    : ValidationResult.Success;
+            }
 
             if (parts.Count > 7)
                 return new ValidationResult("You cannot specify more than 7 working days.");
 
-            // Normalize using dictionary & check validity
+            // Normalize & check validity
             var normalized = new List<string>();
             foreach (var part in parts)
             {
@@ -148,17 +163,16 @@ namespace AH.Application.DTOs.Validation
                 normalized.Add(normalizedDay);
             }
 
-            // Check uniqueness (case-insensitive, but we already normalized so just Distinct)
-            if (normalized.Distinct().Count() != normalized.Count)
+            // Check uniqueness
+            if (normalized.Distinct(StringComparer.OrdinalIgnoreCase).Count() != normalized.Count)
                 return new ValidationResult("Duplicate working days are not allowed.");
 
-            // Everything passed
             return ValidationResult.Success;
         }
 
         public override string FormatErrorMessage(string name)
         {
-            return $"{name} must be a comma-separated list of weekdays (Mon or Monday, case-insensitive).";
+            return $"{name} must be a list of valid weekdays (Mon, Tue, ..., case-insensitive).";
         }
     }
 

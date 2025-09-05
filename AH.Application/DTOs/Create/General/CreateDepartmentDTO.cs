@@ -9,8 +9,6 @@ namespace AH.Application.DTOs.Create
     public class CreateDepartmentDTO : DepartmentFormDTO
     {
         [BindNever]
-        [Required(ErrorMessage = "Created by admin ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Created by admin ID must be a positive number")]
         public int CreatedByAdminID { get; set; }
 
         public CreateDepartmentDTO()

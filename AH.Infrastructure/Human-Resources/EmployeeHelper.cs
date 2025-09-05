@@ -14,7 +14,7 @@ namespace AH.Infrastructure.Helpers
             // Reuse Person parameters
             PersonHelper.AddPersonFilterParameters(employeeFilter, cmd);
 
-            int workingdays = Employee.ToBitmask(employeeFilter.WorkingDays ?? "");
+            int workingdays = Employee.ToBitmask((employeeFilter.WorkingDays ?? "").Split(',').ToList());
 
             // Employee-specific parameters as dictionary
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>

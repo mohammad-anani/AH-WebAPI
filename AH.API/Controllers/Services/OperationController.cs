@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace AH.API.Controllers
 {
@@ -59,17 +60,21 @@ namespace AH.API.Controllers
         [Authorize(Roles = "Receptionist")]
         public async Task<IActionResult> Add([FromBody] CreateOperationDTO createOperationDTO)
         {
-            var subClaim = User.FindFirst("sub");
+            var subClaim = User.Claims
+.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+
             if (subClaim == null)
-                return Unauthorized("Missing 'sub' claim in token.");
+                return Unauthorized("Missing Name Identifier claim in token.");
             if (!int.TryParse(subClaim.Value, out var receptionistId))
-                return Unauthorized("Invalid 'sub' claim in token.");
+                return Unauthorized("Invalid Name Identifier claim in token.");
+
+            createOperationDTO.CreatedByReceptionistID = receptionistId;
 
             createOperationDTO.CreatedByReceptionistID = receptionistId;
 
             var result = await _operationService.AddAsync(createOperationDTO);
 
-            return StatusCode(result.StatusCode, result.Message);
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpPut("{id}")]

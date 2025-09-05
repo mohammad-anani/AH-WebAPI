@@ -46,10 +46,10 @@ namespace AH.API.Controllers
         {
             var result = await _testOrderService.AddAsync(createTestOrderDTO);
 
-            return StatusCode(result.StatusCode, result.Message);
+            return StatusCode(result.StatusCode, result.Data);
         }
 
-        [HttpPatch("{id}/reserve")]
+        [HttpPost("{id}/reserve")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -61,7 +61,7 @@ namespace AH.API.Controllers
             createTestAppointmentDTO.TestOrderID = id;
             var result = await _testAppointmentService.AddFromTestOrderAsync(createTestAppointmentDTO);
 
-            return StatusCode(result.StatusCode, result.Message);
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpDelete("{id}")]

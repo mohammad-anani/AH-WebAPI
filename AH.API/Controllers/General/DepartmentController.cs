@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace AH.API.Controllers
 {
@@ -53,17 +54,19 @@ namespace AH.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Add([FromBody] CreateDepartmentDTO createDepartmentDTO)
         {
-            var subClaim = User.FindFirst("sub");
+            var subClaim = User.Claims
+     .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+
             if (subClaim == null)
-                return Unauthorized("Missing 'sub' claim in token.");
+                return Unauthorized("Missing Name Identifier claim in token.");
             if (!int.TryParse(subClaim.Value, out var adminId))
-                return Unauthorized("Invalid 'sub' claim in token.");
+                return Unauthorized("Invalid Name Identifier claim in token.");
 
             createDepartmentDTO.CreatedByAdminID = adminId;
 
             var result = await _departmentService.AddAsync(createDepartmentDTO);
 
-            return StatusCode(result.StatusCode, result.Message);
+            return StatusCode(result.StatusCode, result.Data);
         }
 
         [HttpPut("{id}")]

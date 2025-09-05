@@ -18,7 +18,7 @@ namespace AH.Application.DTOs.Form
         public DateTime HireDate { get; set; }
 
         [WorkingDaysString]
-        public string WorkingDays { get; set; } = string.Empty;
+        public List<string> WorkingDays { get; set; } = new List<string>();
 
         [Required(ErrorMessage = "Shift start time is required")]
         public TimeOnly ShiftStart { get; set; }
