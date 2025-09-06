@@ -11,7 +11,6 @@ namespace AH.Application.DTOs.Update
     {
         [BindNever]
         [Required(ErrorMessage = "Employee ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Employee ID must be a positive number")]
         public int ID { get; set; }
 
         public UpdateEmployeeDTO() : base()

@@ -78,7 +78,7 @@ namespace AH.Infrastructure.Repositories
             {
                 ["Name"] = (testType.Name, SqlDbType.NVarChar, 20, null),
                 ["DepartmentID"] = (testType.Department?.ID, SqlDbType.Int, null, null),
-                ["Cost"] = (testType.Cost, SqlDbType.NVarChar, 8, null),
+                ["Cost"] = (testType.Cost, SqlDbType.Int, null, null),
             };
 
             return await ReusableCRUD.UpdateAsync("Update_TestType", _logger, testType.ID, (cmd) =>

@@ -23,7 +23,7 @@ namespace AH.Application.DTOs.Form
 
         [Required(ErrorMessage = "Birth date is required")]
         [PastDateWithin120Years]
-        public DateTime BirthDate { get; set; }
+        public DateOnly BirthDate { get; set; }
 
         [Required(ErrorMessage = "Country ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Country ID must be a positive number")]

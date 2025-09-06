@@ -8,7 +8,6 @@ namespace AH.Application.DTOs.Update
     {
         [BindNever]
         [Required(ErrorMessage = "Appointment ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Appointment ID must be a positive number")]
         public int ID { get; set; }
 
         public UpdateAppointmentDTO() : base()
@@ -26,6 +25,7 @@ namespace AH.Application.DTOs.Update
             PreviousAppointment? previousAppointment = null;
 
             return new Appointment(
+                ID,
                 previousAppointment,
                 new Doctor(-1),
                 base.ToService()

@@ -8,7 +8,6 @@ namespace AH.Application.DTOs.Update
     {
         [BindNever]
         [Required(ErrorMessage = "Patient ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Patient ID must be a positive number")]
         public int ID { get; set; }
 
         public UpdatePatientDTO() : base()
@@ -18,7 +17,7 @@ namespace AH.Application.DTOs.Update
 
         public Patient ToPatient()
         {
-            return new Patient(base.ToPerson(), new Receptionist(-1));
+            return new Patient(ID, base.ToPerson(), new Receptionist(-1));
         }
     }
 }

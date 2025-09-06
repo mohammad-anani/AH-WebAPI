@@ -9,7 +9,6 @@ namespace AH.Application.DTOs.Form
         public int Amount { get; set; }
 
         [Required(ErrorMessage = "Payment method is required")]
-        [Range(1, 3, ErrorMessage = "Method must be 1 (Card), 2 (Cash), or 3 (Insurance)")]
-        public int Method { get; set; }
+        public string Method { get; set; } = String.Empty;
     }
 }

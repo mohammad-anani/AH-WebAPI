@@ -89,8 +89,8 @@ namespace AH.Infrastructure.Helpers
 
                  DepartmentRepository.ReadDepartment(reader),
                  converter.ConvertValue<int>("Salary"),
-                converter.ConvertValue<DateTime>("HireDate"),
-                 converter.ConvertValue<DateTime?>("LeaveDate"),
+                converter.ConvertValue<DateOnly>("HireDate"),
+                 converter.ConvertValue<DateOnly?>("LeaveDate"),
                 Employee.FromBitmask(converter.ConvertValue<int>("WorkingDays")).Split(",").ToList(),
                 converter.ConvertValue<TimeOnly>("ShiftStart"),
                 converter.ConvertValue<TimeOnly>("ShiftEnd"),

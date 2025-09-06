@@ -8,7 +8,6 @@ namespace AH.Application.DTOs.Update
     {
         [BindNever]
         [Required(ErrorMessage = "Test appointment ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Test appointment ID must be a positive number")]
         public int ID { get; set; }
 
         public UpdateTestAppointmentDTO() : base()
@@ -23,7 +22,7 @@ namespace AH.Application.DTOs.Update
 
         public TestAppointment ToTestAppointment()
         {
-            return new TestAppointment(
+            return new TestAppointment(ID,
                 new TestOrder(-1),
                 new TestType(-1),
                 base.ToService()

@@ -15,7 +15,7 @@ namespace AH.Application.DTOs.Form
 
         [Required(ErrorMessage = "Hire date is required")]
         [HireDateValidation]
-        public DateTime HireDate { get; set; }
+        public DateOnly HireDate { get; set; }
 
         [WorkingDaysString]
         public List<string> WorkingDays { get; set; } = new List<string>();

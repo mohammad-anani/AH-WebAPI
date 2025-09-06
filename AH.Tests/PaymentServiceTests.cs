@@ -59,11 +59,9 @@ namespace AH.Tests
         [Fact]
         public async Task AddAsync_UsingAutoFixture_MapsDtoToPayment_AndReturnsId()
         {
-            var random = new Random();
-
             // Arrange
             var fixture = new Fixture();
-            var dto = fixture.Build<CreatePaymentDTO>().With(x => x.Method, random.Next(1, 3)) // ensure valid method
+            var dto = fixture.Build<CreatePaymentDTO>().With(x => x.Method, "Cash") // ensure valid method
                              .Create();
 
             Payment? captured = null;
@@ -82,7 +80,7 @@ namespace AH.Tests
             captured.Should().NotBeNull();
             captured!.Bill.ID.Should().Be(dto.BillID);
             captured.Amount.Should().Be(dto.Amount);
-            captured.Method.Should().Be(Payment.GetMethod(dto.Method));
+            captured.Method.Should().Be(dto.Method);
             captured.CreatedByReceptionist.ID.Should().Be(dto.CreatedByReceptionistID);
 
             mock.Verify(r => r.AddAsync(It.IsAny<Payment>()), Times.Once);

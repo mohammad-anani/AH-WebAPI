@@ -6,7 +6,7 @@
         public string MiddleName { get; set; }
         public string LastName { get; set; }
         public char Gender { get; set; }
-        public DateTime BirthDate { get; set; }
+        public DateOnly BirthDate { get; set; }
         public Country Country { get; set; }
         public string Phone { get; set; }
         public User User { get; set; }
@@ -17,13 +17,13 @@
             MiddleName = "";
             LastName = "";
             Gender = '\0';
-            BirthDate = DateTime.MinValue;
+            BirthDate = DateOnly.MinValue;
             Country = new Country();
             Phone = "";
             User = new User();
         }
 
-        public Person(string firstName, string middleName, string lastName, char gender, DateTime birthDate, Country country, string phone, User user)
+        public Person(string firstName, string middleName, string lastName, char gender, DateOnly birthDate, Country country, string phone, User user)
         {
             FirstName = firstName;
             MiddleName = middleName;

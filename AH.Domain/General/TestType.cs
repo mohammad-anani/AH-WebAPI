@@ -50,5 +50,15 @@ namespace AH.Domain.Entities
             CreatedByAdmin = createdByAdmin;
             CreatedAt = DateTime.MinValue;
         }
+
+        public TestType(int id, string name, Department department, int cost, AdminAudit createdByAdmin)
+        {
+            ID = id;
+            Name = name;
+            Department = department;
+            Cost = cost;
+            CreatedByAdmin = createdByAdmin;
+            CreatedAt = DateTime.MinValue;
+        }
     }
 }

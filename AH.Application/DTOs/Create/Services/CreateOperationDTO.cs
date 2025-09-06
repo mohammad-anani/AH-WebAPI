@@ -24,7 +24,7 @@ namespace AH.Application.DTOs.Create
                 throw new ArgumentException("OperationDoctors list must contain between 1 and 5 items.");
             }
 
-            OperationName = operationName;
+            Name = operationName;
             DepartmentID = departmentID;
             Description = description;
             OperationDoctors = operationDoctors;
@@ -44,7 +44,7 @@ namespace AH.Application.DTOs.Create
         public Operation ToOperation()
         {
             return new Operation(
-                OperationName,
+                Name,
                 new Department(DepartmentID),
                 Description,
                 new Service(

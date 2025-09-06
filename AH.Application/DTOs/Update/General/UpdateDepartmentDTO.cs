@@ -9,7 +9,6 @@ namespace AH.Application.DTOs.Update
     public class UpdateDepartmentDTO : DepartmentFormDTO
     {
         [Required(ErrorMessage = "Department ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Department ID must be a positive number")]
         [BindNever]
         public int ID { get; set; }
 
@@ -25,6 +24,7 @@ namespace AH.Application.DTOs.Update
         public Department ToDepartment()
         {
             return new Department(
+                ID,
                 Name,
                 Phone,
                 new AdminAudit(-1)

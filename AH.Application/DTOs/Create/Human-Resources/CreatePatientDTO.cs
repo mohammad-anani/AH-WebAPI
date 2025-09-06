@@ -8,7 +8,6 @@ namespace AH.Application.DTOs.Create
     {
         [BindNever]
         [Required(ErrorMessage = "Created by receptionist ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Created by receptionist ID must be a positive number")]
         public int CreatedByReceptionistID { get; set; }
 
         public Patient ToPatient()

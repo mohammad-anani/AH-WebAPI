@@ -10,10 +10,10 @@ namespace AH.Application.DTOs.Filter
         public int? DepartmentID { get; set; }
         public int? SalaryFrom { get; set; }
         public int? SalaryTo { get; set; }
-        public DateTime? HireDateFrom { get; set; }
-        public DateTime? HireDateTo { get; set; }
-        public DateTime? LeaveDateFrom { get; set; }
-        public DateTime? LeaveDateTo { get; set; }
+        public DateOnly? HireDateFrom { get; set; }
+        public DateOnly? HireDateTo { get; set; }
+        public DateOnly? LeaveDateFrom { get; set; }
+        public DateOnly? LeaveDateTo { get; set; }
         public TimeSpan? ShiftStartFrom { get; set; }
         public TimeSpan? ShiftStartTo { get; set; }
         public TimeSpan? ShiftEndFrom { get; set; }
@@ -31,10 +31,10 @@ namespace AH.Application.DTOs.Filter
             int? departmentID,
             int? salaryFrom,
             int? salaryTo,
-            DateTime? hireDateFrom,
-            DateTime? hireDateTo,
-            DateTime? leaveDateFrom,
-            DateTime? leaveDateTo,
+            DateOnly? hireDateFrom,
+            DateOnly? hireDateTo,
+            DateOnly? leaveDateFrom,
+            DateOnly? leaveDateTo,
             TimeSpan? shiftStartFrom,
             TimeSpan? shiftStartTo,
             TimeSpan? shiftEndFrom,

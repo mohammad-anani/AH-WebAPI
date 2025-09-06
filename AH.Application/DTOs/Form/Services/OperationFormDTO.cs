@@ -7,7 +7,7 @@ namespace AH.Application.DTOs.Form
     {
         [Required(ErrorMessage = "Operation name is required")]
         [Range(10, 100, ErrorMessage = "Operation name must be between 10 and 100")]
-        public int OperationName { get; set; }
+        public int Name { get; set; }
 
         [Required(ErrorMessage = "Department ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Department ID must be a positive number")]

@@ -8,7 +8,6 @@ namespace AH.Application.DTOs.Update
     {
         [BindNever]
         [Required(ErrorMessage = "Receptionist ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Receptionist ID must be a positive number")]
         public new int ID { get; set; }
 
         public UpdateReceptionistDTO() : base()
@@ -18,7 +17,7 @@ namespace AH.Application.DTOs.Update
 
         public Receptionist ToReceptionist()
         {
-            return new Receptionist(base.ToEmployee());
+            return new Receptionist(ID, base.ToEmployee());
         }
     }
 }

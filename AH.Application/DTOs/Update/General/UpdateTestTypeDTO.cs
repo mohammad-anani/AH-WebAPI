@@ -10,7 +10,6 @@ namespace AH.Application.DTOs.Update
     {
         [BindNever]
         [Required(ErrorMessage = "Test type ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Test type ID must be a positive number")]
         public int ID { get; set; }
 
         public UpdateTestTypeDTO()
@@ -25,6 +24,7 @@ namespace AH.Application.DTOs.Update
         public TestType ToTestType()
         {
             return new TestType(
+                ID,
                 Name,
                 new Department(DepartmentID),
                 Cost,

@@ -7,7 +7,6 @@ namespace AH.Application.DTOs.Create
     public class CreateTestAppointmentFromTestOrderDTO
     {
         [Required(ErrorMessage = "Test order ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Test order ID must be a positive number")]
         [BindNever]
         public int TestOrderID { get; set; }
 

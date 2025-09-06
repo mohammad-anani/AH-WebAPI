@@ -104,6 +104,18 @@ namespace AH.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute, Range(1, int.MaxValue)] int id)
         {
+            var subClaim = User.Claims
+.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+
+            if (subClaim == null)
+                return Unauthorized("Missing Name Identifier claim in token.");
+            if (!int.TryParse(subClaim.Value, out var adminId))
+                return Unauthorized("Invalid Name Identifier claim in token.");
+
+
+            if (id == adminId)
+                return StatusCode(403, "You cannot delete yourself");
+
             var result = await _adminService.DeleteAsync(id);
 
             return StatusCode(result.StatusCode, result.Data);

@@ -8,8 +8,8 @@ namespace AH.Application.DTOs.Entities
         public Person Person { get; set; }
         public DepartmentRowDTO? Department { get; set; }
         public int Salary { get; set; }
-        public DateTime HireDate { get; set; }
-        public DateTime? LeaveDate { get; set; }
+        public DateOnly HireDate { get; set; }
+        public DateOnly? LeaveDate { get; set; }
         public List<string> WorkingDays { get; set; }
         public TimeOnly ShiftStart { get; set; }
         public TimeOnly ShiftEnd { get; set; }
@@ -21,7 +21,7 @@ namespace AH.Application.DTOs.Entities
             Person = new Person();
             Department = new DepartmentRowDTO();
             Salary = -1;
-            HireDate = DateTime.MinValue;
+            HireDate = DateOnly.MinValue;
             LeaveDate = null;
             WorkingDays = new List<string>();
             ShiftStart = TimeOnly.MinValue;
@@ -30,10 +30,10 @@ namespace AH.Application.DTOs.Entities
             CreatedAt = DateTime.MinValue;
         }
 
-        public EmployeeDTO(Person person, DepartmentRowDTO department, int salary, DateTime hireDate, DateTime? leaveDate, List<string> workingDays, TimeOnly shiftStart, TimeOnly shiftEnd, AdminRowDTO? createdByAdmin, DateTime createdAt)
+        public EmployeeDTO(Person person, DepartmentRowDTO department, int salary, DateOnly hireDate, DateOnly? leaveDate, List<string> workingDays, TimeOnly shiftStart, TimeOnly shiftEnd, AdminRowDTO? createdByAdmin, DateTime createdAt)
         {
             Person = person;
-            Department = department.ID==-1?null:department;
+            Department = department.ID == -1 ? null : department;
             Salary = salary;
             HireDate = hireDate;
             LeaveDate = leaveDate;

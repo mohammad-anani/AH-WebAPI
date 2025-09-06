@@ -10,7 +10,6 @@ namespace AH.Application.DTOs.Update
     {
         [BindNever]
         [Required(ErrorMessage = "Prescription ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Prescription ID must be a positive number")]
         public int ID { get; set; }
 
         public UpdatePrescriptionDTO()
@@ -24,7 +23,7 @@ namespace AH.Application.DTOs.Update
 
         public Prescription ToPrescription()
         {
-            return new Prescription(
+            return new Prescription(ID,
                 new Appointment(-1),
                 Diagnosis,
                 Medication,

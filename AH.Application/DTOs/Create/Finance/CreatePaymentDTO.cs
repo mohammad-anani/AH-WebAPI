@@ -13,18 +13,17 @@ namespace AH.Application.DTOs.Create
 
         [BindNever]
         [Required(ErrorMessage = "Created by receptionist ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Created by receptionist ID must be a positive number")]
         public int CreatedByReceptionistID { get; set; }
 
         public CreatePaymentDTO()
         {
             BillID = -1;
             Amount = 0;
-            Method = -1;
+            Method = "";
             CreatedByReceptionistID = -1;
         }
 
-        public CreatePaymentDTO(int billID, int amount, int method, int createdByReceptionistID)
+        public CreatePaymentDTO(int billID, int amount, string method, int createdByReceptionistID)
         {
             BillID = billID;
             Amount = amount;
@@ -37,7 +36,7 @@ namespace AH.Application.DTOs.Create
             return new Payment(
                 new Bill(BillID, 0, 0),
                 Amount,
-                Payment.GetMethod(Method),
+                Method,
                 new Receptionist(CreatedByReceptionistID)
             );
         }

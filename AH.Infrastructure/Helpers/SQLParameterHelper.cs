@@ -46,10 +46,9 @@ namespace AH.Infrastructure.Helpers
         /// SqlParameterHelper.AddParametersFromDictionary(command, parameters);
         /// </example>
         public static void AddParametersFromDictionary(
-            SqlCommand cmd,
-            Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)> parameters)
+         SqlCommand cmd,
+         Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)> parameters)
         {
-            // Track duplicates within this call (normalized with '@', case-insensitive)
             var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var kvp in parameters)
@@ -57,17 +56,18 @@ namespace AH.Infrastructure.Helpers
                 var originalName = kvp.Key?.Trim() ?? throw new ArgumentException("Parameter name cannot be null", nameof(parameters));
                 var paramName = originalName.StartsWith("@") ? originalName : "@" + originalName;
 
-                // 9 - Reject duplicate parameter names (including variations with/without '@')
                 if (!seen.Add(paramName) || cmd.Parameters.Contains(paramName))
-                {
                     throw new ArgumentException($"Duplicate parameter name detected: {paramName}");
-                }
 
                 var (valueObj, sqlType, size, direction) = kvp.Value;
-                var value = valueObj ?? DBNull.Value;
+                object value = valueObj ?? DBNull.Value;
 
-                // 5 - Size must be specified for NVarchar/VarChar and VarBinary types
-                //     Accept -1 as MAX for variable-length types that support it
+                // Convert DateOnly to DateTime for SQL
+                if (value is DateOnly dateOnlyValue)
+                {
+                    value = dateOnlyValue.ToDateTime(TimeOnly.MinValue); // midnight
+                }
+
                 if (sqlType is SqlDbType.NVarChar or SqlDbType.VarChar or SqlDbType.VarBinary)
                 {
                     if (!size.HasValue)
@@ -78,29 +78,20 @@ namespace AH.Infrastructure.Helpers
                 }
                 else if (sqlType is SqlDbType.Char or SqlDbType.NChar)
                 {
-                    // Fixed-length types require a positive size; MAX not supported
                     if (!size.HasValue || size.Value <= 0)
                         throw new ArgumentException($"Size must be specified and > 0 for type {sqlType} (parameter {paramName})");
                 }
 
-                // 7 - Validate value type when not null/DBNull
                 if (value is not DBNull)
                 {
                     ValidateValueMatchesSqlDbType(paramName, sqlType, value);
 
-                    // 8 - Strings/byte[] must respect specified length when provided (except when MAX)
                     if (size.HasValue && size.Value != -1)
                     {
-                        if (value is string s)
-                        {
-                            if (s.Length > size.Value)
-                                throw new ArgumentException($"String length {s.Length} exceeds declared size {size.Value} for {paramName}");
-                        }
-                        else if (value is byte[] bytes)
-                        {
-                            if (bytes.Length > size.Value)
-                                throw new ArgumentException($"Binary length {bytes.Length} exceeds declared size {size.Value} for {paramName}");
-                        }
+                        if (value is string s && s.Length > size.Value)
+                            throw new ArgumentException($"String length {s.Length} exceeds declared size {size.Value} for {paramName}");
+                        if (value is byte[] bytes && bytes.Length > size.Value)
+                            throw new ArgumentException($"Binary length {bytes.Length} exceeds declared size {size.Value} for {paramName}");
                     }
                 }
 
@@ -109,7 +100,7 @@ namespace AH.Infrastructure.Helpers
                     : new SqlParameter(paramName, sqlType);
 
                 sqlParam.Value = value;
-                sqlParam.Direction = direction ?? ParameterDirection.Input; // 2 - default to Input, 6 - preserve provided Output
+                sqlParam.Direction = direction ?? ParameterDirection.Input;
 
                 cmd.Parameters.Add(sqlParam);
             }
@@ -117,8 +108,6 @@ namespace AH.Infrastructure.Helpers
 
         private static void ValidateValueMatchesSqlDbType(string name, SqlDbType type, object value)
         {
-            // This is intentionally strict to enforce correctness per documented rules.
-            // Expand as needed for additional SqlDbType mappings.
             bool ok = type switch
             {
                 SqlDbType.Int => value is int,
@@ -126,19 +115,20 @@ namespace AH.Infrastructure.Helpers
                 SqlDbType.SmallInt => value is short,
                 SqlDbType.TinyInt => value is byte,
                 SqlDbType.Bit => value is bool,
-                SqlDbType.Date or SqlDbType.DateTime or SqlDbType.DateTime2 or SqlDbType.SmallDateTime => value is DateTime,
+                SqlDbType.Date or SqlDbType.DateTime or SqlDbType.DateTime2 or SqlDbType.SmallDateTime => value is DateTime || value is DateOnly,
                 SqlDbType.Decimal or SqlDbType.Money or SqlDbType.SmallMoney => value is decimal,
                 SqlDbType.Float => value is double,
                 SqlDbType.Real => value is float,
                 SqlDbType.UniqueIdentifier => value is Guid,
                 SqlDbType.Binary or SqlDbType.VarBinary or SqlDbType.Image => value is byte[],
                 SqlDbType.NVarChar or SqlDbType.VarChar or SqlDbType.Char or SqlDbType.NChar or SqlDbType.NText or SqlDbType.Text => value is string,
-                _ => true // do not over-restrict unknown mappings
+                _ => true
             };
 
             if (!ok)
             {
-                throw new ArgumentException($"Value for parameter {name} does not match SqlDbType {type}. Actual CLR type: {value.GetType().FullName}");
+                throw new ArgumentException(
+                    $"Value for parameter {name} does not match SqlDbType {type}. Actual CLR type: {value.GetType().FullName}");
             }
         }
     }

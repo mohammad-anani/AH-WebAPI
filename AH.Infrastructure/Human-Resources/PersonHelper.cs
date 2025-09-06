@@ -71,7 +71,7 @@ namespace AH.Infrastructure.Helpers
                 MiddleName = converter.ConvertValue<string>("MiddleName"),
                 LastName = converter.ConvertValue<string>("LastName"),
                 Gender = converter.ConvertValue<char>("Gender"),
-                BirthDate = converter.ConvertValue<DateTime>("BirthDate"),
+                BirthDate = converter.ConvertValue<DateOnly>("BirthDate"),
                 Country = new Country
                 {
                     ID = converter.ConvertValue<int>("CountryID"),

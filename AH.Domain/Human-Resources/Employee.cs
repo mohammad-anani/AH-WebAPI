@@ -32,9 +32,9 @@ namespace AH.Domain.Entities
 
         public int Salary { get; set; }
 
-        public DateTime HireDate { get; set; }
+        public DateOnly HireDate { get; set; }
 
-        public DateTime? LeaveDate { get; set; }
+        public DateOnly? LeaveDate { get; set; }
 
         public int WorkingDays { get; set; }
 
@@ -51,7 +51,7 @@ namespace AH.Domain.Entities
             Person = new Person();
             Department = new Department(); // Fix: Don't create new Department to avoid circular dependency
             Salary = -1;
-            HireDate = DateTime.MinValue;
+            HireDate = DateOnly.MinValue;
             LeaveDate = null;
             WorkingDays = -1;
             ShiftStart = TimeOnly.MinValue;
@@ -60,7 +60,7 @@ namespace AH.Domain.Entities
             CreatedAt = DateTime.MinValue;
         }
 
-        public Employee(Person person, Department department, int salary, DateTime hireDate, DateTime? leaveDate, int workingDays, TimeOnly shiftStart, TimeOnly shiftEnd, AdminAudit? createdByAdmin, DateTime createdAt)
+        public Employee(Person person, Department department, int salary, DateOnly hireDate, DateOnly? leaveDate, int workingDays, TimeOnly shiftStart, TimeOnly shiftEnd, AdminAudit? createdByAdmin, DateTime createdAt)
         {
             Person = person;
             Department = department;
@@ -74,7 +74,7 @@ namespace AH.Domain.Entities
             CreatedAt = createdAt;
         }
 
-        public Employee(Person person, Department department, int salary, DateTime hireDate, int workingDays, TimeOnly shiftStart, TimeOnly shiftEnd, AdminAudit? createdByAdmin)
+        public Employee(Person person, Department department, int salary, DateOnly hireDate, int workingDays, TimeOnly shiftStart, TimeOnly shiftEnd, AdminAudit? createdByAdmin)
         {
             Person = person;
             Department = department;

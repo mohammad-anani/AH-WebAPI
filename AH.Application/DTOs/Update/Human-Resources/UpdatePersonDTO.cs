@@ -11,7 +11,7 @@ namespace AH.Application.DTOs.Update
         {
         }
 
-        public UpdatePersonDTO(string firstName, string middleName, string lastName, char gender, DateTime birthDate, int countryId, string phone, string email, string password)
+        public UpdatePersonDTO(string firstName, string middleName, string lastName, char gender, DateOnly birthDate, int countryId, string phone, string email, string password)
         {
         }
 

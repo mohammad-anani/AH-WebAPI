@@ -32,11 +32,12 @@ namespace AH.Application.DTOs.Validation
     {
         public override bool IsValid(object? value)
         {
-            if (value is DateTime dateTime)
+            if (value is DateOnly date)
             {
-                var now = DateTime.Now;
-                var minimumDate = now.AddYears(-120);
-                return dateTime >= minimumDate && dateTime <= now;
+                var today = DateOnly.FromDateTime(DateTime.Today);
+                var minimumDate = today.AddYears(-120);
+
+                return date >= minimumDate && date <= today;
             }
             return false;
         }
@@ -51,12 +52,14 @@ namespace AH.Application.DTOs.Validation
     {
         public override bool IsValid(object? value)
         {
-            if (value is DateTime dateTime)
+            if (value is DateOnly date)
             {
-                var year2000 = new DateTime(2000, 1, 1);
-                var now = DateTime.Now;
-                return dateTime >= year2000 && dateTime <= now;
+                var minDate = new DateOnly(2000, 1, 1);
+                var today = DateOnly.FromDateTime(DateTime.Today);
+
+                return date >= minDate && date <= today;
             }
+
             return false;
         }
 
@@ -98,7 +101,6 @@ namespace AH.Application.DTOs.Validation
             return new ValidationResult("Medication start must be now or later, end must be after start, and within 5 years from now.");
         }
     }
-
 
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class WorkingDaysStringAttribute : ValidationAttribute
@@ -220,4 +222,4 @@ namespace AH.Application.DTOs.Validation
             return ValidationResult.Success;
         }
     }
-    }
+}

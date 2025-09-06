@@ -37,6 +37,15 @@ namespace AH.Domain.Entities
             CreatedAt = DateTime.MinValue;
         }
 
+        public Department(int id, string name, string phone, AdminAudit createdByAdmin)
+        {
+            ID = id;
+            Name = name;
+            Phone = phone;
+            CreatedByAdmin = createdByAdmin;
+            CreatedAt = DateTime.MinValue;
+        }
+
         public Department(string name, string phone, AdminAudit createdByAdmin)
         {
             ID = -1;
