@@ -51,7 +51,7 @@ namespace AH.Infrastructure.Helpers
                 ["Status"] = (Service.GetStatus(service.Status), SqlDbType.TinyInt, null, null),
                 ["Reason"] = (service.Reason, SqlDbType.NVarChar, -1, null),
                 ["Notes"] = (service.Notes, SqlDbType.NVarChar, 500, null),
-                ["BillAmount"] = (service.Bill.Amount, SqlDbType.Decimal, null, null),
+                ["CreatedByReceptionistID"] = (service.CreatedByReceptionist.ID, SqlDbType.Int, null, null)
             };
 
             SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
@@ -62,7 +62,6 @@ namespace AH.Infrastructure.Helpers
             // Service-specific parameters based on ServiceFilter properties
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
-                ["Status"] = (Service.GetStatus(service.Status), SqlDbType.TinyInt, null, null),
                 ["Reason"] = (service.Reason, SqlDbType.NVarChar, -1, null),
                 ["Notes"] = (service.Notes, SqlDbType.NVarChar, 500, null),
             };
@@ -78,7 +77,7 @@ namespace AH.Infrastructure.Helpers
                 converter.ConvertValue<DateTime>("ScheduledDate"),
                 converter.ConvertValue<DateTime?>("ActualStartingDate"), converter.ConvertValue<string>("Reason"),
                  converter.ConvertValue<string?>("Result"), converter.ConvertValue<DateTime?>("ResultDate"), converter.ConvertValue<string>("Status"),
-                   converter.ConvertValue<string?>("Notes"), new Bill(converter.ConvertValue<int>("BillID"), converter.ConvertValue<int>("Amount"), converter.ConvertValue<int>("AmountPaid")),
+                   converter.ConvertValue<string?>("Notes"), new Bill(converter.ConvertValue<int>("BillID"), converter.ConvertValue<int>("BillAmount"), converter.ConvertValue<int?>("BillAmountPaid")),
                    ReceptionistAuditHelper.ReadReceptionist(reader), converter.ConvertValue<DateTime>("CreatedAt")
 
                  );

@@ -4,7 +4,7 @@ namespace AH.Application.DTOs.Row
     {
         public int ID { get; set; }
         public string PatientFullName { get; set; }
-        public string TestName { get; set; }
+        public string TestTypeName { get; set; }
 
         public bool IsOrdered { get; set; }
         public DateTime ScheduledDate { get; set; }
@@ -16,7 +16,7 @@ namespace AH.Application.DTOs.Row
         {
             ID = iD;
             PatientFullName = patientFullName;
-            TestName = testName;
+            TestTypeName = testName;
             IsOrdered = isOrdered;
             ScheduledDate = scheduledDate;
             Status = status;
@@ -27,7 +27,7 @@ namespace AH.Application.DTOs.Row
         {
             ID = -1;
             PatientFullName = String.Empty;
-            TestName = String.Empty;
+            TestTypeName = String.Empty;
             IsOrdered = false;
             IsPaid = false;
             Status = String.Empty;

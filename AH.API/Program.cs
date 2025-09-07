@@ -6,6 +6,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
@@ -21,6 +22,30 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
 // Initialize configuration helper
 ConfigHelper.Initialize(builder.Configuration);
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        // Log model binding errors
+        var logger = context.HttpContext.RequestServices
+            .GetRequiredService<ILogger<Program>>();
+
+        foreach (var kvp in context.ModelState)
+        {
+            foreach (var error in kvp.Value.Errors)
+            {
+                logger.LogWarning("Model binding error on {Field}: {ErrorMessage}",
+                    kvp.Key, error.ErrorMessage);
+            }
+        }
+
+        // Return the default response
+        return new BadRequestObjectResult(context.ModelState);
+    };
+});
+
+
 
 // -------------------- Bind Options --------------------
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));

@@ -16,9 +16,9 @@ namespace AH.Application.DTOs.Create
         [FutureDateWithinYear]
         public DateTime ScheduledDate { get; set; }
 
-        [Required(ErrorMessage = "Bill amount is required")]
-        [Range(10, 99999, ErrorMessage = "Bill amount must be between 10 and 99,999")]
-        public int BillAmount { get; set; }
+        //[Required(ErrorMessage = "Bill amount is required")]
+        //[Range(10, 99999, ErrorMessage = "Bill amount must be between 10 and 99,999")]
+        //public int BillAmount { get; set; }
 
         [BindNever]
         [Required(ErrorMessage = "Created by receptionist ID is required")]
@@ -28,7 +28,6 @@ namespace AH.Application.DTOs.Create
         {
             PatientID = -1;
             ScheduledDate = DateTime.MinValue;
-            BillAmount = 0;
             CreatedByReceptionistID = -1;
         }
 
@@ -38,8 +37,23 @@ namespace AH.Application.DTOs.Create
             ScheduledDate = scheduledDate;
             Reason = reason;
             Notes = notes;
-            BillAmount = billAmount;
             CreatedByReceptionistID = createdByReceptionistID;
+        }
+
+        public Service ToService(string status)
+        {
+            return new Service(
+                new Patient(PatientID),
+                ScheduledDate,
+                null,
+                Reason,
+                null,
+                null, status,
+
+                Notes,
+                new Bill(),
+                new Receptionist(CreatedByReceptionistID)
+            );
         }
 
         public Service ToService()
@@ -53,7 +67,7 @@ namespace AH.Application.DTOs.Create
                 null, "",
 
                 Notes,
-                new Bill(-1, BillAmount, 0),
+                new Bill(),
                 new Receptionist(CreatedByReceptionistID)
             );
         }

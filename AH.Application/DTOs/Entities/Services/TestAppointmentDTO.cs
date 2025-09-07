@@ -5,7 +5,7 @@ namespace AH.Application.DTOs.Entities
     public class TestAppointmentDTO
     {
         public int ID { get; set; }
-        public TestOrderRowDTO TestOrder { get; set; }
+        public TestOrderRowDTO? TestOrder { get; set; }
         public TestTypeRowDTO TestType { get; set; }
         public ServiceDTO Service { get; set; }
 
@@ -17,7 +17,7 @@ namespace AH.Application.DTOs.Entities
             Service = new ServiceDTO();
         }
 
-        public TestAppointmentDTO(int id, TestOrderRowDTO testOrder, TestTypeRowDTO testType, ServiceDTO service)
+        public TestAppointmentDTO(int id, TestOrderRowDTO? testOrder, TestTypeRowDTO testType, ServiceDTO service)
         {
             ID = id;
             TestOrder = testOrder;

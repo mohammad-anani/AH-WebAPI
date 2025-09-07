@@ -35,7 +35,7 @@ namespace AH.Infrastructure.Repositories
 
                 new TestAppointmentRowDTO(converter.ConvertValue<int>("ID"),
                                     converter.ConvertValue<string>("PatientFullName"),
-                                    converter.ConvertValue<string>("TestName"),
+                                    converter.ConvertValue<string>("TestTypeName"),
                                     converter.ConvertValue<bool>("IsOrdered"),
                                     converter.ConvertValue<DateTime>("ScheduledDate"),
                                     converter.ConvertValue<string>("Status"),
@@ -53,10 +53,12 @@ namespace AH.Infrastructure.Repositories
         {
             return await ReusableCRUD.GetByID<TestAppointmentDTO>("Fetch_TestAppointmentByID", _logger, id, null, (reader, converter) =>
             {
+                int? testorderid = converter.ConvertValue<int?>("TestOrderID");
+
                 TestTypeRowDTO testType = TestTypeRepository.ReadTestType(reader);
-                return new TestAppointmentDTO(converter.ConvertValue<int>("ID"), new TestOrderRowDTO(
-                    converter.ConvertValue<int>("TestOrderID"), converter.ConvertValue<string>("TestOrderPatientFullName"),
-                    converter.ConvertValue<string>("TestOrderTestTypeName")), testType,
+                return new TestAppointmentDTO(converter.ConvertValue<int>("ID"), testorderid != null ? new TestOrderRowDTO(testorderid ?? -1,
+converter.ConvertValue<string>("TestOrderPatientFullName"),
+                    converter.ConvertValue<string>("TestOrderTestTypeName")) : null, testType,
 ServiceHelper.ReadService(reader));
             }
             );
@@ -98,7 +100,7 @@ ServiceHelper.ReadService(reader));
         {
             return await ReusableCRUD.UpdateAsync("Update_TestAppointment", _logger, testAppointment.ID, cmd =>
             {
-                ServiceHelper.AddCreateServiceParameters(testAppointment.Service, cmd);
+                ServiceHelper.AddUpdateServiceParameters(testAppointment.Service, cmd);
             });
         }
 
@@ -111,7 +113,7 @@ ServiceHelper.ReadService(reader));
         {
             var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
             {
-                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
+                ["Notes"] = (notes, SqlDbType.NVarChar, 500, null),
             };
 
             return await ReusableCRUD.ExecuteByIDAsync("Start_TestAppointment", _logger, id, extraParams);
@@ -121,7 +123,7 @@ ServiceHelper.ReadService(reader));
         {
             var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
             {
-                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
+                ["Notes"] = (notes, SqlDbType.NVarChar, 500, null),
             };
 
             return await ReusableCRUD.ExecuteByIDAsync("Cancel_TestAppointment", _logger, id, extraParams);
@@ -131,8 +133,8 @@ ServiceHelper.ReadService(reader));
         {
             var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
             {
-                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
-                ["Result"] = (result, SqlDbType.NVarChar, null, null),
+                ["Notes"] = (notes, SqlDbType.NVarChar, 500, null),
+                ["Result"] = (result, SqlDbType.NVarChar, 500, null),
             };
 
             return await ReusableCRUD.ExecuteByIDAsync("Complete_TestAppointment", _logger, id, extraParams);
@@ -142,7 +144,7 @@ ServiceHelper.ReadService(reader));
         {
             var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
             {
-                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
+                ["Notes"] = (notes, SqlDbType.NVarChar, 500, null),
                 ["ScheduledDate"] = (newScheduledDate, SqlDbType.DateTime, null, null),
             };
 

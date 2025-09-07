@@ -69,12 +69,13 @@ namespace AH.Infrastructure.Repositories
         {
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
-                ["CreatedByReceptionistID"] = (patient.CreatedByReceptionist, SqlDbType.Int, null, null),
+                ["CreatedByReceptionistID"] = (patient.CreatedByReceptionist.ID, SqlDbType.Int, null, null),
             };
 
             return await ReusableCRUD.AddAsync("Create_Patient", _logger, (cmd) =>
             {
                 PersonHelper.AddCreatePersonParameters(patient.Person, cmd);
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
             });
         }
 
@@ -99,7 +100,7 @@ namespace AH.Infrastructure.Repositories
 
                  converter.ConvertValue<int>("PatientID"),
 
- converter.ConvertValue<string>("PatientFullName"), converter.ConvertValue<int>("Age"), converter.ConvertValue<string>("Phone"));
+ converter.ConvertValue<string>("PatientFullName"), converter.ConvertValue<int>("PatientAge"), converter.ConvertValue<string>("PatientPhone"));
         }
     }
 }

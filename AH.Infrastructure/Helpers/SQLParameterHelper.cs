@@ -113,7 +113,7 @@ namespace AH.Infrastructure.Helpers
                 SqlDbType.Int => value is int,
                 SqlDbType.BigInt => value is long,
                 SqlDbType.SmallInt => value is short,
-                SqlDbType.TinyInt => value is byte,
+                SqlDbType.TinyInt => value is int,
                 SqlDbType.Bit => value is bool,
                 SqlDbType.Date or SqlDbType.DateTime or SqlDbType.DateTime2 or SqlDbType.SmallDateTime => value is DateTime || value is DateOnly,
                 SqlDbType.Decimal or SqlDbType.Money or SqlDbType.SmallMoney => value is decimal,

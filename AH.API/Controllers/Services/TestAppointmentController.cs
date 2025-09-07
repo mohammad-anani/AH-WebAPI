@@ -156,7 +156,7 @@ namespace AH.API.Controllers
         [Authorize(Roles = "Receptionist")]
         public async Task<IActionResult> Reschedule([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] RescheduleServiceDTO dto)
         {
-            var result = await _testAppointmentService.RescheduleAsync(id, dto?.Notes, dto!.NewScheduledDate);
+            var result = await _testAppointmentService.RescheduleAsync(id, dto?.Notes, dto!.ScheduledDate);
             return StatusCode(result.StatusCode, result.Data);
         }
     }
