@@ -24,5 +24,7 @@ namespace AH.Application.IRepositories
         Task<SuccessResponseDTO> UpdateAsync(TestAppointment testAppointment);
 
         Task<DeleteResponseDTO> DeleteAsync(int id);
+
+        Task<CreateResponseDTO> PayAsync(int testAppointmentID, int amount, string method, int createdByReceptionistID);
     }
 }

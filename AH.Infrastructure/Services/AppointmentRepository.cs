@@ -37,7 +37,6 @@ namespace AH.Infrastructure.Repositories
                 new AppointmentRowDTO(converter.ConvertValue<int>("ID"),
                                     converter.ConvertValue<string>("PatientFullName"),
                                     converter.ConvertValue<string>("DoctorFullName"),
-                                    converter.ConvertValue<bool>("IsFollowUp"),
                                     converter.ConvertValue<DateTime>("ScheduledDate"),
                                     converter.ConvertValue<string>("Status"), converter.ConvertValue<bool>("IsPaid"))
             , parameters);
@@ -83,7 +82,7 @@ DoctorRepository.ReadDoctor(reader),
         {
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
-                ["TestOrderID"] = (app.AppointmentID, SqlDbType.Int, null, null),
+                ["PreviousAppointmentID"] = (app.AppointmentID, SqlDbType.Int, null, null),
                 ["ScheduledDate"] = (app.ScheduledDate, SqlDbType.DateTime, null, null),
                 ["Notes"] = (app.Notes, SqlDbType.NVarChar, -1, null),
                 ["CreatedByReceptionistID"] = (app.CreatedByReceptionistID, SqlDbType.Int, null, null),
@@ -113,7 +112,7 @@ DoctorRepository.ReadDoctor(reader),
         {
             var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
             {
-                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
+                ["Notes"] = (notes, SqlDbType.NVarChar, 500, null),
             };
 
             return await ReusableCRUD.ExecuteByIDAsync("Start_Appointment", _logger, id, extraParams);
@@ -123,7 +122,7 @@ DoctorRepository.ReadDoctor(reader),
         {
             var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
             {
-                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
+                ["Notes"] = (notes, SqlDbType.NVarChar, 500, null),
             };
 
             return await ReusableCRUD.ExecuteByIDAsync("Cancel_Appointment", _logger, id, extraParams);
@@ -131,35 +130,39 @@ DoctorRepository.ReadDoctor(reader),
 
         public async Task<SuccessResponseDTO> CompleteAsync(int id, string? notes, string result)
         {
-            var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
-            {
-                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
-                ["Result"] = (result, SqlDbType.NVarChar, null, null),
-            };
-
-            return await ReusableCRUD.ExecuteByIDAsync("Complete_Appointment", _logger, id, extraParams);
+            return await CompleteAsync(id, notes, result, null);
         }
+
+        public async Task<SuccessResponseDTO> CompleteAsync(int id, string? notes, string result, string? testOrdersCsv)
+        { var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)> { { "Notes", (notes, SqlDbType.NVarChar, 500, null) }, { "Result", (result, SqlDbType.NVarChar, 500, null) }, { "TestOrders", (testOrdersCsv, SqlDbType.NVarChar, -1, null) }, }; return await ReusableCRUD.ExecuteByIDAsync("Complete_Appointment", _logger, id, extraParams); }
 
         public async Task<SuccessResponseDTO> RescheduleAsync(int id, string? notes, DateTime newScheduledDate)
         {
             var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
             {
+                ["Notes"] = (notes, SqlDbType.NVarChar, 500, null),
+
                 ["ScheduledDate"] = (newScheduledDate, SqlDbType.DateTime, null, null),
             };
 
             return await ReusableCRUD.ExecuteByIDAsync("Reschedule_Appointment", _logger, id, extraParams);
         }
 
-        public static AppointmentRowDTO ReadAppointment(SqlDataReader reader, string? prefix)
+        public static AppointmentRowDTO? ReadAppointment(SqlDataReader reader, string? prefix)
         {
             var converter = new ConvertingHelper(reader);
-            return new AppointmentRowDTO(converter.ConvertValue<int>(prefix + "AppointmenID"),
-                                        converter.ConvertValue<string>(prefix + "AppointmentPatientFullName"),
-                                        converter.ConvertValue<string>(prefix + "AppointmentDoctorFullName"),
-                                        converter.ConvertValue<bool>(prefix + "AppointmentIsFollowUp"),
-                                        converter.ConvertValue<DateTime>(prefix + "AppointmentScheduledDate"),
-                                        converter.ConvertValue<string>(prefix + "AppointmentStatus"),
-                                        converter.ConvertValue<bool>(prefix + "AppointmentIsPaid"));
+
+            int? ID = converter.ConvertValue<int?>(prefix + "AppointmentID");
+
+            if (ID.HasValue)
+                return new AppointmentRowDTO(converter.ConvertValue<int>(prefix + "AppointmentID"),
+                                            converter.ConvertValue<string>(prefix + "AppointmentPatientFullName"),
+                                            converter.ConvertValue<string>(prefix + "AppointmentDoctorFullName"),
+                                            converter.ConvertValue<DateTime>(prefix + "AppointmentScheduledDate"),
+                                            converter.ConvertValue<string>(prefix + "AppointmentStatus"),
+                                            converter.ConvertValue<bool>(prefix + "AppointmentIsPaid"));
+            else
+                return null;
         }
 
         public async Task<GetAllResponseDTO<PaymentRowDTO>> GetPaymentsAsync(ServicePaymentsDTO filterDTO)
@@ -193,6 +196,22 @@ DoctorRepository.ReadDoctor(reader),
             totalCount = rowCountOutputHelper.GetRowCount();
 
             return new GetAllResponseDTO<PaymentRowDTO>(items, totalCount, ex);
+        }
+
+        public async Task<CreateResponseDTO> PayAsync(int appointmentID, int amount, string method, int createdByReceptionistID)
+        {
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["AppointmentID"] = (appointmentID, SqlDbType.Int, null, null),
+                ["Amount"] = (amount, SqlDbType.Int, null, null),
+                ["Method"] = (Payment.GetMethod(method), SqlDbType.TinyInt, null, null),
+                ["CreatedByReceptionistID"] = (createdByReceptionistID, SqlDbType.Int, null, null)
+            };
+
+            return await ReusableCRUD.AddAsync("Create_AppointmentPayment", _logger, cmd =>
+            {
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+            });
         }
     }
 }

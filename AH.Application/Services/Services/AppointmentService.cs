@@ -6,6 +6,7 @@ using AH.Application.DTOs.Row;
 using AH.Application.DTOs.Update;
 using AH.Application.IRepositories;
 using AH.Application.IServices;
+using System.Linq;
 
 namespace AH.Application.Services
 {
@@ -155,6 +156,21 @@ namespace AH.Application.Services
         }
 
         /// <summary>
+        /// Completes an appointment by updating its status to completed with additional test type information.
+        /// </summary>
+        /// <param name="id">The unique identifier of the appointment to complete</param>
+        /// <param name="notes">Optional notes for the completion</param>
+        /// <param name="result">The result or outcome of the appointment</param>
+        /// <param name="testTypeIDs">Optional list of test type IDs associated with the appointment</param>
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        public async Task<ServiceResult<bool>> CompleteAsync(int id, string? notes, string result, IEnumerable<int>? testTypeIDs)
+        {
+            string? csv = testTypeIDs != null && testTypeIDs.Any() ? string.Join(',', testTypeIDs) : null;
+            var response = await _appointmentRepository.CompleteAsync(id, notes, result, csv);
+            return ServiceResult<bool>.Create(response.Success, response.Exception);
+        }
+
+        /// <summary>
         /// Reschedules an appointment to a new date and time.
         /// </summary>
         /// <param name="id">The unique identifier of the appointment to reschedule</param>
@@ -171,6 +187,12 @@ namespace AH.Application.Services
         {
             var response = await _appointmentRepository.GetPaymentsAsync(filterDTO);
             var data = new GetAllResponseDataDTO<PaymentRowDTO>(response); return ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>.Create(data, response.Exception); ;
+        }
+
+        public async Task<ServiceResult<int>> PayAsync(int id, CreateServicePaymentDTO dto)
+        {
+            var response = await _appointmentRepository.PayAsync(id, dto.Amount, dto.Method, dto.CreatedByReceptionistID);
+            return ServiceResult<int>.Create(response.ID, response.Exception);
         }
     }
 }

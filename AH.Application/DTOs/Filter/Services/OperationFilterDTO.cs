@@ -16,7 +16,7 @@ namespace AH.Application.DTOs.Filter
         [OperationDoctors]
         public string? Doctors { get; set; }
         public string? Sort { get; set; }
-        public bool? Order { get; set; }
+        public string? Order { get; set; }
         public int? Page { get; set; }
 
         // Full constructor
@@ -25,7 +25,7 @@ namespace AH.Application.DTOs.Filter
             string? description,
             int? departmentID,
             string? sort,
-            bool? order,
+            string? order,
             int? page,
             int? patientID = null,
             DateTime? scheduledDateFrom = null,

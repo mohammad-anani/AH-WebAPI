@@ -70,5 +70,57 @@ namespace AH.Application.IServices
         /// <param name="id">The unique identifier of the appointment to delete</param>
         /// <returns>ServiceResult containing true if deletion was successful, false otherwise</returns>
         Task<ServiceResult<bool>> DeleteAsync(int id);
+
+        /// <summary>
+        /// Starts an appointment, indicating that the service is in progress.
+        /// </summary>
+        /// <param name="id">The unique identifier of the appointment to start</param>
+        /// <param name="notes">Optional notes or comments about the appointment</param>
+        /// <returns>ServiceResult containing true if the operation was successful, false otherwise</returns>
+        Task<ServiceResult<bool>> StartAsync(int id, string? notes);
+
+        /// <summary>
+        /// Cancels an appointment, marking it as not attended.
+        /// </summary>
+        /// <param name="id">The unique identifier of the appointment to cancel</param>
+        /// <param name="notes">Optional notes or comments about the cancellation</param>
+        /// <returns>ServiceResult containing true if the operation was successful, false otherwise</returns>
+        Task<ServiceResult<bool>> CancelAsync(int id, string? notes);
+
+        /// <summary>
+        /// Marks an appointment as complete, indicating that the service has been provided.
+        /// </summary>
+        /// <param name="id">The unique identifier of the appointment to complete</param>
+        /// <param name="notes">Optional notes or comments about the appointment</param>
+        /// <param name="result">The result or outcome of the appointment</param>
+        /// <returns>ServiceResult containing true if the operation was successful, false otherwise</returns>
+        Task<ServiceResult<bool>> CompleteAsync(int id, string? notes, string result);
+
+        /// <summary>
+        /// Marks an appointment as complete, indicating that the service has been provided.
+        /// </summary>
+        /// <param name="id">The unique identifier of the appointment to complete</param>
+        /// <param name="notes">Optional notes or comments about the appointment</param>
+        /// <param name="result">The result or outcome of the appointment</param>
+        /// <param name="testTypeIDs">A collection of related test type IDs to be passed to the stored procedure</param>
+        /// <returns>ServiceResult containing true if the operation was successful, false otherwise</returns>
+        Task<ServiceResult<bool>> CompleteAsync(int id, string? notes, string result, IEnumerable<int>? testTypeIDs);
+
+        /// <summary>
+        /// Reschedules an appointment to a new date and time.
+        /// </summary>
+        /// <param name="id">The unique identifier of the appointment to reschedule</param>
+        /// <param name="notes">Optional notes or comments about the rescheduling</param>
+        /// <param name="newScheduledDate">The new date and time for the appointment</param>
+        /// <returns>ServiceResult containing true if the operation was successful, false otherwise</returns>
+        Task<ServiceResult<bool>> RescheduleAsync(int id, string? notes, DateTime newScheduledDate);
+
+        /// <summary>
+        /// Processes a payment for an appointment.
+        /// </summary>
+        /// <param name="id">The unique identifier of the appointment for which to process the payment</param>
+        /// <param name="dto">The service payment DTO containing payment information</param>
+        /// <returns>ServiceResult containing the ID of the newly created payment record</returns>
+        Task<ServiceResult<int>> PayAsync(int id, CreateServicePaymentDTO dto);
     }
 }

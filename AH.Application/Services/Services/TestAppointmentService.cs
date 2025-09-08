@@ -166,10 +166,29 @@ namespace AH.Application.Services
             return ServiceResult<bool>.Create(response.Success, response.Exception);
         }
 
+        /// <summary>
+        /// Retrieves a paginated list of payments for test appointments based on filter criteria.
+        /// </summary>
+        /// <param name="filterDTO">Filter criteria for payment search</param>
+        /// <returns>Response containing payment row DTOs and count</returns>
+        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
         public async Task<ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>> GetPaymentsAsync(ServicePaymentsDTO filterDTO)
         {
             var response = await _testAppointmentRepository.GetPaymentsAsync(filterDTO);
             var data = new GetAllResponseDataDTO<PaymentRowDTO>(response); return ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>.Create(data, response.Exception); ;
+        }
+
+        /// <summary>
+        /// Processes a payment for a test appointment.
+        /// </summary>
+        /// <param name="id">The unique identifier of the test appointment</param>
+        /// <param name="dto">Payment information including amount, method, and receptionist ID</param>
+        /// <returns>The ID of the created payment record</returns>
+        /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
+        public async Task<ServiceResult<int>> PayAsync(int id, CreateServicePaymentDTO dto)
+        {
+            var response = await _testAppointmentRepository.PayAsync(id, dto.Amount, dto.Method, dto.CreatedByReceptionistID);
+            return ServiceResult<int>.Create(response.ID, response.Exception);
         }
     }
 }

@@ -171,5 +171,11 @@ namespace AH.Application.Services
             var response = await _operationRepository.GetPaymentsAsync(filterDTO);
             var data = new GetAllResponseDataDTO<PaymentRowDTO>(response); return ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>.Create(data, response.Exception); ;
         }
+
+        public async Task<ServiceResult<int>> PayAsync(int id, CreateServicePaymentDTO dto)
+        {
+            var response = await _operationRepository.PayAsync(id, dto.Amount, dto.Method, dto.CreatedByReceptionistID);
+            return ServiceResult<int>.Create(response.ID, response.Exception);
+        }
     }
 }

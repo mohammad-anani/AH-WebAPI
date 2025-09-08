@@ -10,7 +10,7 @@ namespace AH.Application.DTOs.Filter
         public DateTime? CreatedAtFrom { get; set; }
         public DateTime? CreatedAtTo { get; set; }
         public string? Sort { get; set; }
-        public bool? Order { get; set; }
+        public string? Order { get; set; }
         public int? Page { get; set; }
 
         // Full constructor
@@ -21,7 +21,7 @@ namespace AH.Application.DTOs.Filter
             DateTime? createdAtFrom,
             DateTime? createdAtTo,
             string? sort,
-            bool? order,
+            string? order,
             int? page)
         {
             Name = name;

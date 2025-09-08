@@ -29,7 +29,7 @@ namespace AH.Application.DTOs.Create
             OperationDoctors.ForEach(OperationDoctors =>
             {
                 var row = table.NewRow();
-                row["DoctorID"] = OperationDoctors.DoctorID;
+                row["DoctorID"] = OperationDoctors.ID;
                 row["Role"] = OperationDoctors.Role;
                 table.Rows.Add(row);
             });

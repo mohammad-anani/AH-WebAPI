@@ -5,7 +5,7 @@ namespace AH.Application.DTOs.Filter
     public class PatientFilterDTO : PersonFilter, IFilterable, IReceptionistAudit
     {
         public string? Sort { get; set; }
-        public bool? Order { get; set; }
+        public string? Order { get; set; }
         public int? Page { get; set; }
 
         public int? CreatedByReceptionistID { get; set; }
@@ -17,7 +17,7 @@ namespace AH.Application.DTOs.Filter
         // Full constructor
         public PatientFilterDTO(
             string? sort,
-            bool? order,
+            string? order,
             int? page,
             int? createdByReceptionistID,
             DateTime? createdAtFrom,

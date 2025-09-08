@@ -1,5 +1,7 @@
+using AH.Application.DTOs.Entities;
 using AH.Application.DTOs.Entities.Services;
 using AH.Application.DTOs.Form;
+using AH.Application.DTOs.Row;
 using AH.Domain.Entities;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
@@ -7,16 +9,33 @@ using System.Data;
 
 namespace AH.Application.DTOs.Create
 {
-    public class CreateOperationDTO : OperationFormDTO
+    public class CreateOperationDTO : CreateServiceDTO
     {
-        [BindNever]
-        public int CreatedByReceptionistID { get; set; }
+        [Required(ErrorMessage = "Operation name is required")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Department ID is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Department ID must be a positive number")]
+        public int DepartmentID { get; set; }
+
+        [Required(ErrorMessage = "Bill amount is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Bill amount must be a positive number")]
+        public int Amount { get; set; }
+
+        [Required(ErrorMessage = "Description is required")]
+        [StringLength(int.MaxValue, MinimumLength = 10, ErrorMessage = "Description must be at least 10 characters")]
+        public string Description { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Operation doctors list is required")]
+        [MinLength(1, ErrorMessage = "At least 1 doctor is required")]
+        [MaxLength(5, ErrorMessage = "Maximum 5 doctors allowed")]
+        public List<OperationDoctorDTO> OperationDoctors { get; set; } = new();
 
         public CreateOperationDTO() : base()
         {
         }
 
-        public CreateOperationDTO(int operationName, int departmentID, string description, List<OperationDoctorDTO> operationDoctors, int patientID, DateTime scheduledDate, string reason, string? notes, int billAmount, int createdByReceptionistID)
+        public CreateOperationDTO(string operationName, int departmentID, string description, List<OperationDoctorDTO> operationDoctors, int patientID, DateTime scheduledDate, string reason, string? notes, int billAmount, int createdByReceptionistID)
             : base()
         {
             if (operationDoctors.Count > 5 || operationDoctors.Count == 0)
@@ -28,18 +47,13 @@ namespace AH.Application.DTOs.Create
             DepartmentID = departmentID;
             Description = description;
             OperationDoctors = operationDoctors;
-            _patientID = patientID;
-            _scheduledDate = scheduledDate;
+            PatientID = patientID;
+            ScheduledDate = scheduledDate;
             Reason = reason;
             Notes = notes;
-            _billAmount = billAmount;
+            Amount = billAmount;
             CreatedByReceptionistID = createdByReceptionistID;
         }
-
-        // Local fields to carry create-only service data
-        private int _patientID;
-        private DateTime _scheduledDate;
-        private int _billAmount;
 
         public Operation ToOperation()
         {
@@ -48,15 +62,15 @@ namespace AH.Application.DTOs.Create
                 new Department(DepartmentID),
                 Description,
                 new Service(
-                    new Patient(_patientID),
-                    _scheduledDate,
+                    new Patient(PatientID),
+                    ScheduledDate,
                     null,
                     Reason,
                     null,
                     null,
-                    "",
+                    "Scheduled",
                     Notes,
-                    new Bill(-1, _billAmount, 0),
+                    new Bill(-1, Amount, 0),
                     new Receptionist(CreatedByReceptionistID)
                 )
             );
@@ -79,7 +93,7 @@ namespace AH.Application.DTOs.Create
             OperationDoctors.ForEach(operationDoctor =>
             {
                 var row = table.NewRow();
-                row["DoctorID"] = operationDoctor.DoctorID;
+                row["DoctorID"] = operationDoctor.ID;
                 row["Role"] = operationDoctor.Role;
                 table.Rows.Add(row);
             });

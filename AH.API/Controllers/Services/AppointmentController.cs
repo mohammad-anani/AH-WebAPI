@@ -103,7 +103,7 @@ namespace AH.API.Controllers
             return StatusCode(result.StatusCode, result.Data);
         }
 
-        [HttpPatch("{id}/reserve-follow-up")]
+        [HttpPost("{id}/reserve-follow-up")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -111,6 +111,16 @@ namespace AH.API.Controllers
         [Authorize(Roles = "Receptionist")]
         public async Task<IActionResult> AddFromPreviousAppointment([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] CreateAppointmentFromPreviousDTO createAppointmentDTO)
         {
+            var subClaim = User.Claims
+.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+
+            if (subClaim == null)
+                return Unauthorized("Missing Name Identifier claim in token.");
+            if (!int.TryParse(subClaim.Value, out var receptionistId))
+                return Unauthorized("Invalid Name Identifier claim in token.");
+
+            createAppointmentDTO.CreatedByReceptionistID = receptionistId;
+
             createAppointmentDTO.AppointmentID = id;
             var result = await _appointmentService.AddFromPreviousAppointmentAsync(createAppointmentDTO);
 
@@ -189,9 +199,9 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(Roles = "Doctor")]
-        public async Task<IActionResult> Complete([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] CompleteServiceDTO dto)
+        public async Task<IActionResult> Complete([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] CompleteAppointmentDTO dto)
         {
-            var result = await _appointmentService.CompleteAsync(id, dto?.Notes, dto?.Result ?? string.Empty);
+            var result = await _appointmentService.CompleteAsync(id, dto?.Notes, dto?.Result ?? string.Empty, dto?.TestTypeIDs);
             return StatusCode(result.StatusCode, result.Data);
         }
 
@@ -204,6 +214,22 @@ namespace AH.API.Controllers
         public async Task<IActionResult> Reschedule([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] RescheduleServiceDTO dto)
         {
             var result = await _appointmentService.RescheduleAsync(id, dto?.Notes, dto!.ScheduledDate);
+            return StatusCode(result.StatusCode, result.Data);
+        }
+
+        [HttpPost("{id}/pay")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Receptionist")]
+        public async Task<IActionResult> Pay([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] CreateServicePaymentDTO dto)
+        {
+            var subClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            if (subClaim == null || !int.TryParse(subClaim.Value, out var receptionistId))
+                return Unauthorized("Invalid receptionist claim.");
+            dto.CreatedByReceptionistID = receptionistId;
+            var result = await _appointmentService.PayAsync(id, dto);
             return StatusCode(result.StatusCode, result.Data);
         }
     }

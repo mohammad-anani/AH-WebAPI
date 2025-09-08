@@ -85,7 +85,6 @@ ServiceHelper.ReadService(reader));
             {
                 ["TestOrderID"] = (app.TestOrderID, SqlDbType.Int, null, null),
                 ["ScheduledDate"] = (app.ScheduledDate, SqlDbType.DateTime, null, null),
-                ["Notes"] = (app.Notes, SqlDbType.NVarChar, -1, null),
                 ["CreatedByReceptionistID"] = (app.CreatedByReceptionistID, SqlDbType.Int, null, null),
                 ["Status"] = (3, SqlDbType.TinyInt, null, null)
             };
@@ -182,6 +181,22 @@ ServiceHelper.ReadService(reader));
             totalCount = rowCountOutputHelper.GetRowCount();
 
             return new GetAllResponseDTO<PaymentRowDTO>(items, totalCount, ex);
+        }
+
+        public async Task<CreateResponseDTO> PayAsync(int testAppointmentID, int amount, string method, int createdByReceptionistID)
+        {
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["TestAppointmentID"] = (testAppointmentID, SqlDbType.Int, null, null),
+                ["Amount"] = (amount, SqlDbType.Int, null, null),
+                ["Method"] = (Payment.GetMethod(method), SqlDbType.TinyInt, null, null),
+                ["CreatedByReceptionistID"] = (createdByReceptionistID, SqlDbType.Int, null, null)
+            };
+
+            return await ReusableCRUD.AddAsync("Create_TestAppointmentPayment", _logger, cmd =>
+            {
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+            });
         }
     }
 }

@@ -62,7 +62,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize]
-        public async Task<IActionResult> GetAppointments([FromRoute, Range(1, int.MaxValue)] int id, AppointmentFilterDTO filterDTO)
+        public async Task<IActionResult> GetAppointments([FromRoute, Range(1, int.MaxValue)] int id, [FromQuery] AppointmentFilterDTO filterDTO)
         {
             filterDTO.PatientID = id;
             var result = await _appointmentService.GetAllByPatientIDAsync(filterDTO);
@@ -74,7 +74,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize]
-        public async Task<IActionResult> GetOperations([FromRoute, Range(1, int.MaxValue)] int id, OperationFilterDTO filterDTO)
+        public async Task<IActionResult> GetOperations([FromRoute, Range(1, int.MaxValue)] int id, [FromQuery] OperationFilterDTO filterDTO)
         {
             filterDTO.PatientID = id;
             var result = await _operationService.GetAllByPatientIDAsync(filterDTO);
@@ -86,7 +86,7 @@ namespace AH.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize]
-        public async Task<IActionResult> GetTestAppointments([FromRoute, Range(1, int.MaxValue)] int id, TestAppointmentFilterDTO filterDTO)
+        public async Task<IActionResult> GetTestAppointments([FromRoute, Range(1, int.MaxValue)] int id, [FromQuery] TestAppointmentFilterDTO filterDTO)
         {
             filterDTO.PatientID = id;
             var result = await _testAppointmentService.GetAllByPatientIDAsync(filterDTO);

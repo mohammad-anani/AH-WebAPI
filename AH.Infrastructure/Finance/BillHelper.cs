@@ -11,8 +11,8 @@ namespace AH.Infrastructure.Finance
             ConvertingHelper converter = new ConvertingHelper(reader);
 
             return new Bill(converter.ConvertValue<int>("BillID")
-                , converter.ConvertValue<int>("Amount"),
-                converter.ConvertValue<int>("AmountPaid"));
+                , converter.ConvertValue<int>("BillAmount"),
+                converter.ConvertValue<int>("BillAmountPaid"));
         }
     }
 }

@@ -25,7 +25,7 @@ namespace AH.Application.DTOs.Create
             return new Appointment(
 
                 new Doctor(DoctorID),
-                base.ToService()
+                base.ToService("Scheduled")
             );
         }
     }

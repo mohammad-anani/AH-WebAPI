@@ -63,5 +63,15 @@ namespace AH.Application.IServices
         /// <param name="id">The unique identifier of the test appointment to delete</param>
         /// <returns>True if deletion was successful, false otherwise</returns>
         Task<ServiceResult<bool>> DeleteAsync(int id);
+
+        Task<ServiceResult<bool>> StartAsync(int id, string? notes);
+
+        Task<ServiceResult<bool>> CancelAsync(int id, string? notes);
+
+        Task<ServiceResult<bool>> CompleteAsync(int id, string? notes, string result);
+
+        Task<ServiceResult<bool>> RescheduleAsync(int id, string? notes, DateTime newScheduledDate);
+
+        Task<ServiceResult<int>> PayAsync(int id, CreateServicePaymentDTO dto);
     }
 }

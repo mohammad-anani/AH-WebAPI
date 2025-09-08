@@ -33,7 +33,6 @@ namespace AH.Infrastructure.Repositories
             {
                 ServiceHelper.AddServiceFilterParameters(filterDTO, cmd);
 
-
                 var param = cmd.Parameters.AddWithValue("@Doctors", filterDTO.ToOperationDoctorDatatable());
                 param.SqlDbType = SqlDbType.Structured;
                 param.TypeName = "dbo.OperationDoctorsType";
@@ -78,7 +77,6 @@ namespace AH.Infrastructure.Repositories
               {
                   ServiceDTO service = ServiceHelper.ReadService(reader);
                   DepartmentRowDTO department = DepartmentRepository.ReadDepartment(reader);
-                  AdminRowDTO adminAudit = AdminAuditHelper.ReadAdmin(reader);
                   return new OperationDTO(converter.ConvertValue<int>("ID"), converter.ConvertValue<string>("Name"),
                       department, converter.ConvertValue<string>("Description"), service
              );
@@ -92,6 +90,7 @@ namespace AH.Infrastructure.Repositories
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {
                 ["Name"] = (operation.Name, SqlDbType.NVarChar, 100, null),
+                ["BillAmount"] = (operation.Service.Bill.Amount, SqlDbType.Int, null, null),
                 ["Description"] = (operation.Description, SqlDbType.NVarChar, -1, null),
                 ["DepartmentID"] = (operation.Department.ID, SqlDbType.Int, null, null)
             };
@@ -102,7 +101,7 @@ namespace AH.Infrastructure.Repositories
 
                 SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
 
-                var param = cmd.Parameters.AddWithValue("@OperationDoctors", operationDTO.ToDatatable());
+                var param = cmd.Parameters.AddWithValue("@OperationDoctorsTable", operationDTO.ToDatatable());
                 param.SqlDbType = SqlDbType.Structured;
                 param.TypeName = "dbo.OperationDoctorsType";
             });
@@ -125,7 +124,7 @@ namespace AH.Infrastructure.Repositories
 
                 SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
 
-                var param = cmd.Parameters.AddWithValue("@OperationDoctors", operationDTO.ToDatatable());
+                var param = cmd.Parameters.AddWithValue("@OperationDoctorsTable", operationDTO.ToDatatable());
                 param.SqlDbType = SqlDbType.Structured;
                 param.TypeName = "dbo.OperationDoctorsType";
             });
@@ -150,7 +149,7 @@ namespace AH.Infrastructure.Repositories
         {
             var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
             {
-                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
+                ["Notes"] = (notes, SqlDbType.NVarChar, 500, null),
             };
 
             return await ReusableCRUD.ExecuteByIDAsync("Cancel_Operation", _logger, id, extraParams);
@@ -160,8 +159,8 @@ namespace AH.Infrastructure.Repositories
         {
             var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
             {
-                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
-                ["Result"] = (result, SqlDbType.NVarChar, null, null),
+                ["Notes"] = (notes, SqlDbType.NVarChar, 500, null),
+                ["Result"] = (result, SqlDbType.NVarChar, 500, null),
             };
 
             return await ReusableCRUD.ExecuteByIDAsync("Complete_Operation", _logger, id, extraParams);
@@ -171,7 +170,7 @@ namespace AH.Infrastructure.Repositories
         {
             var extraParams = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>()
             {
-                ["Notes"] = (notes, SqlDbType.NVarChar, null, null),
+                ["Notes"] = (notes, SqlDbType.NVarChar, 500, null),
                 ["ScheduledDate"] = (newScheduledDate, SqlDbType.DateTime, null, null),
             };
 
@@ -209,6 +208,22 @@ namespace AH.Infrastructure.Repositories
             totalCount = rowCountOutputHelper.GetRowCount();
 
             return new GetAllResponseDTO<PaymentRowDTO>(items, totalCount, ex);
+        }
+
+        public async Task<CreateResponseDTO> PayAsync(int operationID, int amount, string method, int createdByReceptionistID)
+        {
+            var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
+            {
+                ["OperationID"] = (operationID, SqlDbType.Int, null, null),
+                ["Amount"] = (amount, SqlDbType.Int, null, null),
+                ["Method"] = (Payment.GetMethod(method), SqlDbType.TinyInt, null, null),
+                ["CreatedByReceptionistID"] = (createdByReceptionistID, SqlDbType.Int, null, null)
+            };
+
+            return await ReusableCRUD.AddAsync("Create_OperationPayment", _logger, cmd =>
+            {
+                SqlParameterHelper.AddParametersFromDictionary(cmd, parameters);
+            });
         }
     }
 }

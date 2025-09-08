@@ -3,7 +3,7 @@
     public class Operation
     {
         public int ID { get; set; }
-        public int Name { get; set; }
+        public string Name { get; set; }
         public Department Department { get; set; }
         public string Description { get; set; }
         public Service Service { get; set; }
@@ -11,13 +11,13 @@
         public Operation()
         {
             ID = -1;
-            Name = -1;
+            Name = "";
             Department = new Department();
             Description = "";
             Service = new Service();
         }
 
-        public Operation(int id, int name, Department department, string description, Service service)
+        public Operation(int id, string name, Department department, string description, Service service)
         {
             ID = id;
             Name = name;
@@ -26,7 +26,7 @@
             Service = service;
         }
 
-        public Operation(int name, Department department, string description, Service service)
+        public Operation(string name, Department department, string description, Service service)
         {
             ID = -1;
             Name = name;

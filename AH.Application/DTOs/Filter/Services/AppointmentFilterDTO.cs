@@ -7,7 +7,7 @@ namespace AH.Application.DTOs.Filter
         public int? PreviousAppointmentID { get; set; }
         public int? DoctorID { get; set; }
         public string? Sort { get; set; }
-        public bool? Order { get; set; }
+        public string? Order { get; set; }
         public int? Page { get; set; }
 
         // Full constructor
@@ -15,7 +15,7 @@ namespace AH.Application.DTOs.Filter
             int? previousAppointmentID,
             int? doctorID,
             string? sort,
-            bool? order,
+            string? order,
             int? page,
             int? patientID = null,
             DateTime? scheduledDateFrom = null,

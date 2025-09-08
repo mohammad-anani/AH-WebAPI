@@ -6,13 +6,13 @@ namespace AH.Application.DTOs.Filter
     public class ReceptionistFilterDTO : EmployeeFilter, IFilterable
     {
         public string? Sort { get; set; }
-        public bool? Order { get; set; }
+        public string? Order { get; set; }
         public int? Page { get; set; }
 
         // Full constructor
         public ReceptionistFilterDTO(
             string? sort,
-            bool? order,
+            string? order,
             int? page,
             int? departmentID = null,
             int? salaryFrom = null,

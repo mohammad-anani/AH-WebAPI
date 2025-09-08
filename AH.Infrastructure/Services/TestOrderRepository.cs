@@ -74,7 +74,7 @@ namespace AH.Infrastructure.Repositories
             return await ReusableCRUD.GetByID<TestOrderDTO>("Fetch_TestOrderByID", logger, id, null, (reader, converter) =>
             {
                 TestTypeRowDTO testType = TestTypeRepository.ReadTestType(reader);
-                AppointmentRowDTO appointment = AppointmentRepository.ReadAppointment(reader, "");
+                AppointmentRowDTO appointment = AppointmentRepository.ReadAppointment(reader, "")??new AppointmentRowDTO();
                 return new TestOrderDTO(converter.ConvertValue<int>("ID"), appointment, testType
                       );
             });

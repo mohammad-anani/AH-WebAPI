@@ -63,5 +63,47 @@ namespace AH.Application.IServices
         /// <param name="id">The unique identifier of the operation to delete</param>
         /// <returns>True if deletion was successful, false otherwise</returns>
         Task<ServiceResult<bool>> DeleteAsync(int id);
+
+        /// <summary>
+        /// Starts the operation with the specified ID.
+        /// </summary>
+        /// <param name="id">The unique identifier of the operation to start</param>
+        /// <param name="notes">Optional notes regarding the operation start</param>
+        /// <returns>True if the operation was successfully started, false otherwise</returns>
+        Task<ServiceResult<bool>> StartAsync(int id, string? notes);
+
+        /// <summary>
+        /// Cancels the operation with the specified ID.
+        /// </summary>
+        /// <param name="id">The unique identifier of the operation to cancel</param>
+        /// <param name="notes">Optional notes regarding the operation cancellation</param>
+        /// <returns>True if the operation was successfully canceled, false otherwise</returns>
+        Task<ServiceResult<bool>> CancelAsync(int id, string? notes);
+
+        /// <summary>
+        /// Completes the operation with the specified ID.
+        /// </summary>
+        /// <param name="id">The unique identifier of the operation to complete</param>
+        /// <param name="notes">Optional notes regarding the operation completion</param>
+        /// <param name="result">The result of the operation</param>
+        /// <returns>True if the operation was successfully completed, false otherwise</returns>
+        Task<ServiceResult<bool>> CompleteAsync(int id, string? notes, string result);
+
+        /// <summary>
+        /// Reschedules the operation with the specified ID to a new date.
+        /// </summary>
+        /// <param name="id">The unique identifier of the operation to reschedule</param>
+        /// <param name="notes">Optional notes regarding the rescheduling</param>
+        /// <param name="newScheduledDate">The new date and time for the operation</param>
+        /// <returns>True if the operation was successfully rescheduled, false otherwise</returns>
+        Task<ServiceResult<bool>> RescheduleAsync(int id, string? notes, DateTime newScheduledDate);
+
+        /// <summary>
+        /// Pays for the operation with the specified ID.
+        /// </summary>
+        /// <param name="id">The unique identifier of the operation to pay for</param>
+        /// <param name="dto">The service payment DTO containing payment information</param>
+        /// <returns>The ID of the created payment record</returns>
+        Task<ServiceResult<int>> PayAsync(int id, CreateServicePaymentDTO dto);
     }
 }

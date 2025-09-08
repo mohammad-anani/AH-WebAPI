@@ -4,7 +4,8 @@
     {
         public string? Sort { get; set; }
 
-        public bool? Order { get; set; }
+        // Now a textual order: "asc", "desc", or null
+        public string? Order { get; set; }
 
         public int? Page { get; set; }
     }

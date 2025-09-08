@@ -6,8 +6,7 @@ namespace AH.Application.DTOs.Create
 {
     public class CreateAppointmentFromPreviousDTO
     {
-        [Required(ErrorMessage = "Appointment ID is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Appointment ID must be a positive number")]
+
         [BindNever]
         public int AppointmentID { get; set; }
 

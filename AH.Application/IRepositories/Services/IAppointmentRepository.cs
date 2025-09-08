@@ -7,7 +7,7 @@ using AH.Domain.Entities;
 
 namespace AH.Application.IRepositories
 {
-    public interface IAppointmentRepository : IService
+    public interface IAppointmentRepository
     {
         Task<GetAllResponseDTO<AppointmentRowDTO>> GetAllAsync(AppointmentFilterDTO filterDTO);
 
@@ -26,5 +26,19 @@ namespace AH.Application.IRepositories
         Task<SuccessResponseDTO> UpdateAsync(Appointment appointment);
 
         Task<DeleteResponseDTO> DeleteAsync(int id);
+
+        Task<CreateResponseDTO> PayAsync(int appointmentID, int amount, string method, int createdByReceptionistID);
+
+        Task<SuccessResponseDTO> StartAsync(int id, string? notes);
+
+        Task<SuccessResponseDTO> CancelAsync(int id, string? notes);
+
+        // Legacy signature
+        Task<SuccessResponseDTO> CompleteAsync(int id, string? notes, string result);
+
+        // Extended signature with test orders CSV
+        Task<SuccessResponseDTO> CompleteAsync(int id, string? notes, string result, string? testOrdersCsv);
+
+        Task<SuccessResponseDTO> RescheduleAsync(int id, string? notes, DateTime newScheduledDate);
     }
 }

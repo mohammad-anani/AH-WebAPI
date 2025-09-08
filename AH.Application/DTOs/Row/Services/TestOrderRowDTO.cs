@@ -6,20 +6,20 @@ namespace AH.Application.DTOs.Row
 
         public string PatientFullName { get; set; }
 
-        public string TestName { get; set; }
+        public string TestTypeName { get; set; }
 
         public TestOrderRowDTO(int id, string patientFullName, string testName)
         {
             ID = id;
             PatientFullName = patientFullName;
-            TestName = testName;
+            TestTypeName = testName;
         }
 
         public TestOrderRowDTO()
         {
             ID = -1;
             PatientFullName = string.Empty;
-            TestName = string.Empty;
+            TestTypeName = string.Empty;
         }
     }
 }

@@ -159,5 +159,21 @@ namespace AH.API.Controllers
             var result = await _testAppointmentService.RescheduleAsync(id, dto?.Notes, dto!.ScheduledDate);
             return StatusCode(result.StatusCode, result.Data);
         }
+
+        [HttpPost("{id}/pay")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Receptionist")]
+        public async Task<IActionResult> Pay([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] CreateServicePaymentDTO dto)
+        {
+            var subClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            if (subClaim == null || !int.TryParse(subClaim.Value, out var receptionistId))
+                return Unauthorized("Invalid receptionist claim.");
+            dto.CreatedByReceptionistID = receptionistId;
+            var result = await _testAppointmentService.PayAsync(id, dto);
+            return StatusCode(result.StatusCode, result.Data);
+        }
     }
 }

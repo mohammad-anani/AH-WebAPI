@@ -43,9 +43,9 @@
         {
             switch (Method.ToLower())
             {
-                case "Card": return 1;
-                case "Cash": return 2;
-                case "Insurance": return 3;
+                case "card": return 1;
+                case "cash": return 2;
+                case "insurance": return 3;
                 default: return -1;
             }
         }

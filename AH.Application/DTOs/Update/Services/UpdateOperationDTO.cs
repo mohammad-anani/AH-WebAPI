@@ -16,7 +16,7 @@ namespace AH.Application.DTOs.Update
 
         [Required(ErrorMessage = "Operation name is required")]
         [Range(10, 100, ErrorMessage = "Operation name must be between 10 and 100")]
-        public int Name { get; set; }
+        public string Name { get; set; }
 
         [Required(ErrorMessage = "Department ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Department ID must be a positive number")]
@@ -36,7 +36,7 @@ namespace AH.Application.DTOs.Update
             ID = -1;
         }
 
-        public UpdateOperationDTO(int operationName, int departmentID, string description, List<OperationDoctorDTO> operationDoctors, int patientID, DateTime scheduledDate, DateTime? actualStartingDate, string reason, string? result, DateTime? resultDate, string status, string? notes, int billAmount, int createdByReceptionistID)
+        public UpdateOperationDTO(string operationName, int departmentID, string description, List<OperationDoctorDTO> operationDoctors, int patientID, DateTime scheduledDate, DateTime? actualStartingDate, string reason, string? result, DateTime? resultDate, string status, string? notes, int billAmount, int createdByReceptionistID)
             : base()
         {
             if (operationDoctors.Count > 5 || operationDoctors.Count == 0)
@@ -91,7 +91,7 @@ namespace AH.Application.DTOs.Update
             OperationDoctors.ForEach(OperationDoctors =>
             {
                 var row = table.NewRow();
-                row["DoctorID"] = OperationDoctors.DoctorID;
+                row["DoctorID"] = OperationDoctors.ID;
                 row["Role"] = OperationDoctors.Role;
                 table.Rows.Add(row);
             });

@@ -58,7 +58,7 @@ namespace AH.Infrastructure.Repositories
             return await ReusableCRUD.GetByID<PaymentDTO>("Fetch_PaymentByID", _logger, id, null, (reader, converter) =>
             new PaymentDTO(converter.ConvertValue<int>("ID"),
                 BillHelper.ReadBill(reader),
-                converter.ConvertValue<int>("AmountToPay"),
+                converter.ConvertValue<int>("Amount"),
                 converter.ConvertValue<string>("Method"),
                 converter.ConvertValue<DateTime>("CreatedAt"), ReceptionistAuditHelper.ReadReceptionist(reader)));
         }
