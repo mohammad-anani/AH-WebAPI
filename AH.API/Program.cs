@@ -14,8 +14,20 @@ using Newtonsoft.Json.Serialization;
 using Serilog;
 using System.Reflection;
 using System.Text;
+using DotNetEnv;
+
+Env.Load(); // Load .env file
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Override appsettings with env variables
+builder.Configuration["ConnectionStrings:DefaultConnection"] = Environment.GetEnvironmentVariable("DEFAULT_CONNECTION");
+builder.Configuration["Jwt:Issuer"] = Environment.GetEnvironmentVariable("JWT_ISSUER");
+builder.Configuration["Jwt:Audience"] = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+builder.Configuration["Jwt:Key"] = Environment.GetEnvironmentVariable("JWT_KEY");
+builder.Configuration["Jwt:ExpireInMinutes"] = Environment.GetEnvironmentVariable("JWT_EXPIRE_IN_MINUTES");
+builder.Configuration["RefreshToken:ExpireInMinutes"] = Environment.GetEnvironmentVariable("REFRESH_TOKEN_EXPIRE_IN_MINUTES");
+builder.Configuration["AllowedOrigins:0"] = Environment.GetEnvironmentVariable("ALLOWED_ORIGINS");
 
 // -------------------- Use Autofac --------------------
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -44,8 +56,6 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
         return new BadRequestObjectResult(context.ModelState);
     };
 });
-
-
 
 // -------------------- Bind Options --------------------
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
