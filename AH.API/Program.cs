@@ -223,7 +223,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // -------------------- Middleware Pipeline --------------------
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName=="Docker")
 {
     app.UseSwagger();
     app.UseSwaggerUI();
