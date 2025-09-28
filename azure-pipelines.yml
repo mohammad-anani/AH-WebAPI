@@ -19,12 +19,31 @@ variables:
   # Agent VM image name
   vmImageName: "ubuntu-latest"
   windowsImageName: "windows-latest"
-  aksClusterName: "AHAKSCluster"
+  #aksClusterName: "AHAKSCluster"
   aksServiceConnectionName: "dev-AHAKSCluster-dev-1759080360257"
   deploymentFile: "$(Build.SourcesDirectory)/k8s/deployment.yaml"
-  kubernetesNamespace: "dev"
+  group: aspnet-dev
+  #kubernetesNamespace: "dev"
+  resourceGroupServiceConnectionName: "ah-resource-group-connection"
+  keyVaultName: "aspnet-pipeline-kv"
 
 stages:
+  - stage: InitilializeKeyVault
+    displayName: Initialize Key Vault Secrets
+    jobs:
+      - job: FetchSecrets
+        displayName: Fetch FetchSecrets
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - task: AzureKeyVault@2
+            displayName: Fetch key vault secrets
+            inputs:
+              azureSubscription: $(resourceGroupServiceConnectionName)
+              keyVaultName: $(keyVaultName)
+              SecretsFilter: "*"
+              RunAsPreJob: true
+
   - stage: Build
     displayName: Build and push stage
     jobs:
