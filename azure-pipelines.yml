@@ -21,7 +21,7 @@ variables:
   windowsImageName: "windows-latest"
   aksClusterName: "AHAKSCluster"
   aksServiceConnectionName: "dev-AHAKSCluster-dev-1759080360257"
-  deploymentFile: "${Build.SourcesDirectory}/k8s/deployment.yaml"
+  deploymentFile: "$(Build.SourcesDirectory)/k8s/deployment.yaml"
   kubernetesNamespace: "dev"
 
 stages:
@@ -105,3 +105,16 @@ stages:
                     echo "Listing contents of k8s"
                     ls -l $(Build.SourcesDirectory)/k8s/
                   displayName: "List Files in k8s Directory"
+
+                - script: |
+                    sed -i 's/__TAG__/$(tag)/g' $(deploymentFile)
+                  displayName: "Replace image tag in deployment file"
+
+                - task: Kubernetes@1
+                  displayName: Deploy to dev namespace in k8s
+                  inputs:
+                    kubernetesServiceEndpoint: $(aksServiceConnectionName)
+                    kubernetesCluster: $(aksClusterName)
+                    namespace: $(kubernetesNamespace)
+                    command: apply
+                    arguments: "-f $(Build.SourcesDirectory)/k8s/."
