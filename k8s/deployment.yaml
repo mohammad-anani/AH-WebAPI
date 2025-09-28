@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aspnet-deployment
+  labels:
+    app: aspnet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aspnet
+  template:
+    metadata:
+      labels:
+        app: aspnet
+    spec:
+      containers:
+        - name: aspnet
+          image: ahappregistry.azurecr.io/aspnet-ah:__TAG__
+          ports:
+            - containerPort: 7076

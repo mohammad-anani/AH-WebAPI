@@ -3,80 +3,105 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 trigger:
-- master
+  - dev
 
 resources:
-- repo: self
+  - repo: self
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'e114edaa-2c81-40ba-926f-d412f9af95e7'
-  imageRepository: 'aspnetah'
-  containerRegistry: 'ahappregistry.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/AH.API/Dockerfile'
-  tag: '$(Build.BuildId)'
+  dockerRegistryServiceConnection: "e114edaa-2c81-40ba-926f-d412f9af95e7"
+  imageRepository: "aspnet-ah"
+  containerRegistry: "ahappregistry.azurecr.io"
+  dockerfilePath: "$(Build.SourcesDirectory)/AH.API/Dockerfile"
+  tag: "$(Build.BuildId)"
 
   # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+  vmImageName: "ubuntu-latest"
   windowsImageName: "windows-latest"
+  aksClusterName: "AHAKSCluster"
+  aksServiceConnectionName: "dev-AHAKSCluster-dev-1759080360257"
+  deploymentFile: "${Build.SourcesDirectory}/k8s/deployment.yaml"
+  kubernetesNamespace: "dev"
 
 stages:
-- stage: Build
-  displayName: Build and push stage
-  jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    - task: Docker@2
-      displayName: Build and push an image to container registry
-      inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
+  - stage: Build
+    displayName: Build and push stage
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: $(vmImageName)
+        steps:
+          - task: Docker@2
+            displayName: Build and push an image to container registry
+            inputs:
+              command: buildAndPush
+              repository: $(imageRepository)
+              dockerfile: $(dockerfilePath)
+              containerRegistry: $(dockerRegistryServiceConnection)
+              tags: |
+                $(tag)
 
-- stage: Test
-  displayName: Run Tests
-  jobs:
-  - job: RunTest
+  - stage: Test
     displayName: Run Tests
-    pool: 
-      vmImage: "$(windowsImageName)"
-    steps:
-    - checkout: self
-      displayName: Checkout source code
+    jobs:
+      - job: RunTest
+        displayName: Run Tests
+        pool:
+          vmImage: "$(windowsImageName)"
+        steps:
+          - checkout: self
+            displayName: Checkout source code
 
-    - task: NuGetToolInstaller@1
-      displayName: Install NugetTool
-      inputs:
-          versionSpec: 
+          - task: NuGetToolInstaller@1
+            displayName: Install NugetTool
+            inputs:
+              versionSpec:
 
-    - task: NuGetCommand@2
-      displayName: Restore Nuget Packages
-      inputs:
-        command: 'restore'
-        restoreSolution: '**/*.sln'
-        feedsToUse: 'select'
+          - task: NuGetCommand@2
+            displayName: Restore Nuget Packages
+            inputs:
+              command: "restore"
+              restoreSolution: "**/*.sln"
+              feedsToUse: "select"
 
-    - task: MSBuild@1
-      displayName: Build solution
-      inputs:
-        solution: '**/*.sln'
-        msbuildArchitecture: 'x64'
-        platform: 'Any CPU'
-        configuration: 'Debug'
+          - task: MSBuild@1
+            displayName: Build solution
+            inputs:
+              solution: "**/*.sln"
+              msbuildArchitecture: "x64"
+              platform: "Any CPU"
+              configuration: "Debug"
 
-    - task: VSTest@3
-      displayName: Test Solution
-      inputs:
-          azureSubscription: 'Azure subscription 1(182b9dc9-41e4-4a7c-966c-8050b6f33408)'
-          testSelector: 'testAssemblies'
-          testAssemblyVer2: |
-            **\AH.Tests.dll
-          searchFolder: '$(System.DefaultWorkingDirectory)'
-          runTestsInIsolation: true
-          codeCoverageEnabled: true
+          - task: VSTest@3
+            displayName: Test Solution
+            inputs:
+              azureSubscription: "Azure subscription 1(182b9dc9-41e4-4a7c-966c-8050b6f33408)"
+              testSelector: "testAssemblies"
+              testAssemblyVer2: |
+                **\AH.Tests.dll
+              searchFolder: "$(System.DefaultWorkingDirectory)"
+              runTestsInIsolation: true
+              codeCoverageEnabled: true
+
+  - stage: DeployToDev
+    displayName: Deploy to dev
+    dependsOn: Test
+    condition: and(succeeded('Build'),eq(variables['Build.SourceBranch'],'ref/heads/dev'))
+
+    jobs:
+      - deployment: DeploymentToDev
+        displayName: Deployment to Dev Env
+        environment: dev
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                  displayName: Checkout source code
+
+                - script: |
+                    echo "Listing contents of k8s"
+                    ls -l $(Build.SourcesDirectory)/k8s/
+                  displayName: "List Files in k8s Directory"
