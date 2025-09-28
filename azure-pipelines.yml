@@ -18,6 +18,7 @@ variables:
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
+  windowsImageName: "windows-latest"
 
 stages:
 - stage: Build
@@ -37,3 +38,45 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+
+- stage: Test
+  displayName: Run Tests
+  jobs:
+  - job: RunTest
+    displayName: Run Tests
+    pool: 
+      vmImage: "$(windowsImageName)"
+    steps:
+    - checkout: self
+      displayName: Checkout source code
+
+    - task: NuGetToolInstaller@1
+      displayName: Install NugetTool
+      inputs:
+          versionSpec: 
+
+    - task: NuGetCommand@2
+      displayName: Restore Nuget Packages
+      inputs:
+        command: 'restore'
+        restoreSolution: '**/*.sln'
+        feedsToUse: 'select'
+
+    - task: MSBuild@1
+      displayName: Build solution
+      inputs:
+        solution: '**/*.sln'
+        msbuildArchitecture: 'x64'
+        platform: 'Any CPU'
+        configuration: 'Debug'
+
+    - task: VSTest@3
+      displayName: Test Solution
+      inputs:
+          azureSubscription: 'Azure subscription 1(182b9dc9-41e4-4a7c-966c-8050b6f33408)'
+          testSelector: 'testAssemblies'
+          testAssemblyVer2: |
+            **\AH.Tests.dll
+          searchFolder: '$(System.DefaultWorkingDirectory)'
+          runTestsInIsolation: true
+          codeCoverageEnabled: true
