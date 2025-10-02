@@ -11,7 +11,7 @@ variables:
   dockerRegistryServiceConnection: "e114edaa-2c81-40ba-926f-d412f9af95e7"
   imageRepository: "aspnet-ah"
   containerRegistry: "ahappregistry.azurecr.io"
-  dockerfilePath: "$(Build.SourcesDirectory)/Dockerfile"
+  dockerfilePath: "$(Build.SourcesDirectory)/AH.API/Dockerfile"
   tag: "$(Build.BuildId)"
 
   vmImageName: "ubuntu-latest"
@@ -106,6 +106,7 @@ stages:
               command: buildAndPush
               repository: $(imageRepository)
               dockerfile: $(dockerfilePath)
+              buildContext: $(Build.SourcesDirectory)
               containerRegistry: $(dockerRegistryServiceConnection)
               tags: $(tag)
               arguments: "--build-arg ASPNETCORE_ENVIRONMENT=Production"
