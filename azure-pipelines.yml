@@ -83,7 +83,7 @@ stages:
                 **\AH.Tests.dll
               searchFolder: "$(System.DefaultWorkingDirectory)"
               runTestsInIsolation: true
-              codeCoverageEnabled: true
+              codeCoverageEnabled: false
 
   - stage: Build
     displayName: Build and push stage
