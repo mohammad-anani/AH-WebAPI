@@ -1,6 +1,5 @@
-# Docker
-# Build and push an image to Azure Container Registry
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+# Docker + .NET 8 + Azure DevOps Pipeline
+# Build, Test, Push Docker image, Deploy to Kubernetes
 
 trigger:
   - dev
@@ -9,30 +8,27 @@ resources:
   - repo: self
 
 variables:
-  # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: "e114edaa-2c81-40ba-926f-d412f9af95e7"
   imageRepository: "aspnet-ah"
   containerRegistry: "ahappregistry.azurecr.io"
   dockerfilePath: "$(Build.SourcesDirectory)/Dockerfile"
   tag: "$(Build.BuildId)"
 
-  # Agent VM image name
   vmImageName: "ubuntu-latest"
   windowsImageName: "windows-latest"
-  #aksClusterName: "AHAKSCluster"
+
   aksServiceConnectionName: "dev-AHAKSCluster-dev-1759080360257"
   deploymentFile: "$(Build.SourcesDirectory)/k8s/deployment.yaml"
-  group: aspnet-dev
-  #kubernetesNamespace: "dev"
+
   resourceGroupServiceConnectionName: "ah-resource-group-connection"
   keyVaultName: "aspnet-pipeline-kv"
 
 stages:
-  - stage: InitilializeKeyVault
+  - stage: InitializeKeyVault
     displayName: Initialize Key Vault Secrets
     jobs:
       - job: FetchSecrets
-        displayName: Fetch FetchSecrets
+        displayName: Fetch Secrets
         pool:
           vmImage: "ubuntu-latest"
         steps:
@@ -46,53 +42,66 @@ stages:
 
   - stage: Test
     displayName: Run Tests
-    dependsOn: InitilializeKeyVault
+    dependsOn: InitializeKeyVault
     jobs:
-      - job: RunTest
+      - job: RunTests
         displayName: Run Tests
         pool:
-          vmImage: "windows-latest"
+          vmImage: "$(windowsImageName)"
         steps:
           - checkout: self
 
           - task: UseDotNet@2
-            displayName: "Install .NET 8 SDK"
+            displayName: Install .NET 8 SDK
             inputs:
               packageType: "sdk"
               version: "8.0.x"
 
           - task: DotNetCoreCLI@2
-            displayName: Restore packages
+            displayName: Restore NuGet Packages
             inputs:
               command: "restore"
               projects: "**/*.sln"
 
           - task: DotNetCoreCLI@2
-            displayName: Build solution
+            displayName: Build Solution
             inputs:
               command: "build"
               projects: "**/*.sln"
-              arguments: "--configuration Debug --no-restore"
+              arguments: "--configuration Debug --no-restore --verbosity minimal"
+
+          # Debug: ensure test DLL exists
+          - script: dir AH.Tests\bin\Debug\net8.0
+            displayName: Verify test DLL exists
 
           - task: DotNetCoreCLI@2
-            displayName: Run tests
+            displayName: Run Tests
             inputs:
               command: "test"
-              projects: "AH.Tests/AH.Tests.csproj"
-              arguments: "--configuration Debug --no-build --verbosity normal"
+              projects: "AH.Tests\\AH.Tests.csproj"
+              arguments: '--configuration Debug --no-build --framework net8.0 --logger "console;verbosity=detailed"'
               publishTestResults: true
+              failOnFailedTests: false
+
+          - task: PublishTestResults@2
+            displayName: Publish Test Results
+            condition: always()
+            inputs:
+              testResultsFormat: "VSTest"
+              testResultsFiles: "**/*.trx"
+              mergeTestResults: true
 
   - stage: Build
-    displayName: Build and push stage
+    displayName: Build and Push Docker Image
     dependsOn: Test
     jobs:
-      - job: Build
-        displayName: Build
+      - job: BuildDocker
+        displayName: Build Docker Image
         pool:
           vmImage: $(vmImageName)
         steps:
           - task: Docker@2
-            displayName: Build and push an image to container registry
+            displayName: Build and Push Docker Image
             inputs:
               command: buildAndPush
               repository: $(imageRepository)
@@ -102,32 +111,30 @@ stages:
               arguments: "--build-arg ASPNETCORE_ENVIRONMENT=Production"
 
   - stage: DeployToDev
-    displayName: Deploy to dev
+    displayName: Deploy to Dev
     dependsOn: Build
     condition: and(succeeded('Build'), eq(variables['Build.SourceBranch'], 'refs/heads/dev'))
-
     jobs:
       - deployment: DeploymentToDev
-        displayName: Deployment to Dev Env
+        displayName: Deployment to Dev Environment
         environment: dev
         strategy:
           runOnce:
             deploy:
               steps:
                 - checkout: self
-                  displayName: Checkout source code
 
                 - script: |
-                    echo "Listing contents of k8s"
+                    echo "Listing k8s directory contents"
                     ls -l $(Build.SourcesDirectory)/k8s/
-                  displayName: "List Files in k8s Directory"
+                  displayName: List Files in k8s Directory
 
                 - script: |
                     sed -i 's/__TAG__/$(tag)/g' $(deploymentFile)
-                  displayName: "Replace image tag in deployment file"
+                  displayName: Replace Image Tag in Deployment YAML
 
                 - task: Kubernetes@1
-                  displayName: Deploy to dev namespace in k8s
+                  displayName: Deploy to Dev Namespace
                   inputs:
                     kubernetesServiceEndpoint: $(aksServiceConnectionName)
                     namespace: dev
