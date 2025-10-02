@@ -11,7 +11,7 @@ variables:
   dockerRegistryServiceConnection: "e114edaa-2c81-40ba-926f-d412f9af95e7"
   imageRepository: "aspnet-ah"
   containerRegistry: "ahappregistry.azurecr.io"
-  dockerfilePath: "$(Build.SourcesDirectory)/AH.API/Dockerfile"
+  dockerfilePath: "$(Build.SourcesDirectory)/Dockerfile"
   tag: "$(Build.BuildId)"
 
   vmImageName: "ubuntu-latest"

@@ -5,15 +5,12 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Copy project files first for better Docker layer caching
-COPY AH.API/AH.API.sln ./
+COPY AH.API/AH.API.sln ./AH.API/
 COPY AH.API/AH.API.csproj ./AH.API/
 COPY AH.Application/AH.Application.csproj ./AH.Application/
 COPY AH.Domain/AH.Domain.csproj ./AH.Domain/
 COPY AH.Infrastructure/AH.Infrastructure.csproj ./AH.Infrastructure/
 COPY AH.Tests/AH.Tests.csproj ./AH.Tests/
-
-# Copy solution file to AH.API directory (where it expects to be)
-COPY AH.API/AH.API.sln ./AH.API/
 
 # Restore dependencies using solution file from AH.API directory
 WORKDIR /app/AH.API

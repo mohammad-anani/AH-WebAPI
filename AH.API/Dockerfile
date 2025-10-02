@@ -5,7 +5,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 WORKDIR /app/AH.API
 
-COPY AH.API/AH.API.sln ./
+COPY AH.API/AH.API.sln ./AH.API.sln
 COPY AH.API/AH.API.csproj ./
 COPY AH.Application/AH.Application.csproj ../AH.Application/
 COPY AH.Domain/AH.Domain.csproj ../AH.Domain/
