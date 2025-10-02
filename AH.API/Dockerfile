@@ -9,7 +9,6 @@ COPY AH.API/ AH.API/
 COPY AH.Application/ AH.Application/
 COPY AH.Domain/ AH.Domain/
 COPY AH.Infrastructure/ AH.Infrastructure/
-COPY AH.Tests/ AH.Tests/
 
 # Restore dependencies
 WORKDIR /app/AH.API
