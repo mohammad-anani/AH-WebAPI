@@ -4,25 +4,25 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Copy project files first for better Docker layer caching
-COPY AH.API/AH.API.csproj AH.API/
-COPY AH.Application/AH.Application.csproj AH.Application/
-COPY AH.Domain/AH.Domain.csproj AH.Domain/
-COPY AH.Infrastructure/AH.Infrastructure.csproj AH.Infrastructure/
-COPY AH.Tests/AH.Tests.csproj AH.Tests/
-
-# Copy solution file
+# Copy solution file to root
 COPY AH.API/AH.API.sln ./
 
-# Restore dependencies
+# Copy project files maintaining directory structure
+COPY AH.API/AH.API.csproj ./AH.API/
+COPY AH.Application/AH.Application.csproj ./AH.Application/
+COPY AH.Domain/AH.Domain.csproj ./AH.Domain/
+COPY AH.Infrastructure/AH.Infrastructure.csproj ./AH.Infrastructure/
+COPY AH.Tests/AH.Tests.csproj ./AH.Tests/
+
+# Restore dependencies using solution file
 RUN dotnet restore AH.API.sln
 
-# Copy all source code
-COPY AH.API/ AH.API/
-COPY AH.Application/ AH.Application/
-COPY AH.Domain/ AH.Domain/
-COPY AH.Infrastructure/ AH.Infrastructure/
-COPY AH.Tests/ AH.Tests/
+# Copy all source code maintaining directory structure
+COPY AH.API/ ./AH.API/
+COPY AH.Application/ ./AH.Application/
+COPY AH.Domain/ ./AH.Domain/
+COPY AH.Infrastructure/ ./AH.Infrastructure/
+COPY AH.Tests/ ./AH.Tests/
 
 # Publish the API project
 RUN dotnet publish AH.API/AH.API.csproj -c Release -o /out
@@ -36,12 +36,9 @@ WORKDIR /app
 # Copy published output
 COPY --from=build /out .
 
-# Set environment variables with defaults
+# Set environment variables with defaults (non-sensitive only)
 ENV DOTNET_ENVIRONMENT=Docker
 ENV ASPNETCORE_URLS=https://+:7076;http://+:5084
-ENV JWT_KEY="2000200120022003"
-ENV JWT_EXPIRE_IN_MINUTES="1"
-ENV REFRESH_TOKEN_EXPIRE_IN_MINUTES="60"
 
 # Expose ports (matching your configuration)
 EXPOSE 5084
