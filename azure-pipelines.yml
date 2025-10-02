@@ -56,34 +56,32 @@ stages:
           - checkout: self
             displayName: Checkout source code
 
-          - task: NuGetToolInstaller@1
-            displayName: Install NugetTool
+          - task: UseDotNet@2
+            displayName: "Install .NET SDK"
+            inputs:
+              packageType: "sdk"
+              version: "8.x"
 
-          - task: NuGetCommand@2
-            displayName: Restore Nuget Packages
+          - task: DotNetCoreCLI@2
+            displayName: Restore NuGet packages
             inputs:
               command: "restore"
-              restoreSolution: "**/*.sln"
-              feedsToUse: "select"
+              projects: "**/*.csproj"
 
-          - task: MSBuild@1
+          - task: DotNetCoreCLI@2
             displayName: Build solution
             inputs:
-              solution: "**/*.sln"
-              msbuildArchitecture: "x64"
-              platform: "Any CPU"
-              configuration: "Debug"
+              command: "build"
+              projects: "**/*.csproj"
+              arguments: "--configuration Debug --no-restore"
 
-          - task: VSTest@3
-            displayName: Test Solution
+          - task: DotNetCoreCLI@2
+            displayName: Run tests
             inputs:
-              azureSubscription: "Azure subscription 1(182b9dc9-41e4-4a7c-966c-8050b6f33408)"
-              testSelector: "testAssemblies"
-              testAssemblyVer2: |
-                **\AH.Tests.dll
-              searchFolder: "$(System.DefaultWorkingDirectory)"
-              runTestsInIsolation: true
-              codeCoverageEnabled: false
+              command: "test"
+              projects: "**/AH.Tests.csproj"
+              arguments: '--configuration Debug --no-build --collect:"XPlat Code Coverage" --logger trx --results-directory $(Agent.TempDirectory)'
+              publishTestResults: true
 
   - stage: Build
     displayName: Build and push stage
