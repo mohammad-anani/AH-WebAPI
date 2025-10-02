@@ -1,13 +1,10 @@
-# This Dockerfile should be used with build context from the root directory
-# Build command: docker build -f AH.API/Dockerfile .
-
 # ---------------------------
 # Stage 1: Build & Publish
 # ---------------------------
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Copy project files first for better caching
+# Copy project files first for better Docker layer caching
 COPY AH.API/AH.API.csproj AH.API/
 COPY AH.Application/AH.Application.csproj AH.Application/
 COPY AH.Domain/AH.Domain.csproj AH.Domain/
@@ -39,12 +36,15 @@ WORKDIR /app
 # Copy published output
 COPY --from=build /out .
 
+# Set environment variables with defaults
 ENV DOTNET_ENVIRONMENT=Docker
+ENV ASPNETCORE_URLS=https://+:7076;http://+:5084
 ENV JWT_KEY="2000200120022003"
 ENV JWT_EXPIRE_IN_MINUTES="1"
 ENV REFRESH_TOKEN_EXPIRE_IN_MINUTES="60"
 
-# Expose default HTTP port
+# Expose ports (matching your configuration)
+EXPOSE 5084
 EXPOSE 7076
 
 # Run the API
