@@ -6,6 +6,7 @@ using AH.Application.DTOs.Row;
 using AH.Application.DTOs.Update;
 using AH.Application.IRepositories;
 using AH.Application.IServices;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AH.Application.Services
 {
@@ -16,15 +17,17 @@ namespace AH.Application.Services
     public class AdminService : IAdminService
     {
         private readonly IAdminRepository _adminRepository;
+        private readonly IPersonService personService;
 
         /// <summary>
         /// Initializes a new instance of the AdminService.
         /// </summary>
         /// <param name="adminRepository">The admin repository instance</param>
         /// <exception cref="ArgumentNullException">Thrown when repository is null</exception>
-        public AdminService(IAdminRepository adminRepository)
+        public AdminService(IAdminRepository adminRepository, IPersonService personService)
         {
             _adminRepository = adminRepository ?? throw new ArgumentNullException(nameof(adminRepository));
+            this.personService = personService;
         }
 
         /// <summary>
@@ -60,6 +63,11 @@ namespace AH.Application.Services
         /// <exception cref="InvalidOperationException">Thrown when repository operation fails</exception>
         public async Task<ServiceResult<int>> AddAsync(CreateAdminDTO createAdminDTO)
         {
+            if (await personService.EmailAlreadyExists(createAdminDTO.Email))
+            {
+                return ServiceResult<int>.Create(-1, new InvalidOperationException("Email already exists"));
+            }
+
             var admin = createAdminDTO.ToAdmin();
             var response = await _adminRepository.AddAsync(admin);
             return ServiceResult<int>.Create(response.ID, response.Exception);

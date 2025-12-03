@@ -33,9 +33,6 @@ namespace AH.Application.DTOs.Form
         [RegularExpression("^[0-9]{8}$", ErrorMessage = "Phone must be exactly 8 digits")]
         public string Phone { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Email is required")]
-        [StringLength(40, MinimumLength = 6, ErrorMessage = "Email must be between 6 and 40 characters")]
-        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Invalid email format")]
-        public string Email { get; set; } = string.Empty;
+
     }
 }

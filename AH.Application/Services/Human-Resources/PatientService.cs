@@ -16,15 +16,17 @@ namespace AH.Application.Services
     public class PatientService : IPatientService
     {
         private readonly IPatientRepository _patientRepository;
+        private readonly IPersonService _personService;
 
         /// <summary>
         /// Initializes a new instance of the PatientService.
         /// </summary>
         /// <param name="patientRepository">The patient repository instance</param>
         /// <exception cref="ArgumentNullException">Thrown when repository is null</exception>
-        public PatientService(IPatientRepository patientRepository)
+        public PatientService(IPatientRepository patientRepository, IPersonService personService)
         {
             _patientRepository = patientRepository ?? throw new ArgumentNullException(nameof(patientRepository));
+            _personService = personService;
         }
 
         /// <summary>
@@ -35,7 +37,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<GetAllResponseDataDTO<PatientRowDTO>>> GetAllAsync(PatientFilterDTO filterDTO)
         {
             var response = await _patientRepository.GetAllAsync(filterDTO);
-            var data = new GetAllResponseDataDTO<PatientRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<PatientRowDTO>>.Create(data, response.Exception);
+            var data = new GetAllResponseDataDTO<PatientRowDTO>(response); return ServiceResult<GetAllResponseDataDTO<PatientRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>
@@ -47,7 +49,7 @@ namespace AH.Application.Services
         public async Task<ServiceResult<GetAllResponseDataDTO<PatientRowDTO>>> GetAllForDoctorAsync(int doctorID, PatientFilterDTO filterDTO)
         {
             var response = await _patientRepository.GetAllForDoctorAsync(doctorID, filterDTO);
-            var data = new GetAllResponseDataDTO<PatientRowDTO>(response);return ServiceResult<GetAllResponseDataDTO<PatientRowDTO>>.Create(data, response.Exception);
+            var data = new GetAllResponseDataDTO<PatientRowDTO>(response); return ServiceResult<GetAllResponseDataDTO<PatientRowDTO>>.Create(data, response.Exception);
         }
 
         /// <summary>
@@ -68,6 +70,11 @@ namespace AH.Application.Services
         /// <returns>ServiceResult containing the ID of the newly created patient</returns>
         public async Task<ServiceResult<int>> AddAsync(CreatePatientDTO createPatientDTO)
         {
+            if (await _personService.EmailAlreadyExists(createPatientDTO.Email))
+            {
+                return ServiceResult<int>.Create(-1, new InvalidOperationException("Email already exists"));
+            }
+
             var patient = createPatientDTO.ToPatient();
             var response = await _patientRepository.AddAsync(patient);
             return ServiceResult<int>.Create(response.ID, response.Exception);

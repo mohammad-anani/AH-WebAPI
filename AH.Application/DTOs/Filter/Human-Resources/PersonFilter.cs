@@ -5,7 +5,8 @@
         public string? FirstName { get; set; }
         public string? MiddleName { get; set; }
         public string? LastName { get; set; }
-        public char? Gender { get; set; }
+
+        public string? Gender { get; set; }
         public DateOnly? BirthDateFrom { get; set; }
         public DateOnly? BirthDateTo { get; set; }
         public int? CountryID { get; set; }
@@ -17,7 +18,7 @@
             string? firstName,
             string? middleName,
             string? lastName,
-            char? gender,
+            string? gender,
             DateOnly? birthDateFrom,
             DateOnly? birthDateTo,
             int? countryID,

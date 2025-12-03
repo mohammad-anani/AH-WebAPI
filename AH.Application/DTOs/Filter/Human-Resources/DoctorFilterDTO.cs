@@ -41,7 +41,7 @@ namespace AH.Application.DTOs.Filter
             string? firstName = null,
             string? middleName = null,
             string? lastName = null,
-            char? gender = null,
+            string? gender = null,
             DateOnly? birthDateFrom = null,
             DateOnly? birthDateTo = null,
             int? countryID = null,

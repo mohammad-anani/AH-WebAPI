@@ -36,10 +36,10 @@
                 InvalidOperationException e =>
                     new ServiceResult<T>(default, 400, e.Message),
 
-                ArgumentNullException e =>
+                ArgumentNullException e when e.Message.Contains("invalid", StringComparison.OrdinalIgnoreCase) =>
                     new ServiceResult<T>(default, 400, e.Message),
-                var e when e.Message.Contains("does not exist", StringComparison.OrdinalIgnoreCase) ||
-         e.Message.Contains("invalid", StringComparison.OrdinalIgnoreCase) =>
+
+                var e when e.Message.Contains("does not exist", StringComparison.OrdinalIgnoreCase) =>
   new ServiceResult<T>(default, 404, e.Message),
                 KeyNotFoundException e =>
                     new ServiceResult<T>(default, 404, e.Message),

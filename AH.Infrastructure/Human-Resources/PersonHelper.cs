@@ -11,7 +11,7 @@ namespace AH.Infrastructure.Helpers
         public static void AddPersonFilterParameters(PersonFilter personFilter, SqlCommand cmd)
         {
             // Ensure nullable Gender maps to NULL (DBNull) rather than empty string
-            object? genderValue = personFilter.Gender.HasValue ? personFilter.Gender.Value.ToString() : null;
+            object? genderValue = personFilter.Gender != null ? personFilter.Gender[0].ToString() : null;
 
             var parameters = new Dictionary<string, (object? Value, SqlDbType Type, int? Size, ParameterDirection? Direction)>
             {

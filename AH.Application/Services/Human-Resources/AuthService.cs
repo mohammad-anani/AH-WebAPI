@@ -21,7 +21,7 @@ namespace AH.Application.Services
         private readonly RefreshTokenOptions _options;
         private readonly ILogger<AuthService> logger;
 
-        public AuthService(ISigninRepository signinRepository, IJwtService jwtService, IOptions<RefreshTokenOptions> options,ILogger<AuthService> logger)
+        public AuthService(ISigninRepository signinRepository, IJwtService jwtService, IOptions<RefreshTokenOptions> options, ILogger<AuthService> logger)
         {
             this.signinRepository = signinRepository;
             this.jwtService = jwtService;
@@ -33,7 +33,7 @@ namespace AH.Application.Services
         {
             var response = await signinRepository.SigninAsync(email, CreatePersonDTO.HashPassword(password));
 
-            if(response.Exception!=null)
+            if (response.Exception != null)
             {
                 logger.LogError(response.Exception.Message);
             }
@@ -41,6 +41,12 @@ namespace AH.Application.Services
             var responseData = new SigninResponseDataDTO(response);
 
             // Generate access and refresh tokens
+
+            if (responseData.ID == -1 || string.IsNullOrEmpty(responseData.Role))
+            {
+                logger.LogWarning("Signin failed for email: {Email}", email);
+                return responseData;
+            }
             jwtService.CreateToken(responseData);
             responseData.RefreshToken = JwtService.GenerateRefreshToken();
 

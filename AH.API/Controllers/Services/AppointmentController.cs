@@ -228,8 +228,10 @@ namespace AH.API.Controllers
             var subClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
             if (subClaim == null || !int.TryParse(subClaim.Value, out var receptionistId))
                 return Unauthorized("Invalid receptionist claim.");
+
             dto.CreatedByReceptionistID = receptionistId;
             var result = await _appointmentService.PayAsync(id, dto);
+
             return StatusCode(result.StatusCode, result.Data);
         }
     }

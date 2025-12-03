@@ -1,12 +1,14 @@
 using AH.Application.DTOs.Form;
 using AH.Application.DTOs.Validation;
 using AH.Domain.Entities;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace AH.Application.DTOs.Update
 {
-    public class UpdatePersonDTO : PersonFormDTO
+    public class UpdatePersonDTO:PersonFormDTO
     {
+ 
         public UpdatePersonDTO()
         {
         }
@@ -17,7 +19,7 @@ namespace AH.Application.DTOs.Update
 
         public Person ToPerson()
         {
-            return new Person(FirstName, MiddleName, LastName, Gender, BirthDate, new Country(CountryID), Phone, new User(Email, ""));
+            return new Person(FirstName, MiddleName, LastName, Gender, BirthDate, new Country(CountryID), Phone, new User("", ""));
         }
     }
 }

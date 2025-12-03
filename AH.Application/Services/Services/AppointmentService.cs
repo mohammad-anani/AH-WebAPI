@@ -6,6 +6,8 @@ using AH.Application.DTOs.Row;
 using AH.Application.DTOs.Update;
 using AH.Application.IRepositories;
 using AH.Application.IServices;
+using AH.Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
 namespace AH.Application.Services
@@ -189,8 +191,22 @@ namespace AH.Application.Services
             var data = new GetAllResponseDataDTO<PaymentRowDTO>(response); return ServiceResult<GetAllResponseDataDTO<PaymentRowDTO>>.Create(data, response.Exception); ;
         }
 
-        public async Task<ServiceResult<int>> PayAsync(int id, CreateServicePaymentDTO dto)
+        public async Task<ServiceResult<int>> PayAsync([FromRoute] int id, CreateServicePaymentDTO dto)
         {
+            ServiceDTO? service = (await this.GetByIDAsync(id))?.Data?.Service;
+
+            if (service == null)
+            {
+                return ServiceResult<int>.Create(-1, new InvalidDataException(), "Invalid Service");
+            }
+
+            int remaining = service.Bill.Amount - (service.Bill.AmountPaid ?? 0);
+
+            if (dto.Amount > remaining)
+            {
+                return ServiceResult<int>.Create(-1, new InvalidDataException(), "Payment amount exceeds remaining balance");
+            }
+
             var response = await _appointmentRepository.PayAsync(id, dto.Amount, dto.Method, dto.CreatedByReceptionistID);
             return ServiceResult<int>.Create(response.ID, response.Exception);
         }

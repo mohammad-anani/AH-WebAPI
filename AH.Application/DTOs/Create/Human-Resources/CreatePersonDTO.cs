@@ -10,6 +10,11 @@ namespace AH.Application.DTOs.Create
 {
     public class CreatePersonDTO : PersonFormDTO
     {
+        [Required(ErrorMessage = "Email is required")]
+        [StringLength(40, MinimumLength = 6, ErrorMessage = "Email must be between 6 and 40 characters")]
+        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Invalid email format")]
+        public string Email { get; set; } = string.Empty;
+
         [Required(ErrorMessage = "Password is required")]
         [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be between 10 and 64 characters")]
         public string Password { get; set; }

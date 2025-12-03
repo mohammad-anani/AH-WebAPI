@@ -20,7 +20,7 @@ namespace AH.Application.DTOs.Update
 
         public Employee ToEmployee()
         {
-            var person = new Person(FirstName, MiddleName, LastName, Gender, BirthDate, new Country(CountryID), Phone, new User(Email, ""));
+            var person = new Person(FirstName, MiddleName, LastName, Gender, BirthDate, new Country(CountryID), Phone, new User("", ""));
             return new Employee(person, new Department(DepartmentID),
                 Salary, HireDate, Employee.ToBitmask(WorkingDays), ShiftStart, ShiftEnd, new AdminAudit(-1));
         }

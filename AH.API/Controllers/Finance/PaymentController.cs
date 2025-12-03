@@ -52,7 +52,7 @@ namespace AH.API.Controllers
 
             createPaymentDTO.CreatedByReceptionistID = receptionistId;
 
-            createPaymentDTO.CreatedByReceptionistID = receptionistId;
+            createPaymentDTO.BillID = receptionistId;
 
             var result = await _paymentService.AddAsync(createPaymentDTO);
 

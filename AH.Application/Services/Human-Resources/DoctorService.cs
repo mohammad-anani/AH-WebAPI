@@ -16,15 +16,17 @@ namespace AH.Application.Services
     public class DoctorService : IDoctorService
     {
         private readonly IDoctorRepository _doctorRepository;
+        private readonly IPersonService _personService;
 
         /// <summary>
         /// Initializes a new instance of the DoctorService.
         /// </summary>
         /// <param name="doctorRepository">The doctor repository instance</param>
         /// <exception cref="ArgumentNullException">Thrown when repository is null</exception>
-        public DoctorService(IDoctorRepository doctorRepository)
+        public DoctorService(IDoctorRepository doctorRepository, IPersonService personService)
         {
             _doctorRepository = doctorRepository ?? throw new ArgumentNullException(nameof(doctorRepository));
+            _personService = personService;
         }
 
         /// <summary>
@@ -56,6 +58,11 @@ namespace AH.Application.Services
         /// <returns>ServiceResult containing the ID of the newly created doctor</returns>
         public async Task<ServiceResult<int>> AddAsync(CreateDoctorDTO createDoctorDTO)
         {
+            if (await _personService.EmailAlreadyExists(createDoctorDTO.Email))
+            {
+                return ServiceResult<int>.Create(-1, new InvalidOperationException("Email already exists"));
+            }
+
             var doctor = createDoctorDTO.ToDoctor();
             var response = await _doctorRepository.AddAsync(doctor);
             return ServiceResult<int>.Create(response.ID, response.Exception);

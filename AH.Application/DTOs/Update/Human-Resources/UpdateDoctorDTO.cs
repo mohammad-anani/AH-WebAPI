@@ -26,7 +26,7 @@ namespace AH.Application.DTOs.Update
 
         public Doctor ToDoctor()
         {
-            var person = new Person(FirstName, MiddleName, LastName, Gender, BirthDate, new Country(CountryID), Phone, new User(Email, ""));
+            var person = new Person(FirstName, MiddleName, LastName, Gender, BirthDate, new Country(CountryID), Phone, new User("", ""));
             var employee = new Employee(person, new Department(DepartmentID),
                 Salary, HireDate, Employee.ToBitmask(WorkingDays), ShiftStart, ShiftEnd, null);
             return new Doctor(ID, employee,

@@ -26,6 +26,11 @@ namespace AH.API.Controllers.Human_Resources
         public async Task<IActionResult> SigninAsync([FromBody] SigninRequestDTO signinRequestDTO)
         {
             var result = await signinService.SigninAsync(signinRequestDTO.Email, signinRequestDTO.Password);
+
+            if (result.ID == -1 || string.IsNullOrEmpty(result.Role))
+            {
+                return NotFound("Invalid email or password.");
+            }
             return Ok(result);
         }
     }
